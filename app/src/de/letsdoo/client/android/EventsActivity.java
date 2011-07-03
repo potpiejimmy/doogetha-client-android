@@ -32,10 +32,14 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
     	getListView().setTextFilterEnabled(true);
     	getListView().setOnItemClickListener(this);
     	registerForContextMenu(getListView());
-
+    	
     	this.dataLoader = new DataLoader();
     	
-		refresh();
+    	if (((Letsdoo)getApplication()).getPreferences().getString("authtoken", null) == null) {
+    		login();
+    	} else {
+			refresh();
+    	}
     }
     
     @Override
@@ -81,10 +85,10 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
     	dataLoader.go(getString(R.string.loading));
     }
     
-    protected void add()
+    protected void login()
     {
-//    	Intent intent = new Intent(getApplicationContext(), EditAct.class);
-//    	startActivityForResult(intent, 0);
+    	Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+    	startActivityForResult(intent, 0);
     }
     
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

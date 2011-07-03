@@ -17,7 +17,12 @@ public class JsonWebRequest extends WebRequest
 
 	public <T> T getObject(String url, Class<T> type) throws Exception
 	{
-		return gson.fromJson(super.get(url), type);
+		String json = super.get(url);
+		try {
+			return gson.fromJson(json, type);
+		} catch (Exception ex) {
+			throw new RuntimeException("Could not parse: " + json, ex);
+		}
 	}
 	
 	public void postObject(String url, Object object) throws Exception

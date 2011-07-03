@@ -8,7 +8,7 @@ import de.potpiejimmy.util.RestResourceAccessor;
 public class Letsdoo extends Application {
 	
 	//public final static String URL = "http://www.potpiejimmy.de/letsdoo/res/events/";
-	public final static String URL = "http://deffm949:8089/letsdoo/res/events/";
+	public final static String URL = "https://192.168.100.30:8181/letsdoo/res/events/";
 	
 	private RestResourceAccessor<Events, Event> req = null;
 	

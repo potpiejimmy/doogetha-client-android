@@ -19,8 +19,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -63,7 +67,20 @@ public class WebRequest implements ResponseHandler<String>
 
         HttpParams httpParams = new BasicHttpParams();
     	HttpConnectionParams.setSoTimeout(httpParams, 5000);
-        client = new DefaultHttpClient(httpParams);
+    	
+    	SchemeRegistry schemeRegistry = new SchemeRegistry ();
+
+    	schemeRegistry.register (new Scheme ("http",
+    	    PlainSocketFactory.getSocketFactory (), 80));
+    	try {
+	    	schemeRegistry.register (new Scheme ("https",
+	    	    new CustomSSLSocketFactory (), 443));
+    	} catch (Exception ex) {
+    		throw new RuntimeException("Could not register CustomSSLSocketFactory", ex);
+    	}
+    	
+        client = new DefaultHttpClient(new ThreadSafeClientConnManager (
+        		httpParams, schemeRegistry), httpParams);
     }
  
     public void addParam(String name, String value)

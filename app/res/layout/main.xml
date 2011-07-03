@@ -4,6 +4,43 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+    <LinearLayout android:layout_height="wrap_content"
+    		      android:id="@+id/linearLayout1"
+    		      android:layout_width="match_parent"
+    		      android:baselineAligned="false"
+    		      android:background="#60f060">
+        <ImageView android:layout_height="wrap_content"
+        		   android:id="@+id/imageView1"
+        		   android:src="@drawable/icon" 
+        		   android:layout_width="wrap_content">
+        </ImageView>
+        <TextView android:id="@+id/textView1"
+                  android:textAppearance="?android:attr/textAppearanceLarge" 
+                  android:text="Doogetha" android:layout_gravity="center" 
+                  android:layout_height="wrap_content" 
+                  android:layout_weight="0.0" 
+                  android:layout_width="wrap_content" 
+                  android:layout_marginLeft="10dip"
+                  android:textColor="#003000"></TextView>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout2"
+                  android:layout_width="wrap_content" 
+                  android:layout_height="wrap_content">
+        <Button android:layout_width="wrap_content" android:layout_margin="3dip" android:id="@+id/button1" android:layout_height="wrap_content" android:text="Neue Aktivität planen...">
+        </Button>
+    </LinearLayout>
+    <LinearLayout android:layout_height="wrap_content"
+                  android:id="@+id/linearLayout3" 
+                  android:layout_width="match_parent"
+                  android:background="#606060">
+        <TextView android:id="@+id/textView2" 
+                  android:layout_width="match_parent" 
+                  android:layout_margin="3dip" 
+                  android:text="Aktuelle Aktivitäten" 
+                  android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    
 <ListView android:id="@id/android:list"
                android:layout_width="match_parent"
                android:layout_height="match_parent"

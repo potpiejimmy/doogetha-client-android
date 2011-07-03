@@ -3,6 +3,9 @@ package de.letsdoo.client.entity;
 public class Event {
 	private Integer id = null;
 	private String name = null;
+	private String description = null;
+	private Integer state = null;
+	private String users = null;
 	
 	public Event() {
 	}
@@ -25,5 +28,29 @@ public class Event {
 	}
 	public String toString() {
 		return name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	public String getUsers() {
+		return users;
+	}
+
+	public void setUsers(String users) {
+		this.users = users;
 	}
 }

@@ -4,13 +4,13 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.Events;
 import de.potpiejimmy.util.AsyncUITask;
@@ -119,7 +119,8 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
 		public void done(Events result)
 		{
 			data.clear();
-    		for (Event e : result.getEvents()) data.add(e);
+			if (result != null && result.getEvents() != null)
+				for (Event e : result.getEvents()) data.add(e);
 		}
 	}
 }

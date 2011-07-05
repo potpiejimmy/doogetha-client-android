@@ -68,18 +68,38 @@ public class RestResourceAccessor<CT, ET>
 		requester.postObject(baseUrl, item);
 	}
 	
-	public ET getItem(long id) throws Exception
+	public ET insertItemWithResult(ET item) throws Exception
+	{
+		return requester.postObjectWithResult(baseUrl, item, entityType);
+	}
+	
+	public ET getItem(String id) throws Exception
 	{
 		return requester.getObject(baseUrl+id, entityType);
 	}
 	
-	public void updateItem(long id, ET item) throws Exception
+	public void updateItem(String id, ET item) throws Exception
 	{
 		requester.putObject(baseUrl + id, item);
 	}
 	
-	public void deleteItem(long id) throws Exception
+	public void deleteItem(String id) throws Exception
 	{
 		requester.deleteObject(baseUrl + id);
+	}
+	
+	public ET getItem(long id) throws Exception
+	{
+		return getItem(""+id);
+	}
+	
+	public void updateItem(long id, ET item) throws Exception
+	{
+		updateItem(""+id, item);
+	}
+	
+	public void deleteItem(long id) throws Exception
+	{
+		deleteItem(""+id);
 	}
 }

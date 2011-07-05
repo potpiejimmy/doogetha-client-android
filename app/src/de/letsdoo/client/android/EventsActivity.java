@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.Events;
+import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 
 public class EventsActivity extends ListActivity implements OnItemClickListener {
@@ -35,7 +36,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
     	
     	this.dataLoader = new DataLoader();
     	
-    	if (((Letsdoo)getApplication()).getPreferences().getString("authtoken", null) == null) {
+    	if (!Utils.getApp(this).isLoggedIn()) {
     		login();
     	} else {
 			refresh();
@@ -111,7 +112,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
 		{
 	    	Events msgs = null;
 	    	try{
-	    		msgs = ((Letsdoo)getApplication()).getRestAccessor().getItems();
+	    		msgs = Utils.getApp(EventsActivity.this).getEventsAccessor().getItems();
 	    	} catch (Exception ex) {
 	    		ex.printStackTrace();
 	    		msgs = new Events();

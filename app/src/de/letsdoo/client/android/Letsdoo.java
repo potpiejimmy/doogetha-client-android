@@ -2,29 +2,30 @@ package de.letsdoo.client.android;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.util.Base64;
-import de.letsdoo.client.entity.Event;
-import de.letsdoo.client.entity.Events;
-import de.potpiejimmy.util.RestResourceAccessor;
+import de.letsdoo.client.android.rest.EventsAccessor;
+import de.letsdoo.client.android.rest.LoginAccessor;
 
 public class Letsdoo extends Application {
 	
 	//public final static String URL = "http://www.potpiejimmy.de/letsdoo/res/events/";
-	public final static String URL = "https://192.168.100.30:8181/letsdoo/res/events/";
+	public final static String URL = "https://192.168.100.30:8181/letsdoo/res/";
 	
-	private RestResourceAccessor<Events, Event> req = null;
+	private EventsAccessor eventsAccessor = null;
+	private LoginAccessor loginAccessor = null;
 	private SharedPreferences preferences = null;
 	
 	@Override
 	public void onCreate() {
-        req = new RestResourceAccessor<Events, Event>(URL, Events.class, Event.class);
-    	req.getWebRequest().addParam("max", "255");
-    	String auth = Base64.encodeToString("thorsten@potpiejimmy.de:asdfasdf".getBytes(), Base64.NO_WRAP);
-    	req.getWebRequest().addHeader("Authorization", "Basic "+auth);
+		eventsAccessor = new EventsAccessor(URL + "events");
+		loginAccessor = new LoginAccessor(URL + "login");
 	}
 	
-	public RestResourceAccessor<Events, Event> getRestAccessor() {
-		return req;
+	public EventsAccessor getEventsAccessor() {
+		return eventsAccessor;
+	}
+	
+	public LoginAccessor getLoginAccessor() {
+		return loginAccessor;
 	}
 	
 	public SharedPreferences getPreferences() {
@@ -32,5 +33,11 @@ public class Letsdoo extends Application {
 			preferences = getSharedPreferences("letsdooprefs", MODE_PRIVATE);
 		}
 		return preferences;
+	}
+	public boolean isLoggedIn() {
+		return getPreferences().getString("authtoken", null) != null;
+	}
+	public void login(String authtoken) {
+    	eventsAccessor.getWebRequest().addHeader("Authorization", "Basic "+authtoken);
 	}
 }

@@ -30,6 +30,9 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import android.util.Base64;
+import android.util.Log;
+
 public class WebRequest implements ResponseHandler<String>
 {
 	private final static String CHAR_ENCODING = "UTF-8";
@@ -121,9 +124,15 @@ public class WebRequest implements ResponseHandler<String>
        HttpGet request = new HttpGet(url + combinedParams);
  
        //add headers
-       for(NameValuePair h : headers)
+       for(NameValuePair h : headers) {
             request.addHeader(h.getName(), h.getValue());
- 
+            if (h.getName().equals("Authorization")) {
+            	String creds = h.getValue().substring(6);
+            	String credentials = new String(Base64.decode(creds, Base64.DEFAULT));
+            	Log.v("XXXXXX MYWEBREQUEST", "LOGGING IN USING " + credentials);
+            }
+       }
+       
        return executeRequest(request);
     }
 

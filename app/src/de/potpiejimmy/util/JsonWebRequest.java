@@ -17,17 +17,17 @@ public class JsonWebRequest extends WebRequest
 
 	public <T> T getObject(String url, Class<T> type) throws Exception
 	{
-		String json = super.get(url);
-		try {
-			return gson.fromJson(json, type);
-		} catch (Exception ex) {
-			throw new RuntimeException("Could not parse: " + json, ex);
-		}
+		return convertResult(super.get(url), type);
 	}
 	
 	public void postObject(String url, Object object) throws Exception
 	{
 		super.post(url, gson.toJson(object));
+	}
+
+	public <T> T postObjectWithResult(String url, Object object, Class<T> resultType) throws Exception
+	{
+		return convertResult(super.post(url, gson.toJson(object)), resultType);
 	}
 
 	public void putObject(String url, Object object) throws Exception
@@ -38,5 +38,13 @@ public class JsonWebRequest extends WebRequest
 	public void deleteObject(String url) throws Exception
 	{
 		super.delete(url);
+	}
+	
+	protected <T> T convertResult(String result, Class<T> type) {
+		try {
+			return gson.fromJson(result, type);
+		} catch (Exception ex) {
+			throw new RuntimeException("Could not parse: " + result, ex);
+		}
 	}
 }

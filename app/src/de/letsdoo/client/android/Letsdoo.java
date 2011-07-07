@@ -7,8 +7,8 @@ import de.letsdoo.client.android.rest.LoginAccessor;
 
 public class Letsdoo extends Application {
 	
-	//public final static String URL = "http://www.potpiejimmy.de/letsdoo/res/events/";
-	public final static String URL = "https://192.168.100.30:8181/letsdoo/res/";
+	public final static String URL = "https://www.potpiejimmy.de:8181/letsdoo/res/";
+	//public final static String URL = "https://192.168.100.30:8181/letsdoo/res/";
 	
 	private EventsAccessor eventsAccessor = null;
 	private LoginAccessor loginAccessor = null;
@@ -38,6 +38,6 @@ public class Letsdoo extends Application {
 		return getPreferences().getString("authtoken", null) != null;
 	}
 	public void login(String authtoken) {
-    	eventsAccessor.getWebRequest().addHeader("Authorization", "Basic "+authtoken);
+    	eventsAccessor.getWebRequest().setHeader("Authorization", "Basic "+authtoken);
 	}
 }

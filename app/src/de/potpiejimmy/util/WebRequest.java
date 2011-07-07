@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,8 +37,8 @@ public class WebRequest implements ResponseHandler<String>
 {
 	private final static String CHAR_ENCODING = "UTF-8";
 	
-    private List <NameValuePair> params;
-    private List <NameValuePair> headers;
+    private Map<String,String> params;
+    private Map<String,String> headers;
     private String contentType = null;
  
     private int responseCode;
@@ -65,8 +65,8 @@ public class WebRequest implements ResponseHandler<String>
  
     public WebRequest()
     {
-        params = new ArrayList<NameValuePair>();
-        headers = new ArrayList<NameValuePair>();
+        params = new HashMap<String,String>();
+        headers = new HashMap<String,String>();
 
         HttpParams httpParams = new BasicHttpParams();
     	HttpConnectionParams.setSoTimeout(httpParams, 5000);
@@ -86,14 +86,14 @@ public class WebRequest implements ResponseHandler<String>
         		httpParams, schemeRegistry), httpParams);
     }
  
-    public void addParam(String name, String value)
+    public void setParam(String name, String value)
     {
-        params.add(new BasicNameValuePair(name, value));
+        params.put(name, value);
     }
  
-    public void addHeader(String name, String value)
+    public void setHeader(String name, String value)
     {
-        headers.add(new BasicNameValuePair(name, value));
+        headers.put(name, value);
     }
  
     public String getContentType()
@@ -113,9 +113,9 @@ public class WebRequest implements ResponseHandler<String>
         if (!params.isEmpty())
         {
             combinedParams.append('?');
-            for (NameValuePair p : params)
+            for (String param : params.keySet())
             {
-                String paramString = p.getName() + "=" + URLEncoder.encode(p.getValue(), CHAR_ENCODING);
+                String paramString = param + "=" + URLEncoder.encode(params.get(param), CHAR_ENCODING);
                 if (combinedParams.length() > 1) combinedParams.append('&');
                 combinedParams.append(paramString);
             }
@@ -124,13 +124,13 @@ public class WebRequest implements ResponseHandler<String>
        HttpGet request = new HttpGet(url + combinedParams);
  
        //add headers
-       for(NameValuePair h : headers) {
-            request.addHeader(h.getName(), h.getValue());
-            if (h.getName().equals("Authorization")) {
-            	String creds = h.getValue().substring(6);
-            	String credentials = new String(Base64.decode(creds, Base64.DEFAULT));
-            	Log.v("XXXXXX MYWEBREQUEST", "LOGGING IN USING " + credentials);
-            }
+       for(String header : headers.keySet()) {
+            request.addHeader(header, headers.get(header));
+//            if (header.equals("Authorization")) {
+//            	String creds = headers.get(header).substring(6);
+//            	String credentials = new String(Base64.decode(creds, Base64.DEFAULT));
+//            	Log.v("XXXXXX MYWEBREQUEST", "LOGGING IN USING " + credentials);
+//            }
        }
        
        return executeRequest(request);
@@ -149,8 +149,8 @@ public class WebRequest implements ResponseHandler<String>
 	protected String putImpl(HttpEntityEnclosingRequestBase request, String msg) throws Exception
 	{
         //add headers
-        for(NameValuePair h : headers)
-            request.addHeader(h.getName(), h.getValue());
+        for(String header : headers.keySet())
+            request.addHeader(header, headers.get(header));
 
         StringEntity entity = new StringEntity(msg, CHAR_ENCODING);
     	if (contentType != null)

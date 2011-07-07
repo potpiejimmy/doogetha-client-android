@@ -17,6 +17,9 @@ import de.potpiejimmy.util.DroidLib;
 public class LoginActivity extends Activity implements OnClickListener {
 
 	private Button loginbutton = null;
+	private Button registerbutton = null;
+	private Button unregisterbutton = null;
+	private EditText email = null;
 	
     /** Called when the activity is first created. */
     @Override
@@ -24,13 +27,16 @@ public class LoginActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.login);
         
-    	Button registerbutton = (Button) findViewById(R.id.registerbutton);
+    	registerbutton = (Button) findViewById(R.id.registerbutton);
+    	unregisterbutton = (Button) findViewById(R.id.unregisterbutton);
     	loginbutton = (Button) findViewById(R.id.loginbutton);
+		email = (EditText) findViewById(R.id.email);
     	
     	registerbutton.setOnClickListener(this);
     	loginbutton.setOnClickListener(this);
+    	unregisterbutton.setOnClickListener(this);
     	
-    	loginbutton.setEnabled(false);
+    	switchUIRegistered(false);
     }
     
 	public void onClick(View view) {
@@ -42,12 +48,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 			case R.id.loginbutton:
 				login();
 				break;
+			case R.id.unregisterbutton:
+				switchUIRegistered(false);
+				break;
 		}
 	}
 
 	protected void register()
 	{
-		EditText email = (EditText) findViewById(R.id.email);
 		new RegisterTask(email.getText().toString()).go("Creating login credentials...");
 	}
 	
@@ -67,18 +75,28 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void registerSuccess(String logintoken)
 	{
     	//String authtoken = Base64.encodeToString("thorsten@potpiejimmy.de:asdfasdf".getBytes(), Base64.NO_WRAP);
-    	((TextView)findViewById(R.id.registerresulttext)).setText("Successful, got token: " + logintoken);
+    	((TextView)findViewById(R.id.registerresulttext)).setText(
+    			"A request for creating your login credentials has been sent out successfully. "+
+    			"Please check your email and click the confirm link in the mail to verify your account. "+
+    			"Click the Login button below after you have done so to log in.");
     	setLoginToken(logintoken);
-    	loginbutton.setEnabled(true);
+    	switchUIRegistered(true);
+	}
+	
+	protected void switchUIRegistered(boolean registered) 
+	{
+		loginbutton.setEnabled(registered);
+		unregisterbutton.setEnabled(registered);
+		registerbutton.setEnabled(!registered);
+		email.setEnabled(!registered);
 	}
 	
 	protected void loginSuccess(String credentials)
 	{
 		String userid = credentials.substring(0, credentials.indexOf(":"));
 		String authkey = credentials.substring(credentials.indexOf(":")+1);
-		BigInteger authkeyI = new BigInteger(authkey, 16);
-		BigInteger password = authkeyI.xor(new BigInteger(getLoginToken(), 16));
-    	String authtoken = Base64.encodeToString((userid + ":" + password.toString(16)).getBytes(), Base64.NO_WRAP);
+		String password = Utils.xorHex(authkey, getLoginToken());
+    	String authtoken = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
     	Utils.getApp(this).login(authtoken);
     	setResult(RESULT_OK);
     	finish();

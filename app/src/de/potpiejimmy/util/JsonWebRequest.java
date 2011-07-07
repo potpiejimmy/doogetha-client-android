@@ -12,7 +12,7 @@ public class JsonWebRequest extends WebRequest
 		this.gson = new GsonBuilder().create();
 		
     	setContentType("application/json; charset=utf-8");
-    	addHeader("Accept", "application/json");
+    	setHeader("Accept", "application/json");
 	}
 
 	public <T> T getObject(String url, Class<T> type) throws Exception

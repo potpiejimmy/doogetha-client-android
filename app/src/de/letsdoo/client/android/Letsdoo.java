@@ -8,9 +8,9 @@ import de.letsdoo.client.android.rest.RegisterAccessor;
 
 public class Letsdoo extends Application {
 	
-	//public final static String URL = "https://www.potpiejimmy.de:8181/letsdoo/res/";
-	//public final static String URL = "https://192.168.100.30:8181/letsdoo/res/";
-	public final static String URL = "http://172.18.119.203:8089/letsdoo/res/";
+	//public final static String URL = "https://www.potpiejimmy.de:8181/doogetha/res/";
+	public final static String URL = "https://192.168.100.30:8181/doogetha/res/";
+	//public final static String URL = "http://172.18.119.203:8089/doogetha/res/";
 	
 	private EventsAccessor eventsAccessor = null;
 	private RegisterAccessor registerAccessor = null;

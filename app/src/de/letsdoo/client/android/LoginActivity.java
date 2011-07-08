@@ -106,7 +106,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     	finish();
 	}
 	
-	protected class RegisterTask extends AsyncUITask<String>
+	protected class RegisterTask extends AsyncUITask<String[]>
 	{
 		private String email = null;
 		
@@ -116,19 +116,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 
 		@Override
-		public String doTask() {
-			String result = null;
+		public String[] doTask() {
+			String[] result = null;
 			try {
-				result = Utils.getApp(LoginActivity.this).getRegisterAccessor().insertItemWithResult(email);
+				result = new String[] {Utils.getApp(LoginActivity.this).getRegisterAccessor().insertItemWithResult(email), null};
 			} catch (Exception ex) {
-				result = ex.toString();
+				result = new String[] {null, ex.toString()};
 			}
 			return result;
 		}
 
 		@Override
-		public void done(String result) {
-			registerSuccess(result);
+		public void done(String[] result) {
+			String registertoken = result[0];
+			String exceptiontext = result[1];
+			if (registertoken != null) registerSuccess(registertoken);
+			else DroidLib.alert(LoginActivity.this, "Sorry, could not send registration request.");
 		}
 	}
 	
@@ -155,7 +158,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			String credentials = result[0];
 			String exceptionText = result[1];
 			if (credentials != null) fetchCredentialsSuccess(credentials);
-			else DroidLib.alert(LoginActivity.this, "Login failed: " + exceptionText);
+			else DroidLib.alert(LoginActivity.this, "Sorry, registration failed. Please make sure you have confirmed your registration request by clicking the confirmation link in your registration email.");
 		}
 	}
 }

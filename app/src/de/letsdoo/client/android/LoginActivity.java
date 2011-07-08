@@ -61,7 +61,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	protected void login()
 	{
-		new LoginTask(getLoginToken()).go("Logging in...");
+		new FetchCredentialsTask(getLoginToken()).go("Logging in...");
 	}
 	
 	protected String getLoginToken() {
@@ -70,6 +70,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	protected void setLoginToken(String logintoken) {
     	Utils.getApp(this).getPreferences().edit().putString("logintoken", logintoken).commit();
+	}
+	
+	protected void removeLoginToken() {
+    	Utils.getApp(this).getPreferences().edit().remove("logintoken").commit();
 	}
 	
 	protected void registerSuccess(String logintoken)
@@ -91,13 +95,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		email.setEnabled(!registered);
 	}
 	
-	protected void loginSuccess(String credentials)
+	protected void fetchCredentialsSuccess(String authkey)
 	{
-		String userid = credentials.substring(0, credentials.indexOf(":"));
-		String authkey = credentials.substring(credentials.indexOf(":")+1);
-		String password = Utils.xorHex(authkey, getLoginToken());
-    	String authtoken = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
-    	Utils.getApp(this).login(authtoken);
+		String id = authkey.substring(0, authkey.indexOf(":"));
+		String password = authkey.substring(authkey.indexOf(":")+1);
+		password = Utils.xorHex(password, getLoginToken());
+		removeLoginToken();
+    	Utils.getApp(this).register(id + ":" + password);
     	setResult(RESULT_OK);
     	finish();
 	}
@@ -115,7 +119,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		public String doTask() {
 			String result = null;
 			try {
-				result = Utils.getApp(LoginActivity.this).getLoginAccessor().insertItemWithResult(email);
+				result = Utils.getApp(LoginActivity.this).getRegisterAccessor().insertItemWithResult(email);
 			} catch (Exception ex) {
 				result = ex.toString();
 			}
@@ -128,11 +132,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	protected class LoginTask extends AsyncUITask<String[]>
+	protected class FetchCredentialsTask extends AsyncUITask<String[]>
 	{
 		private String logintoken = null;
 		
-		public LoginTask(String logintoken) {
+		public FetchCredentialsTask(String logintoken) {
 			super(LoginActivity.this);
 			this.logintoken = logintoken;
 		}
@@ -140,7 +144,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		@Override
 		public String[] doTask() {
 			try {
-				return new String[] {Utils.getApp(LoginActivity.this).getLoginAccessor().getItem(logintoken),null};
+				return new String[] {Utils.getApp(LoginActivity.this).getRegisterAccessor().getItem(logintoken),null};
 			} catch (Exception ex) {
 				return new String[] {null,ex.toString()};
 			}
@@ -150,7 +154,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		public void done(String[] result) {
 			String credentials = result[0];
 			String exceptionText = result[1];
-			if (credentials != null) loginSuccess(credentials);
+			if (credentials != null) fetchCredentialsSuccess(credentials);
 			else DroidLib.alert(LoginActivity.this, "Login failed: " + exceptionText);
 		}
 	}

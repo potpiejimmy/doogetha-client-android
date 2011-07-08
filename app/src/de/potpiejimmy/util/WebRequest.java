@@ -126,11 +126,11 @@ public class WebRequest implements ResponseHandler<String>
        //add headers
        for(String header : headers.keySet()) {
             request.addHeader(header, headers.get(header));
-//            if (header.equals("Authorization")) {
-//            	String creds = headers.get(header).substring(6);
-//            	String credentials = new String(Base64.decode(creds, Base64.DEFAULT));
-//            	Log.v("XXXXXX MYWEBREQUEST", "LOGGING IN USING " + credentials);
-//            }
+            if (header.equals("Authorization")) {
+            	String creds = headers.get(header).substring(6);
+            	String credentials = new String(Base64.decode(creds, Base64.DEFAULT));
+            	Log.v("XXXXXX MYWEBREQUEST", "LOGGING IN USING " + credentials);
+            }
        }
        
        return executeRequest(request);

@@ -4,19 +4,23 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import de.letsdoo.client.android.rest.EventsAccessor;
 import de.letsdoo.client.android.rest.LoginAccessor;
+import de.letsdoo.client.android.rest.RegisterAccessor;
 
 public class Letsdoo extends Application {
 	
-	public final static String URL = "https://www.potpiejimmy.de:8181/letsdoo/res/";
+	//public final static String URL = "https://www.potpiejimmy.de:8181/letsdoo/res/";
 	//public final static String URL = "https://192.168.100.30:8181/letsdoo/res/";
+	public final static String URL = "http://172.18.119.203:8089/letsdoo/res/";
 	
 	private EventsAccessor eventsAccessor = null;
+	private RegisterAccessor registerAccessor = null;
 	private LoginAccessor loginAccessor = null;
 	private SharedPreferences preferences = null;
 	
 	@Override
 	public void onCreate() {
 		eventsAccessor = new EventsAccessor(URL + "events");
+		registerAccessor = new RegisterAccessor(URL + "register");
 		loginAccessor = new LoginAccessor(URL + "login");
 	}
 	
@@ -28,16 +32,34 @@ public class Letsdoo extends Application {
 		return loginAccessor;
 	}
 	
+	public RegisterAccessor getRegisterAccessor() {
+		return registerAccessor;
+	}
+	
 	public SharedPreferences getPreferences() {
 		if (preferences == null) {
 			preferences = getSharedPreferences("letsdooprefs", MODE_PRIVATE);
 		}
 		return preferences;
 	}
-	public boolean isLoggedIn() {
-		return getPreferences().getString("authtoken", null) != null;
+	
+	public String getAuthtoken() {
+		return getPreferences().getString("authtoken", null);
 	}
-	public void login(String authtoken) {
-    	eventsAccessor.getWebRequest().setHeader("Authorization", "Basic "+authtoken);
+	
+	public void setAuthtoken(String authtoken) {
+		getPreferences().edit().putString("authtoken", authtoken).commit();
+	}
+	
+	public boolean isRegistered() {
+		return false; //getAuthtoken() != null;
+	}
+	
+	public void register(String authtoken) {
+		setAuthtoken(authtoken);
+	}
+	
+	public void newSession(String sessionkey) {
+    	eventsAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
 	}
 }

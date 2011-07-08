@@ -3,14 +3,15 @@ package de.letsdoo.client.android;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.Events;
 import de.letsdoo.client.util.Utils;
@@ -36,10 +37,10 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
     	
     	this.dataLoader = new DataLoader();
     	
-    	if (!Utils.getApp(this).isLoggedIn()) {
-    		login();
+    	if (!Utils.getApp(this).isRegistered()) {
+    		register();
     	} else {
-			refresh();
+			startSession();
     	}
     }
     
@@ -86,15 +87,26 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
     	dataLoader.go(getString(R.string.loading));
     }
     
-    protected void login()
+    protected void register()
     {
     	Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
     	startActivityForResult(intent, 0);
     }
     
+    protected void startSession()
+    {
+    	new SessionLoginTask(Utils.getApp(this).getAuthtoken()).go("Starting session...");
+    }
+    
+    protected void sessionCreateSuccess(String sessionkey)
+    {
+    	Utils.getApp(this).newSession(sessionkey);
+    	refresh();
+    }
+    
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (resultCode == RESULT_OK)
-    		refresh();
+    		startSession();
     }
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -126,6 +138,36 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
 			data.clear();
 			if (result != null && result.getEvents() != null)
 				for (Event e : result.getEvents()) data.add(e);
+		}
+	}
+	
+	protected class SessionLoginTask extends AsyncUITask<String>
+	{
+		private String authkey = null;
+		
+		public SessionLoginTask(String authkey) 
+		{
+			super(EventsActivity.this);
+			this.authkey = authkey;
+		}
+		
+		public String doTask()
+		{
+			String result = null;
+			try {
+				result = Utils.getApp(EventsActivity.this).getLoginAccessor().insertItemWithResult(authkey);
+			} catch (Exception ex) {
+				result = ex.toString();
+			}
+			return result;
+		}
+		
+		public void done(String result)
+		{
+	    	String userid = result.substring(0, result.indexOf(":"));
+	    	String password = result.substring(result.indexOf(":")+1);
+	    	String sessionkey = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
+	    	sessionCreateSuccess(sessionkey);
 		}
 	}
 }

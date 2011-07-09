@@ -1,6 +1,6 @@
 package de.letsdoo.client.entity;
 
-public class Event {
+public class Event implements java.io.Serializable {
 	private Integer id = null;
 	private String name = null;
 	private String description = null;

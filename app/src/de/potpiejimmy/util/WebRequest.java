@@ -95,6 +95,26 @@ public class WebRequest implements ResponseHandler<String>
     {
         headers.put(name, value);
     }
+    
+    public String getParam(String name)
+    {
+    	return params.get(name);
+    }
+ 
+    public String getHeader(String name)
+    {
+    	return headers.get(name);
+    }
+    
+    public void removeParam(String name)
+    {
+    	params.remove(name);
+    }
+    
+    public void removeHeader(String name)
+    {
+    	headers.remove(name);
+    }
  
     public String getContentType()
     {

@@ -8,8 +8,8 @@ import de.letsdoo.client.android.rest.RegisterAccessor;
 
 public class Letsdoo extends Application {
 	
-	//public final static String URL = "https://www.potpiejimmy.de:8181/doogetha/res/";
-	public final static String URL = "https://192.168.100.30:8181/doogetha/res/";
+	public final static String URL = "https://www.potpiejimmy.de/doogetha/res/";
+	//public final static String URL = "https://192.168.100.30:8181/doogetha/res/";
 	//public final static String URL = "http://172.18.119.203:8089/doogetha/res/";
 	
 	private EventsAccessor eventsAccessor = null;
@@ -51,15 +51,32 @@ public class Letsdoo extends Application {
 		getPreferences().edit().putString("authtoken", authtoken).commit();
 	}
 	
+	public void removeAuthtoken() {
+		getPreferences().edit().remove("authtoken").commit();
+	}
+	
 	public boolean isRegistered() {
-		return false; //getAuthtoken() != null;
+		return getAuthtoken() != null;
 	}
 	
 	public void register(String authtoken) {
 		setAuthtoken(authtoken);
 	}
 	
+	public void unregister() {
+		removeAuthtoken();
+		removeSession();
+	}
+	
+	public void removeSession() {
+    	eventsAccessor.getWebRequest().removeHeader("Authorization");
+	}
+	
 	public void newSession(String sessionkey) {
     	eventsAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
+	}
+	
+	public boolean hasSession() {
+    	return eventsAccessor.getWebRequest().getHeader("Authorization") != null;
 	}
 }

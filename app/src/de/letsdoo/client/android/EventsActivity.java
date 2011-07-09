@@ -5,21 +5,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.Events;
 import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
+import de.potpiejimmy.util.DroidLib;
 
-public class EventsActivity extends ListActivity implements OnItemClickListener {
+public class EventsActivity extends ListActivity implements OnItemClickListener, OnClickListener {
 
 	private ArrayAdapter<Event> data = null;
+	
+	private Button newactivitybutton = null;
 	
 	private DataLoader dataLoader = null;
 	
@@ -29,6 +35,10 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.main);
         
+        newactivitybutton = (Button) findViewById(R.id.newactivitybutton);
+        
+        newactivitybutton.setOnClickListener(this);
+        
     	this.data = new ArrayAdapter<Event>(this, R.layout.event_item);
     	this.setListAdapter(data);
     	getListView().setTextFilterEnabled(true);
@@ -37,6 +47,8 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
     	
     	this.dataLoader = new DataLoader();
     	
+    	updateUI();
+    	
     	if (!Utils.getApp(this).isRegistered()) {
     		register();
     	} else {
@@ -44,11 +56,29 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
     	}
     }
     
+    protected void updateUI() {
+    	boolean loggedIn = Utils.getApp(this).hasSession();
+    	newactivitybutton.setEnabled(loggedIn);
+    	if (!loggedIn) data.clear();
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.main, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context, menu);
         return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.unregister:
+            unregister();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
     
     @Override
@@ -70,21 +100,26 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
       }
     }
     
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-//        case R.id.quit:
-//            finish();
-//            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
-    
+	public void onClick(View view) {
+		switch (view.getId())
+		{
+			case R.id.newactivitybutton:
+				addEvent();
+				break;
+		}
+	}
+	
     protected void refresh()
     {
     	dataLoader.go(getString(R.string.loading));
+    	updateUI();
+    }
+    
+    protected void unregister()
+    {
+    	Utils.getApp(this).unregister();
+    	updateUI();
+    	register();
     }
     
     protected void register()
@@ -106,15 +141,24 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
     
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (resultCode == RESULT_OK)
-    		startSession();
+    	{
+    		if (!Utils.getApp(this).hasSession()) startSession();
+    		else refresh();
+    	}
     }
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	{
-//    	Intent intent = new Intent(getApplicationContext(), EditAct.class);
-//    	intent.putExtra("msg", data.getItem(position));
-//    	startActivityForResult(intent, 0);
+    	Intent intent = new Intent(getApplicationContext(), EventEditActivity.class);
+    	intent.putExtra("event", data.getItem(position));
+    	startActivityForResult(intent, 0);
 	}
+	
+    protected void addEvent()
+    {
+    	Intent intent = new Intent(getApplicationContext(), EventEditActivity.class);
+    	startActivityForResult(intent, 0);
+    }
 	
 	protected class DataLoader extends AsyncUITask<Events>
 	{
@@ -141,7 +185,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
 		}
 	}
 	
-	protected class SessionLoginTask extends AsyncUITask<String>
+	protected class SessionLoginTask extends AsyncUITask<String[]>
 	{
 		private String authkey = null;
 		
@@ -151,23 +195,31 @@ public class EventsActivity extends ListActivity implements OnItemClickListener 
 			this.authkey = authkey;
 		}
 		
-		public String doTask()
+		public String[] doTask()
 		{
-			String result = null;
+			String[] result = null;
 			try {
-				result = Utils.getApp(EventsActivity.this).getLoginAccessor().insertItemWithResult(authkey);
+				result = new String[] {Utils.getApp(EventsActivity.this).getLoginAccessor().insertItemWithResult(authkey),null};
 			} catch (Exception ex) {
-				result = ex.toString();
+				result = new String[] {null,ex.toString()};
 			}
 			return result;
 		}
 		
-		public void done(String result)
+		public void done(String[] result)
 		{
-	    	String userid = result.substring(0, result.indexOf(":"));
-	    	String password = result.substring(result.indexOf(":")+1);
-	    	String sessionkey = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
-	    	sessionCreateSuccess(sessionkey);
+			String sessioncredentials = result[0];
+			if (sessioncredentials != null)
+			{
+		    	String userid = sessioncredentials.substring(0, sessioncredentials.indexOf(":"));
+		    	String password = sessioncredentials.substring(sessioncredentials.indexOf(":")+1);
+		    	String sessionkey = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
+		    	sessionCreateSuccess(sessionkey);
+			}
+			else
+			{
+				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
+			}
 		}
 	}
 }

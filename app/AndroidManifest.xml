@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name="LoginActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity android:name="EventEditActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
 
     </application>
 

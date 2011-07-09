@@ -4,4 +4,7 @@
     <string name="app_name">Doogetha</string>
     <string name="loading">Daten laden...</string>
     <string name="pleaseregister">Your login credentials are currently unknown. Please register using your email address.</string>
+    <string name="unregister">Unregister</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
 </resources>

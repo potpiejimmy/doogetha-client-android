@@ -1,10 +1,7 @@
 package de.letsdoo.client.android;
 
-import java.math.BigInteger;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,6 +17,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private Button registerbutton = null;
 	private Button unregisterbutton = null;
 	private EditText email = null;
+	private TextView registerresulttext = null;
 	
     /** Called when the activity is first created. */
     @Override
@@ -31,12 +29,16 @@ public class LoginActivity extends Activity implements OnClickListener {
     	unregisterbutton = (Button) findViewById(R.id.unregisterbutton);
     	loginbutton = (Button) findViewById(R.id.loginbutton);
 		email = (EditText) findViewById(R.id.email);
+		registerresulttext = (TextView) findViewById(R.id.registerresulttext);
     	
     	registerbutton.setOnClickListener(this);
     	loginbutton.setOnClickListener(this);
     	unregisterbutton.setOnClickListener(this);
     	
-    	switchUIRegistered(false);
+    	if (getLoginToken() != null)
+    		registerSuccess(getLoginToken());  // display login token and PIN again when reopening
+    	else
+    		switchUIRegistered(false);
     }
     
 	public void onClick(View view) {
@@ -56,7 +58,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	protected void register()
 	{
-		new RegisterTask(email.getText().toString()).go("Creating login credentials...");
+		new RegisterTask(email.getText().toString()).go("Sending registration request...");
 	}
 	
 	protected void login()
@@ -78,11 +80,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 	
 	protected void registerSuccess(String logintoken)
 	{
+		String pin = logintoken.substring(logintoken.indexOf(":")+1);
     	//String authtoken = Base64.encodeToString("thorsten@potpiejimmy.de:asdfasdf".getBytes(), Base64.NO_WRAP);
-    	((TextView)findViewById(R.id.registerresulttext)).setText(
-    			"A request for creating your login credentials has been sent out successfully. "+
+    	registerresulttext.setText(
+    			"A request for creating your login credentials has been sent out successfully.\n"+
+    			"\nYour Request PIN is " + pin + "\n\n"+
     			"Please check your email and click the confirm link in the mail to verify your account. "+
-    			"Click the Login button below after you have done so to log in.");
+    			"After you have confirmed your registration, you may log in using the button below.");
     	setLoginToken(logintoken);
     	switchUIRegistered(true);
 	}
@@ -93,13 +97,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 		unregisterbutton.setEnabled(registered);
 		registerbutton.setEnabled(!registered);
 		email.setEnabled(!registered);
+		if (!registered) registerresulttext.setText(" ");
 	}
 	
 	protected void fetchCredentialsSuccess(String authkey)
 	{
 		String id = authkey.substring(0, authkey.indexOf(":"));
 		String password = authkey.substring(authkey.indexOf(":")+1);
-		password = Utils.xorHex(password, getLoginToken());
+		String logintoken = getLoginToken();
+		password = Utils.xorHex(password, logintoken.substring(0, logintoken.indexOf(":")));
 		removeLoginToken();
     	Utils.getApp(this).register(id + ":" + password);
     	setResult(RESULT_OK);
@@ -147,7 +153,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		@Override
 		public String[] doTask() {
 			try {
-				return new String[] {Utils.getApp(LoginActivity.this).getRegisterAccessor().getItem(logintoken),null};
+				return new String[] {Utils.getApp(LoginActivity.this).getRegisterAccessor().getItem(logintoken.substring(0, logintoken.indexOf(":"))),null};
 			} catch (Exception ex) {
 				return new String[] {null,ex.toString()};
 			}

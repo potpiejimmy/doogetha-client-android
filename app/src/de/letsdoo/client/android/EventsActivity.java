@@ -14,6 +14,8 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.Events;
@@ -65,7 +67,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.context, menu);
+        inflater.inflate(R.menu.options, menu);
         return true;
     }
     
@@ -84,17 +86,17 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
-//      MenuInflater inflater = getMenuInflater();
-//      inflater.inflate(R.menu.context, menu);
+      MenuInflater inflater = getMenuInflater();
+      inflater.inflate(R.menu.context, menu);
     }
     
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-//      AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+      AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
       switch (item.getItemId()) {
-//      case R.id.delete:
-//  		new Deleter(data.getItem(info.position)).go(getString(R.string.deletingitem));
-//        return true;
+      case R.id.deleteitem:
+  		new Deleter(data.getItem(info.position)).go("Lšschen...");
+        return true;
       default:
         return super.onContextItemSelected(item);
       }
@@ -220,6 +222,34 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			{
 				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
 			}
+		}
+	}
+	
+	protected class Deleter extends AsyncUITask<String>
+	{
+		private Event event = null;
+		
+		public Deleter(Event event)
+		{
+			super(EventsActivity.this);
+			this.event = event;
+		}
+		
+		public String doTask()
+		{
+	    	try{
+	    		Utils.getApp(EventsActivity.this).getEventsAccessor().deleteItem(event.getId());
+	    		return "Gelšscht";
+	    	} catch (Exception ex) {
+	    		ex.printStackTrace();
+	    		return ex.toString();
+	    	}
+		}
+		
+		public void done(String result)
+		{
+			data.remove(event);
+    		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
 		}
 	}
 }

@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpDelete;
@@ -18,6 +17,7 @@ import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -25,13 +25,9 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-
-import android.util.Base64;
-import android.util.Log;
 
 public class WebRequest implements ResponseHandler<String>
 {
@@ -143,15 +139,7 @@ public class WebRequest implements ResponseHandler<String>
  
        HttpGet request = new HttpGet(url + combinedParams);
  
-       //add headers
-       for(String header : headers.keySet()) {
-            request.addHeader(header, headers.get(header));
-            if (header.equals("Authorization")) {
-            	String creds = headers.get(header).substring(6);
-            	String credentials = new String(Base64.decode(creds, Base64.DEFAULT));
-            	Log.v("XXXXXX MYWEBREQUEST", "LOGGING IN USING " + credentials);
-            }
-       }
+       setRequestHeaders(request);
        
        return executeRequest(request);
     }
@@ -168,9 +156,7 @@ public class WebRequest implements ResponseHandler<String>
 	
 	protected String putImpl(HttpEntityEnclosingRequestBase request, String msg) throws Exception
 	{
-        //add headers
-        for(String header : headers.keySet())
-            request.addHeader(header, headers.get(header));
+		setRequestHeaders(request);
 
         StringEntity entity = new StringEntity(msg, CHAR_ENCODING);
     	if (contentType != null)
@@ -184,8 +170,23 @@ public class WebRequest implements ResponseHandler<String>
 	{
 		HttpDelete request = new HttpDelete(url);
  
+		setRequestHeaders(request);
+		
         return executeRequest(request);
     }
+	
+	protected void setRequestHeaders(HttpRequestBase request)
+	{
+       //add headers
+       for(String header : headers.keySet()) {
+            request.addHeader(header, headers.get(header));
+//            if (header.equals("Authorization")) {
+//            	String creds = headers.get(header).substring(6);
+//            	String credentials = new String(Base64.decode(creds, Base64.DEFAULT));
+//            	Log.v("XXXXXX MYWEBREQUEST", "LOGGING IN USING " + credentials);
+//            }
+       }
+	}
  
     protected String executeRequest(HttpUriRequest request) throws Exception
     {

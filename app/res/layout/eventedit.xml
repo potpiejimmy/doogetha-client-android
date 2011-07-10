@@ -4,33 +4,52 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-<TextView android:id="@+id/editlabel"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:textSize="18sp"
-    android:text="Aktivität:"
-    />
-<EditText android:id="@+id/edittext"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text=""
-    />
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    >
-	<Button android:id="@+id/editok"
-	    android:layout_width="match_parent" 
+    <LinearLayout android:layout_height="wrap_content"
+    		      android:id="@+id/linearLayout1"
+    		      android:layout_width="match_parent"
+    		      android:baselineAligned="false"
+    		      android:background="#f06060">
+        <ImageView android:layout_height="wrap_content"
+        		   android:id="@+id/imageView1"
+        		   android:src="@drawable/icon" 
+        		   android:layout_width="wrap_content">
+        </ImageView>
+        <TextView android:id="@+id/textView1"
+                  android:textAppearance="?android:attr/textAppearanceLarge" 
+                  android:text="Doogetha" android:layout_gravity="center" 
+                  android:layout_height="wrap_content" 
+                  android:layout_weight="0.0" 
+                  android:layout_width="wrap_content" 
+                  android:layout_marginLeft="10dip"
+                  android:textColor="#003000"></TextView>
+    </LinearLayout>
+	<TextView android:id="@+id/editlabel"
+	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
-               android:layout_weight="0.5"
-	    android:text="@string/ok"
+	    android:textSize="18sp"
+	    android:text="Aktivität:"
 	    />
-	<Button android:id="@+id/editcancel"
-	    android:layout_width="match_parent" 
+	<EditText android:id="@+id/edittext"
+	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
-               android:layout_weight="0.5"
-	    android:text="@string/cancel"
+	    android:text=""
 	    />
-</LinearLayout>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    >
+		<Button android:id="@+id/editok"
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+	               android:layout_weight="0.5"
+		    android:text="@string/ok"
+		    />
+		<Button android:id="@+id/editcancel"
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+	               android:layout_weight="0.5"
+		    android:text="@string/cancel"
+		    />
+	</LinearLayout>
 </LinearLayout>

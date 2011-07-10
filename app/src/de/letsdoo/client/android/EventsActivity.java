@@ -1,22 +1,24 @@
 package de.letsdoo.client.android;
 
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.Events;
 import de.letsdoo.client.util.Utils;
@@ -36,6 +38,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.main);
+        ((TextView)findViewById(R.id.versionlabel)).setText("Version " + Utils.getApp(this).getVersionName());
         
         newactivitybutton = (Button) findViewById(R.id.newactivitybutton);
         
@@ -56,6 +59,8 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     	} else {
 			startSession();
     	}
+    	
+    	checkVersion();
     }
     
     protected void updateUI() {
@@ -95,7 +100,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
       AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
       switch (item.getItemId()) {
       case R.id.deleteitem:
-  		new Deleter(data.getItem(info.position)).go("Lšschen...");
+  		new Deleter(data.getItem(info.position)).go("Löschen...");
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -161,6 +166,20 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     	Intent intent = new Intent(getApplicationContext(), EventEditActivity.class);
     	startActivityForResult(intent, 0);
     }
+    
+    protected void checkVersion()
+    {
+    	new VersionCheckTask().go("Checking version...");
+    }
+    
+    protected void newerVersionExists()
+    {
+    	DroidLib.alert(this, "A newer version of the application exists.", "Download now", new android.content.DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int i) {
+				DroidLib.invokeBrowser(EventsActivity.this, Letsdoo.DOWNLOADURL);
+			}
+    	});
+    }
 	
 	protected class DataLoader extends AsyncUITask<Events>
 	{
@@ -220,7 +239,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			}
 			else
 			{
-				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
+				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.", null, null);
 			}
 		}
 	}
@@ -239,7 +258,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		{
 	    	try{
 	    		Utils.getApp(EventsActivity.this).getEventsAccessor().deleteItem(event.getId());
-	    		return "Gelšscht";
+	    		return "Gelöscht";
 	    	} catch (Exception ex) {
 	    		ex.printStackTrace();
 	    		return ex.toString();
@@ -252,4 +271,35 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
 		}
 	}
+	
+	protected class VersionCheckTask extends AsyncUITask<String>
+	{
+		public VersionCheckTask() 
+		{
+			super(EventsActivity.this);
+		}
+		
+		public String doTask()
+		{
+			String result = null;
+			try {
+				result = Utils.getApp(EventsActivity.this).getVersionAccessor().getItems();
+			} catch (Exception ex) {
+				result = null;
+			}
+			return result;
+		}
+		
+		public void done(String result)
+		{
+			if (result == null) return; // could not fetch current version, ignore
+			try {
+				int currentVersion = Integer.parseInt(result);
+				if (currentVersion > Utils.getApp(EventsActivity.this).getVersionCode())
+					newerVersionExists();
+			} catch (NumberFormatException nfe) {
+				// no valid version value received, just ignore and do nothing
+			}
+		}
+	}	
 }

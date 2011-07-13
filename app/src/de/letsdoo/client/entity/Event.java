@@ -1,11 +1,15 @@
 package de.letsdoo.client.entity;
 
+import java.util.Date;
+
 public class Event implements java.io.Serializable {
 	private Integer id = null;
+	private Integer userId = null;
 	private String name = null;
 	private String description = null;
+    private Date eventtime;
 	private Integer state = null;
-	private String users = null;
+	private User[] users = null;
 	
 	public Event() {
 	}
@@ -46,11 +50,27 @@ public class Event implements java.io.Serializable {
 		this.state = state;
 	}
 
-	public String getUsers() {
+	public User[] getUsers() {
 		return users;
 	}
 
-	public void setUsers(String users) {
+	public void setUsers(User[] users) {
 		this.users = users;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Date getEventtime() {
+		return eventtime;
+	}
+
+	public void setEventtime(Date eventtime) {
+		this.eventtime = eventtime;
 	}
 }

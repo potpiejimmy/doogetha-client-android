@@ -58,7 +58,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	protected void register()
 	{
-		new RegisterTask(email.getText().toString()).go("Sending registration request...");
+		String mailstring = email.getText().toString();
+		Utils.getApp(this).setEmail(mailstring);
+		new RegisterTask(mailstring).go("Sending registration request...");
 	}
 	
 	protected void login()

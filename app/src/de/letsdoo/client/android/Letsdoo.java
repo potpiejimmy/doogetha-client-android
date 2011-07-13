@@ -99,6 +99,14 @@ public class Letsdoo extends Application {
 		removeSession();
 	}
 	
+	public String getEmail() {
+		return getPreferences().getString("email", null);
+	}
+	
+	public void setEmail(String email) {
+		getPreferences().edit().putString("email", email).commit();
+	}
+	
 	public void removeSession() {
     	eventsAccessor.getWebRequest().removeHeader("Authorization");
 	}

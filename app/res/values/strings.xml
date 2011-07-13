@@ -7,5 +7,6 @@
     <string name="unregister">Unregister</string>
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
+    <string name="save">Speichern</string>
     <string name="deleteitem">Eintrag löschen</string>
 </resources>

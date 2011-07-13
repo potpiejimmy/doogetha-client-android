@@ -23,17 +23,71 @@
                   android:layout_marginLeft="10dip"
                   android:textColor="#003000"></TextView>
     </LinearLayout>
+
+    <LinearLayout android:layout_height="wrap_content"
+                  android:id="@+id/linearLayout3" 
+                  android:layout_width="match_parent"
+                  android:background="#606060">
+        <TextView android:id="@+id/textView4" 
+                  android:layout_width="match_parent" 
+                  android:layout_margin="3dip" 
+                  android:text="Aktivität" 
+                  android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+	
 	<TextView android:id="@+id/editlabel"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
-	    android:textSize="18sp"
-	    android:text="Aktivität:"
+	    android:text="Titel:"
 	    />
-	<EditText android:id="@+id/edittext"
+	<EditText android:id="@+id/activityname"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:text=""
-	    />
+	    >
+		<requestFocus></requestFocus>
+    </EditText>
+    
+	<TextView android:text="Beschreibung" 
+			  android:id="@+id/textView2" 
+			  android:layout_width="wrap_content" 
+			  android:layout_height="wrap_content">
+	</TextView>
+	<EditText android:id="@+id/activitydescription" 
+	          android:layout_width="match_parent" 
+	          android:minLines="3" 
+	          android:layout_height="wrap_content" 
+	          android:inputType="textMultiLine">
+	</EditText>
+	
+    <LinearLayout android:layout_height="wrap_content"
+                  android:id="@+id/linearLayout3" 
+                  android:layout_width="match_parent"
+                  android:background="#606060">
+        <TextView android:id="@+id/textView3" 
+                  android:layout_width="match_parent" 
+                  android:layout_margin="3dip" 
+                  android:text="Teilnehmer" 
+                  android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout2" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
+        <TextView android:text="1 Teilnehmer (Du)" 
+                  android:textAppearance="?android:attr/textAppearanceSmall" 
+                  android:id="@+id/participantssummary" 
+                  android:layout_gravity="center_vertical" 
+                  android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="3dip" android:layout_marginRight="64dip" android:layout_marginTop="3dip" android:layout_marginBottom="3dip"></TextView>
+        <ImageButton android:src="@android:drawable/ic_menu_more"
+                     android:id="@+id/editparticipants"
+                     android:text="Button" 
+                     android:layout_gravity="top" 
+                     android:layout_width="wrap_content" 
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentRight="true">
+        </ImageButton>
+    </RelativeLayout>
+	
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="horizontal"
 	    android:layout_width="fill_parent"
@@ -43,7 +97,7 @@
 		    android:layout_width="match_parent" 
 		    android:layout_height="wrap_content" 
 	               android:layout_weight="0.5"
-		    android:text="@string/ok"
+		    android:text="@string/save"
 		    />
 		<Button android:id="@+id/editcancel"
 		    android:layout_width="match_parent" 

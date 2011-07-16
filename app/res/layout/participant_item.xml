@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="10dp"
-    android:textSize="18sp"
-    android:textColor="#FFF">
-</TextView>
+    android:layout_height="wrap_content"
+    >
+	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/participantname"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:paddingLeft="10dp"
+	    android:paddingTop="10dp"
+	    android:textSize="18sp"
+	    android:textColor="#FFF"
+	    android:text="Max Mustermann">
+    </TextView>
+	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/participantemail"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:paddingLeft="10dp"
+	    android:paddingBottom="10dp"
+	    android:textSize="10sp"
+	    android:textColor="#FFF"
+	    android:text="max.mustermann@yahoo.com">
+    </TextView>
+</LinearLayout>

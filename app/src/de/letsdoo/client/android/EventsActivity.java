@@ -239,7 +239,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			}
 			else
 			{
-				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.", null, null);
+				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
 			}
 		}
 	}

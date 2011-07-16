@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Event implements java.io.Serializable {
 	private Integer id = null;
-	private Integer userId = null;
+	private User owner = null;
 	private String name = null;
 	private String description = null;
     private Date eventtime;
@@ -58,12 +58,12 @@ public class Event implements java.io.Serializable {
 		this.users = users;
 	}
 
-	public Integer getUserId() {
-		return userId;
+	public User getOwner() {
+		return owner;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	public Date getEventtime() {

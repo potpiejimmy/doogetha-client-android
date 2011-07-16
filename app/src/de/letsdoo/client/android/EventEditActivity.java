@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.User;
+import de.letsdoo.client.util.ContactsUtils;
 import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 
@@ -22,6 +23,9 @@ public class EventEditActivity extends Activity implements OnClickListener {
 	private Event event = null;
 	private ImageButton editparticipants = null;
 	private TextView participantssummary = null;
+	private TextView activitytitle = null;
+	
+	private boolean myOwn = false;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class EventEditActivity extends Activity implements OnClickListener {
     	this.activitydescription = (EditText) findViewById(R.id.activitydescription);
     	this.editparticipants = (ImageButton) findViewById(R.id.editparticipants);
     	this.participantssummary = (TextView) findViewById(R.id.participantssummary);
+    	this.activitytitle = (TextView) findViewById(R.id.activitytitle);
     	
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
@@ -46,10 +51,21 @@ public class EventEditActivity extends Activity implements OnClickListener {
         	User myself = new User();
         	myself.setEmail(Utils.getApp(this).getEmail());
         	event.setUsers(new User[] {myself});
+        	event.setOwner(myself);
+        }
+        
+        this.myOwn = Utils.getApp(this).getEmail().equalsIgnoreCase(event.getOwner().getEmail());
+
+        if (!myOwn) {
+            // resolve owner name
+        	ContactsUtils.fillUserInfo(this, event.getOwner());
+        	
+        	buttonok.setEnabled(false);  // XXX
         }
         
         activityname.setText(event.getName());
         activitydescription.setText(event.getDescription());
+        activitytitle.setText(myOwn ? "Meine Aktivität" : "Aktivität von " + ContactsUtils.userDisplayName(this, event.getOwner()));
         
         updateUI();
     }

@@ -28,7 +28,7 @@
                   android:id="@+id/linearLayout3" 
                   android:layout_width="match_parent"
                   android:background="#606060">
-        <TextView android:id="@+id/textView4" 
+        <TextView android:id="@+id/activitytitle" 
                   android:layout_width="match_parent" 
                   android:layout_margin="3dip" 
                   android:text="Aktivität" 

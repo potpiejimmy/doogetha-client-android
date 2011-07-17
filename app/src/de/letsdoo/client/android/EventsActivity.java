@@ -1,24 +1,27 @@
 package de.letsdoo.client.android;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.Events;
 import de.letsdoo.client.util.Utils;
@@ -44,7 +47,27 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
         
         newactivitybutton.setOnClickListener(this);
         
-    	this.data = new ArrayAdapter<Event>(this, R.layout.event_item);
+    	this.data = new ArrayAdapter<Event>(this, R.layout.event_item) {
+			@Override
+			public View getView(int position, View convertView, ViewGroup viewGroup) {
+				if (convertView == null) {
+		            LayoutInflater inflater = (LayoutInflater) getContext()
+		                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		            convertView = inflater.inflate(R.layout.event_item, null);
+		        }
+				Event event = getItem(position);
+				TextView displayName = (TextView) convertView.findViewById(R.id.eventitemname);
+				displayName.setText(event.getName());
+				TextView datetime = (TextView) convertView.findViewById(R.id.eventitemdatetime);
+				if (event.getEventtime() != null) {
+					datetime.setText(Utils.formatDateTime(event.getEventtime()));
+				} else {
+					datetime.setText("");
+				}
+		        return convertView;
+			}
+    	};
+    	
     	this.setListAdapter(data);
     	getListView().setTextFilterEnabled(true);
     	getListView().setOnItemClickListener(this);
@@ -100,7 +123,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
       AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
       switch (item.getItemId()) {
       case R.id.deleteitem:
-  		new Deleter(data.getItem(info.position)).go("Löschen...");
+  		new Deleter(data.getItem(info.position)).go("Lšschen...");
         return true;
       default:
         return super.onContextItemSelected(item);
@@ -258,7 +281,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		{
 	    	try{
 	    		Utils.getApp(EventsActivity.this).getEventsAccessor().deleteItem(event.getId());
-	    		return "Gelöscht";
+	    		return "Gelšscht";
 	    	} catch (Exception ex) {
 	    		ex.printStackTrace();
 	    		return ex.toString();

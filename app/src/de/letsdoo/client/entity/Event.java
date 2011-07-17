@@ -7,7 +7,7 @@ public class Event implements java.io.Serializable {
 	private User owner = null;
 	private String name = null;
 	private String description = null;
-    private Date eventtime;
+    private Long eventtime;
 	private Integer state = null;
 	private User[] users = null;
 	
@@ -66,11 +66,11 @@ public class Event implements java.io.Serializable {
 		this.owner = owner;
 	}
 
-	public Date getEventtime() {
+	public Long getEventtime() {
 		return eventtime;
 	}
 
-	public void setEventtime(Date eventtime) {
+	public void setEventtime(Long eventtime) {
 		this.eventtime = eventtime;
 	}
 }

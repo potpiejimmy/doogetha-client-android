@@ -4,6 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+    
+    <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
+    <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        
     <LinearLayout android:layout_height="wrap_content"
     		      android:id="@+id/linearLayout1"
     		      android:layout_width="match_parent"
@@ -49,7 +53,7 @@
 		<requestFocus></requestFocus>
     </EditText>
     
-	<TextView android:text="Beschreibung" 
+	<TextView android:text="Beschreibung:" 
 			  android:id="@+id/textView2" 
 			  android:layout_width="wrap_content" 
 			  android:layout_height="wrap_content">
@@ -60,6 +64,33 @@
 	          android:layout_height="wrap_content" 
 	          android:inputType="textMultiLine">
 	</EditText>
+	
+    <LinearLayout android:layout_height="wrap_content"
+                  android:id="@+id/linearLayout4" 
+                  android:layout_width="match_parent"
+                  android:background="#606060">
+        <TextView android:id="@+id/datetimetitle" 
+                  android:layout_width="match_parent" 
+                  android:layout_margin="3dip" 
+                  android:text="Zeitpunkt" 
+                  android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout5" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
+        <TextView android:text="Nicht festgelegt" 
+                  android:textAppearance="?android:attr/textAppearanceSmall" 
+                  android:id="@+id/datetimelabel" 
+                  android:layout_gravity="center_vertical" 
+                  android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="3dip" android:layout_marginRight="64dip" android:layout_marginTop="3dip" android:layout_marginBottom="3dip"></TextView>
+        <ImageButton android:src="@android:drawable/ic_menu_more"
+                     android:id="@+id/editdatetime"
+                     android:text="Button" 
+                     android:layout_gravity="top" 
+                     android:layout_width="wrap_content" 
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentRight="true">
+        </ImageButton>
+    </RelativeLayout>
 	
     <LinearLayout android:layout_height="wrap_content"
                   android:id="@+id/linearLayout3" 
@@ -106,4 +137,8 @@
 		    android:text="@string/cancel"
 		    />
 	</LinearLayout>
+	
+	</LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

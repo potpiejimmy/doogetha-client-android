@@ -1,5 +1,9 @@
 package de.letsdoo.client.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import android.app.Activity;
 import de.letsdoo.client.android.Letsdoo;
 
@@ -8,6 +12,9 @@ import de.letsdoo.client.android.Letsdoo;
  */
 public class Utils {
 	
+	protected static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
+	protected static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+
 	public static Letsdoo getApp(Activity activity) {
 		return (Letsdoo)activity.getApplication();
 	}
@@ -43,5 +50,17 @@ public class Utils {
             sb.append(digits.charAt(bi & 0xf));
         }
         return sb.toString();
+    }
+    
+    public static String formatDateTime(long millis) {
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTimeInMillis(millis);
+    	StringBuilder stb = new StringBuilder();
+    	stb.append(DATE_FORMAT.format(cal.getTime()));
+    	if (cal.get(Calendar.HOUR_OF_DAY)!=0 || cal.get(Calendar.MINUTE)!=0) {
+    		stb.append(' ');
+    		stb.append(TIME_FORMAT.format(cal.getTime()));
+    	}
+    	return stb.toString();
     }
 }

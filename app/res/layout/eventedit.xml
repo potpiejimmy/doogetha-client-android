@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#ccc"
     >
     
     <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
@@ -44,6 +45,7 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:text="Titel:"
+	    android:textColor="#000"
 	    />
 	<EditText android:id="@+id/activityname"
 	    android:layout_width="fill_parent" 
@@ -56,6 +58,7 @@
 	<TextView android:text="Beschreibung:" 
 			  android:id="@+id/textView2" 
 			  android:layout_width="wrap_content" 
+			  android:textColor="#000"
 			  android:layout_height="wrap_content">
 	</TextView>
 	<EditText android:id="@+id/activitydescription" 
@@ -80,6 +83,7 @@
         <TextView android:text="Nicht festgelegt" 
                   android:textAppearance="?android:attr/textAppearanceSmall" 
                   android:id="@+id/datetimelabel" 
+				  android:textColor="#000"
                   android:layout_gravity="center_vertical" 
                   android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="3dip" android:layout_marginRight="64dip" android:layout_marginTop="3dip" android:layout_marginBottom="3dip"></TextView>
         <ImageButton android:src="@android:drawable/ic_menu_more"
@@ -107,6 +111,7 @@
         <TextView android:text="1 Teilnehmer (Du)" 
                   android:textAppearance="?android:attr/textAppearanceSmall" 
                   android:id="@+id/participantssummary" 
+				  android:textColor="#000"
                   android:layout_gravity="center_vertical" 
                   android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="3dip" android:layout_marginRight="64dip" android:layout_marginTop="3dip" android:layout_marginBottom="3dip"></TextView>
         <ImageButton android:src="@android:drawable/ic_menu_more"

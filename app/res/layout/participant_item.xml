@@ -11,7 +11,7 @@
 	    android:paddingLeft="10dp"
 	    android:paddingTop="10dp"
 	    android:textSize="18sp"
-	    android:textColor="#FFF"
+	    android:textColor="#000"
 	    android:text="Max Mustermann">
     </TextView>
 	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +21,7 @@
 	    android:paddingLeft="10dp"
 	    android:paddingBottom="10dp"
 	    android:textSize="10sp"
-	    android:textColor="#FFF"
+	    android:textColor="#000"
 	    android:text="max.mustermann@yahoo.com">
     </TextView>
 </LinearLayout>

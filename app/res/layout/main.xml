@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#ccc"
     >
     <LinearLayout android:layout_height="wrap_content"
     		      android:id="@+id/linearLayout1"
@@ -54,7 +55,7 @@
 <ListView android:id="@id/android:list"
                android:layout_width="match_parent"
                android:layout_height="match_parent"
-               android:background="#000000"
+               android:background="#ccc"
                android:layout_weight="1"
                android:drawSelectorOnTop="false"/>
 </LinearLayout>

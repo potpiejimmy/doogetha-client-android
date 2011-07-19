@@ -18,12 +18,14 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.Events;
+import de.letsdoo.client.entity.User;
 import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
@@ -63,6 +65,22 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 					datetime.setText(Utils.formatDateTime(event.getEventtime()));
 				} else {
 					datetime.setText("");
+				}
+				ImageView icon = (ImageView) convertView.findViewById(R.id.eventstateiconview);
+				User myself = null;
+				for (User user : event.getUsers())
+					if (user.getEmail().equalsIgnoreCase(Utils.getApp(EventsActivity.this).getEmail()))
+						myself = user;
+				if (myself != null) {
+					switch (myself.getState()) {
+						case 0:
+							icon.setImageResource(android.R.drawable.btn_star);
+							break;
+						default:
+							icon.setImageDrawable(null);
+					}
+				} else {
+					icon.setImageDrawable(null);
 				}
 		        return convertView;
 			}

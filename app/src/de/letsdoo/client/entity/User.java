@@ -4,10 +4,15 @@ package de.letsdoo.client.entity;
  *
  */
 public class User implements java.io.Serializable {
-    private Integer id;
+    
+	/* User values */
+	private Integer id;
     private String email;
     private String firstname;
     private String lastname;
+
+    /* UserEvent values */
+    private Integer state = null;
 
     public User() {
     }
@@ -47,4 +52,12 @@ public class User implements java.io.Serializable {
     public String toString() {
     	return email;
     }
+
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
 }

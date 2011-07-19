@@ -141,6 +141,7 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     		
         User newUser = new User();
         newUser.setEmail(email);
+        newUser.setState(0); /* unconfirmed/new */
         ContactsUtils.fillUserInfo(this, newUser);
         this.data.add(newUser);
     }

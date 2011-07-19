@@ -68,6 +68,7 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
         	event = new Event("");
         	User myself = new User();
         	myself.setEmail(Utils.getApp(this).getEmail());
+        	myself.setState(1); /* confirmed */
         	event.setUsers(new User[] {myself});
         	event.setOwner(myself);
         }

@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ccc"
+    android:background="#adf"
     >
     
     <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
@@ -13,7 +13,7 @@
     		      android:id="@+id/linearLayout1"
     		      android:layout_width="match_parent"
     		      android:baselineAligned="false"
-    		      android:background="#f06060">
+    		      android:background="#8bf">
         <ImageView android:layout_height="wrap_content"
         		   android:id="@+id/imageView1"
         		   android:src="@drawable/icon" 

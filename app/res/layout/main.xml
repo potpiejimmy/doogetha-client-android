@@ -3,13 +3,13 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ccc"
+    android:background="#adf"
     >
     <LinearLayout android:layout_height="wrap_content"
     		      android:id="@+id/linearLayout1"
     		      android:layout_width="match_parent"
     		      android:baselineAligned="false"
-    		      android:background="#60f060">
+    		      android:background="#8bf">
         <ImageView android:layout_height="wrap_content"
         		   android:id="@+id/imageView1"
         		   android:src="@drawable/icon" 
@@ -55,7 +55,8 @@
 <ListView android:id="@id/android:list"
                android:layout_width="match_parent"
                android:layout_height="match_parent"
-               android:background="#ccc"
+               android:background="#adf"
+               android:cacheColorHint="#adf"
                android:layout_weight="1"
                android:drawSelectorOnTop="false"/>
 </LinearLayout>

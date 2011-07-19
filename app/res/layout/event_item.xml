@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     >
-	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/eventitemdatetime"
+    <ImageView android:layout_height="fill_parent"
+    		   android:id="@+id/eventstateiconview"
+    		   android:src="@android:drawable/btn_star" 
+    		   android:layout_width="24dp"
+    		   android:paddingLeft="3dp">
+    </ImageView>
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="vertical"
 	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:paddingLeft="10dp"
-	    android:paddingTop="10dp"
-	    android:textSize="10sp"
-	    android:textColor="#000"
-	    android:text="eventitemdatetime">
-    </TextView>
-	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-		android:id="@+id/eventitemname"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:paddingLeft="10dp"
-	    android:paddingBottom="10dp"
-	    android:textSize="18sp"
-	    android:textColor="#000">
-	</TextView>
+	    android:layout_height="wrap_content"
+	    >
+		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:id="@+id/eventitemdatetime"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:paddingLeft="5dp"
+		    android:paddingTop="10dp"
+		    android:textSize="10sp"
+		    android:textColor="#000"
+		    android:text="eventitemdatetime">
+	    </TextView>
+		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/eventitemname"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:paddingLeft="5dp"
+		    android:paddingBottom="10dp"
+		    android:textSize="18sp"
+		    android:textColor="#000">
+		</TextView>
+	</LinearLayout>
 </LinearLayout>

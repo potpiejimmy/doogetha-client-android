@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.Activity;
+import android.widget.ImageView;
 import de.letsdoo.client.android.Letsdoo;
+import de.letsdoo.client.entity.User;
 
 /**
  * Static helper methods for Letsdoo app
@@ -62,5 +64,21 @@ public class Utils {
     		stb.append(TIME_FORMAT.format(cal.getTime()));
     	}
     	return stb.toString();
+    }
+    
+    public static void setIconForConfirmState(ImageView view, User user) {
+		switch (user.getState()) {
+			case 0: /* new / unconfirmed */
+				view.setImageResource(android.R.drawable.btn_radio);
+				break;
+			case 1: /* confirmed */
+				view.setImageResource(android.R.drawable.presence_online);
+				break;
+			case 2: /* denied */
+				view.setImageResource(android.R.drawable.presence_busy);
+				break;
+			default:
+				view.setImageDrawable(null);
+		}
     }
 }

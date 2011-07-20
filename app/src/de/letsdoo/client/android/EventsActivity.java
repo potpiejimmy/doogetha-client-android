@@ -71,17 +71,8 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 				for (User user : event.getUsers())
 					if (user.getEmail().equalsIgnoreCase(Utils.getApp(EventsActivity.this).getEmail()))
 						myself = user;
-				if (myself != null) {
-					switch (myself.getState()) {
-						case 0:
-							icon.setImageResource(android.R.drawable.btn_star);
-							break;
-						default:
-							icon.setImageDrawable(null);
-					}
-				} else {
-					icon.setImageDrawable(null);
-				}
+				if (myself != null) Utils.setIconForConfirmState(icon, myself);
+				else icon.setImageDrawable(null);
 		        return convertView;
 			}
     	};
@@ -140,11 +131,14 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     public boolean onContextItemSelected(MenuItem item) {
       AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
       switch (item.getItemId()) {
-      case R.id.deleteitem:
-  		new Deleter(data.getItem(info.position)).go("Lšschen...");
-        return true;
-      default:
-        return super.onContextItemSelected(item);
+	      case R.id.edititem:
+		  		editEvent(data.getItem(info.position));
+		        return true;
+	      case R.id.deleteitem:
+	  		new Deleter(data.getItem(info.position)).go("Lšschen...");
+	        return true;
+	      default:
+	        return super.onContextItemSelected(item);
       }
     }
     
@@ -197,8 +191,19 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	{
+		//editEvent(data.getItem(position));
+		confirmEvent(data.getItem(position));
+	}
+	
+	protected void editEvent(Event event) {
     	Intent intent = new Intent(getApplicationContext(), EventEditActivity.class);
-    	intent.putExtra("event", data.getItem(position));
+    	intent.putExtra("event", event);
+    	startActivityForResult(intent, 0);
+	}
+	
+	protected void confirmEvent(Event event) {
+    	Intent intent = new Intent(getApplicationContext(), EventConfirmActivity.class);
+    	intent.putExtra("event", event);
     	startActivityForResult(intent, 0);
 	}
 	

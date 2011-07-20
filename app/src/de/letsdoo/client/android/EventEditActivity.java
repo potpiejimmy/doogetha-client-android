@@ -1,9 +1,6 @@
 package de.letsdoo.client.android;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -20,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import de.letsdoo.client.android.rest.EventsAccessor;
 import de.letsdoo.client.entity.Event;
 import de.letsdoo.client.entity.User;
 import de.letsdoo.client.util.ContactsUtils;
@@ -31,9 +29,10 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;
 	
+	private Event event = null;
+
 	private EditText activityname = null;
 	private EditText activitydescription = null;
-	private Event event = null;
 	private ImageButton editdatetime = null;
 	private ImageButton editparticipants = null;
 	private TextView participantssummary = null;
@@ -155,10 +154,11 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
 		public String doTask()
 		{
 	    	try{
+	    		EventsAccessor ea = Utils.getApp(EventEditActivity.this).getEventsAccessor();
 	    		if (event.getId() != null)
-	    			Utils.getApp(EventEditActivity.this).getEventsAccessor().updateItem(event.getId(), event);
+	    			ea.updateItem(event.getId(), event);
 	    		else
-	    			Utils.getApp(EventEditActivity.this).getEventsAccessor().insertItem(event);
+	    			ea.insertItem(event);
 	    		return "Gespeichert";
 	    	} catch (Exception ex) {
 	    		ex.printStackTrace();

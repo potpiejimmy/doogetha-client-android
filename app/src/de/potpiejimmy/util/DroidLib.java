@@ -1,7 +1,7 @@
 package de.potpiejimmy.util;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
@@ -12,20 +12,20 @@ import android.widget.Toast;
  * Static utility methods for android
  */
 public class DroidLib {
-	public static void alert(Activity activity, String msg) {
-		alert(activity, msg, (String)null, null);
+	public static void alert(Context context, String msg) {
+		alert(context, msg, (String)null, null);
 	}
 	
-	public static void alert(Activity activity, String title, String[] items, OnClickListener clicklistener) {
-		alert(activity, title, null, null, items, clicklistener);
+	public static void alert(Context context, String title, String[] items, OnClickListener clicklistener) {
+		alert(context, title, null, null, items, clicklistener);
 	}
 	
-	public static void alert(Activity activity, String msg, String oktext, OnClickListener oklistener) {
-		alert(activity, null, msg, oktext, null, oklistener);
+	public static void alert(Context context, String msg, String oktext, OnClickListener oklistener) {
+		alert(context, null, msg, oktext, null, oklistener);
 	}
 	
-	public static void alert(Activity activity, String title, String msg, String oktext, String[] items, OnClickListener clicklistener) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+	public static void alert(Context context, String title, String msg, String oktext, String[] items, OnClickListener clicklistener) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		if (title != null)
 			builder.setTitle(title);
 		if (msg != null)
@@ -38,11 +38,11 @@ public class DroidLib {
 		builder.create().show();
 	}
 	
-	public static void toast(Activity activity, String text) {
-		Toast.makeText(activity.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+	public static void toast(Context context, String text) {
+		Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 	}
 	
-	public static void invokeBrowser(Activity activity, String url){
-		activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+	public static void invokeBrowser(Context context, String url){
+		context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 	}
 }

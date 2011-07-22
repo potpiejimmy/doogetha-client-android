@@ -188,7 +188,7 @@ public class WebRequest implements ResponseHandler<String>
        }
 	}
  
-    protected String executeRequest(HttpUriRequest request) throws Exception
+    protected String executeRequestImpl(HttpUriRequest request) throws Exception
     {
     	final int tries = 10;
     	for (int i=0; i<tries; i++) {
@@ -199,6 +199,13 @@ public class WebRequest implements ResponseHandler<String>
     		}
     	}
     	return null;
+    }
+    
+    protected String executeRequest(HttpUriRequest request) throws Exception
+    {
+    	String result = executeRequestImpl(request);
+    	assertResponseCode();
+    	return result;
     }
  
     public static String streamToString(InputStream is) throws IOException, UnsupportedEncodingException
@@ -224,11 +231,17 @@ public class WebRequest implements ResponseHandler<String>
     {
         responseCode = response.getStatusLine().getStatusCode();
         message = response.getStatusLine().getReasonPhrase();
- 
+
         HttpEntity entity = response.getEntity();
  
         if (entity != null)
             return streamToString(entity.getContent());
         return null;
+    }
+    
+    protected void assertResponseCode() throws IOException
+    {
+        if (responseCode >= 300)
+        	throw new IOException(responseCode + " " + message);
     }
 }

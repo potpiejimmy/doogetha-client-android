@@ -1,6 +1,8 @@
 package de.letsdoo.client.android;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -39,6 +41,8 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 	private Button newactivitybutton = null;
 	
 	private DataLoader dataLoader = null;
+	
+	private boolean versionChecked = false;
 	
     /** Called when the activity is first created. */
     @Override
@@ -90,11 +94,10 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     	
     	if (!Utils.getApp(this).isRegistered()) {
     		register();
+        	checkVersion();
     	} else {
 			startSession();
     	}
-    	
-    	checkVersion();
     }
     
     protected void updateUI() {
@@ -217,12 +220,13 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     
     protected void checkVersion()
     {
+    	versionChecked = true;
     	new VersionCheckTask().go("Checking version...");
     }
     
     protected void newerVersionExists()
     {
-    	DroidLib.alert(this, "A newer version of the application exists.", "Download now", new android.content.DialogInterface.OnClickListener() {
+    	DroidLib.alert(this, "Eine neue Version von Doogetha steht zur Verfügung!", "Jetzt herunterladen", new android.content.DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int i) {
 				DroidLib.invokeBrowser(EventsActivity.this, Letsdoo.DOWNLOADURL);
 			}
@@ -241,17 +245,25 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		public void doneOk(EventsVo result)
 		{
 			data.clear();
+			Map<String,String> allMails = new HashMap<String,String>();
 			if (result != null && result.getEvents() != null)
-				for (EventVo e : result.getEvents()) data.add(e);
+				for (EventVo e : result.getEvents()) {
+					data.add(e);
+					for (UserVo user : e.getUsers())
+						allMails.put(user.getEmail(), user.getEmail());
+				}
+			String[] knownAddresses = allMails.keySet().toArray(new String[allMails.size()]);
+			Arrays.sort(knownAddresses);
+			Utils.getApp(EventsActivity.this).setKnownAddresses(knownAddresses);
+			
+			if (!versionChecked) checkVersion();
 		}
 
 		public void doneFail(Throwable throwable)
 		{
-    		EventsVo msgs = new EventsVo();
-    		EventVo vo = new EventVo();
-    		vo.setName(throwable.toString());
-    		msgs.setEvents(Arrays.asList(new EventVo[] {vo}));
-    		doneOk(msgs); // XXX
+    		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+			
+			if (!versionChecked) checkVersion();
 		}
 	}
 	
@@ -281,6 +293,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		public void doneFail(Throwable throwable) 
 		{
 			DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
+			if (!versionChecked) checkVersion();
 		}
 	}
 	

@@ -8,21 +8,23 @@ import android.util.Log;
 import de.letsdoo.client.android.rest.EventsAccessor;
 import de.letsdoo.client.android.rest.LoginAccessor;
 import de.letsdoo.client.android.rest.RegisterAccessor;
+import de.letsdoo.client.android.rest.UsersAccessor;
 import de.letsdoo.client.android.rest.VersionAccessor;
 
 public class Letsdoo extends Application {
 	
 	public final static String PROTO    = "http://";
-	public final static String PROTOSEC = "http://";
+	public final static String PROTOSEC = "https://";
 	
-	//public final static String URI = "www.potpiejimmy.de/doogetha/res/";
-	public final static String URI = "192.168.100.30:8080/doogetha/res/";
+	public final static String URI = "www.potpiejimmy.de/doogetha/res/";
+	//public final static String URI = "192.168.100.30:8080/doogetha/res/";
 	//public final static String URI = "192.168.100.22:8089/doogetha/res/";
 	//public final static String URI = "172.18.119.203:8089/doogetha/res/";
 	
 	public final static String DOWNLOADURL = "http://www.potpiejimmy.de/download/Doogetha.apk";
 	
 	private EventsAccessor eventsAccessor = null;
+	private UsersAccessor usersAccessor = null;
 	private RegisterAccessor registerAccessor = null;
 	private LoginAccessor loginAccessor = null;
 	private VersionAccessor versionAccessor = null;
@@ -32,9 +34,12 @@ public class Letsdoo extends Application {
 	private int versionCode = 0;
 	private String versionName = null;
 	
+	private String[] knownAddresses = null;
+	
 	@Override
 	public void onCreate() {
 		eventsAccessor = new EventsAccessor(PROTOSEC + URI + "events");
+		usersAccessor = new UsersAccessor(PROTOSEC + URI + "users");
 		registerAccessor = new RegisterAccessor(PROTOSEC + URI + "register");
 		loginAccessor = new LoginAccessor(PROTOSEC + URI + "login");
 		versionAccessor = new VersionAccessor(PROTO + URI + "version");
@@ -53,6 +58,10 @@ public class Letsdoo extends Application {
 	
 	public EventsAccessor getEventsAccessor() {
 		return eventsAccessor;
+	}
+	
+	public UsersAccessor getUsersAccessor() {
+		return usersAccessor;
 	}
 	
 	public LoginAccessor getLoginAccessor() {
@@ -74,6 +83,14 @@ public class Letsdoo extends Application {
 		return preferences;
 	}
 	
+	public String[] getKnownAddresses() {
+		return knownAddresses;
+	}
+
+	public void setKnownAddresses(String[] knownAddresses) {
+		this.knownAddresses = knownAddresses;
+	}
+
 	public String getAuthtoken() {
 		return getPreferences().getString("authtoken", null);
 	}
@@ -113,6 +130,7 @@ public class Letsdoo extends Application {
 	
 	public void newSession(String sessionkey) {
     	eventsAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
+    	usersAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
 	}
 	
 	public boolean hasSession() {

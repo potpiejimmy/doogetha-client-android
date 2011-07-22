@@ -1,23 +1,23 @@
 package de.potpiejimmy.util;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Handler;
 
 public abstract class AsyncUITask<T> implements Runnable
 {
 	private final Handler HANDLER = new Handler();
-	private Activity parent = null;
+	private Context context = null;
 	private ProgressDialog dialog = null;
 
-	public AsyncUITask(Activity parent)
+	public AsyncUITask(Context context)
 	{
-		this.parent = parent;
+		this.context = context;
 	}
 	
 	public void go(String msg)
 	{
-    	dialog = ProgressDialog.show(parent, "", msg, true, true);
+    	dialog = ProgressDialog.show(context, "", msg, true, true);
     	new Thread(this).start();
 	}
 	

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.provider.ContactsContract;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -23,12 +25,17 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.util.ContactsUtils;
+import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
+import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
 public class ParticipantsActivity extends ListActivity implements OnItemClickListener, OnClickListener {
@@ -89,7 +96,23 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
       MenuInflater inflater = getMenuInflater();
-      inflater.inflate(R.menu.context, menu);
+      inflater.inflate(R.menu.participants_edit_context, menu);
+    }
+    
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+      AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+      switch (item.getItemId()) {
+	      case R.id.deleteitem:
+	    	UserVo user = data.getItem(info.position);
+	    	if (Utils.isMyself(this, user))
+	    		Toast.makeText(getApplicationContext(), "Du kannst nicht dich selbst entfernen", Toast.LENGTH_SHORT).show();
+	    	else
+	    		data.remove(user);
+	        return true;
+	      default:
+	        return super.onContextItemSelected(item);
+      }
     }
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -113,13 +136,13 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
                                     		DroidLib.toast(this, "Keine E-Mail-Adressen für diesen Kontakt gefunden");
                                     	} else if (emails.size()==1) {
                                     		// Single email address found - add it.
-                                    		addUser(emails.get(0));
+                                    		checkAddUser(emails.get(0));
                                     	} else {
                                     		// Multiple email addresses found - create dialog
                                     		this.currentMailSelection = emails.toArray(new String[emails.size()]);
                                     		DroidLib.alert(this, "E-Mail-Adresse wählen", this.currentMailSelection, new DialogInterface.OnClickListener() {
                                     		    public void onClick(DialogInterface dialog, int item) {
-                                    		        addUser(currentMailSelection[item]);
+                                    		    	checkAddUser(currentMailSelection[item]);
                                     		    }
                                     		});
                                     	}
@@ -130,7 +153,11 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
             }
     }
     
-    protected void addUser(String email) {
+    protected void checkAddUser(String email) {
+    	if (email == null) return;
+    	email = email.trim();
+    	if (email.length()==0) return;
+    	
     	boolean found = false;
     	for (int i=0; i<data.getCount(); i++)
     		if (data.getItem(i).getEmail().equalsIgnoreCase(email)) {found = true; break;}
@@ -139,6 +166,11 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     		return;
     	}
     		
+    	// now check against server:
+    	new CheckUserTask(email).go("Adresse wird geprüft...");
+    }
+    
+    protected void addUser(String email) {
         UserVo newUser = new UserVo();
         newUser.setEmail(email);
         newUser.setState(0); /* unconfirmed/new */
@@ -147,8 +179,38 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     }
     
     protected void add() {
-    	  Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI); 
-    	  startActivityForResult(intentContact, PICK_CONTACT);
+    	DroidLib.alert(this, "Mailadresse auswählen...", new String[] {"aus Kontaktliste", "aus Doogetha-Liste", "manuell eingeben"}, new android.content.DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+					case 0: 
+			    	  Intent intentContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI); 
+			    	  startActivityForResult(intentContact, PICK_CONTACT);
+			    	  break;
+					case 1:
+					  DroidLib.alert(ParticipantsActivity.this, "E-Mail-Adresse wählen", Utils.getApp(ParticipantsActivity.this).getKnownAddresses(),  new android.content.DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							checkAddUser(Utils.getApp(ParticipantsActivity.this).getKnownAddresses()[which]);
+						}
+					  });
+					  break;
+					case 2:
+						final EditText input = new EditText(ParticipantsActivity.this);
+						new AlertDialog.Builder(ParticipantsActivity.this)
+					    .setMessage("E-Mail-Adresse eingeben")
+					    .setView(input)
+					    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+					        public void onClick(DialogInterface dialog, int whichButton) {
+					        	checkAddUser(input.getText().toString().trim());
+					        }
+					    }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+					        public void onClick(DialogInterface dialog, int whichButton) {
+					        }
+					    }).show();
+
+				}
+			}
+    	});
+    	
 	}
 	
     protected void finishOk()
@@ -185,4 +247,29 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
 		}
 	}
 
+	protected class CheckUserTask extends AsyncUITask<UserVo>
+	{
+		private String email = null;
+		
+		public CheckUserTask(String email) {
+			super(ParticipantsActivity.this);
+			this.email = email;
+		}
+
+		@Override
+		public UserVo doTask() throws Throwable {
+			return Utils.getApp(ParticipantsActivity.this).getUsersAccessor().getItem(email);
+		}
+
+		@Override
+		public void doneFail(Throwable throwable) {
+			DroidLib.alert(ParticipantsActivity.this, email, "Sorry, diese Adresse ist Doogetha unbekannt. Derzeit können noch keine Teilnehmer hinzugefügt werden, die nicht registriert sind.", getString(R.string.ok), null, null);
+		}
+
+		@Override
+		public void doneOk(UserVo result) {
+			addUser(result.getEmail());
+		}
+		
+	}
 }

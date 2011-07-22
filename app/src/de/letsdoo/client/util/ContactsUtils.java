@@ -3,7 +3,7 @@ package de.letsdoo.client.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.letsdoo.client.entity.User;
+import de.letsdoo.client.entity.UserVo;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -37,7 +37,7 @@ public class ContactsUtils {
 	 * the appropriate fields in the User object.
 	 * @param user a user object to be filled - email must be provided
 	 */
-	public static void fillUserInfo(Activity activity, User user) {
+	public static void fillUserInfo(Activity activity, UserVo user) {
     	Cursor c = activity.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.DATA + "=?", new String[] {user.getEmail()}, null);
     	if (c.moveToFirst()) {
     		user.setLastname(c.getString(c.getColumnIndex(ContactsContract.Data.DISPLAY_NAME)));
@@ -48,7 +48,7 @@ public class ContactsUtils {
 	/**
 	 * Chooses the appropriate display name for the given user object
 	 */
-	public static String userDisplayName(Activity activity, User user) {
+	public static String userDisplayName(Activity activity, UserVo user) {
 		if (user.getEmail().equalsIgnoreCase(Utils.getApp(activity).getEmail()))
 			return "Ich" ; // XXX
 

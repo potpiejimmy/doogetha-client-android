@@ -1,20 +1,19 @@
 package de.letsdoo.client.entity;
 
-import java.util.Date;
 
-public class Event implements java.io.Serializable {
+public class EventVo implements java.io.Serializable {
 	private Integer id = null;
-	private User owner = null;
+	private UserVo owner = null;
 	private String name = null;
 	private String description = null;
     private Long eventtime;
 	private Integer state = null;
-	private User[] users = null;
+	private UserVo[] users = null;
 	
-	public Event() {
+	public EventVo() {
 	}
 	
-	public Event(String name) {
+	public EventVo(String name) {
 		this.name = name;
 	}
 	
@@ -50,19 +49,19 @@ public class Event implements java.io.Serializable {
 		this.state = state;
 	}
 
-	public User[] getUsers() {
+	public UserVo[] getUsers() {
 		return users;
 	}
 
-	public void setUsers(User[] users) {
+	public void setUsers(UserVo[] users) {
 		this.users = users;
 	}
 
-	public User getOwner() {
+	public UserVo getOwner() {
 		return owner;
 	}
 
-	public void setOwner(User owner) {
+	public void setOwner(UserVo owner) {
 		this.owner = owner;
 	}
 

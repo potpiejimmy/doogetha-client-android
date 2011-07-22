@@ -114,7 +114,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     	finish();
 	}
 	
-	protected class RegisterTask extends AsyncUITask<String[]>
+	protected class RegisterTask extends AsyncUITask<String>
 	{
 		private String email = null;
 		
@@ -124,26 +124,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 
 		@Override
-		public String[] doTask() {
-			String[] result = null;
-			try {
-				result = new String[] {Utils.getApp(LoginActivity.this).getRegisterAccessor().insertItemWithResult(email), null};
-			} catch (Exception ex) {
-				result = new String[] {null, ex.toString()};
-			}
-			return result;
+		public String doTask() throws Throwable {
+			return Utils.getApp(LoginActivity.this).getRegisterAccessor().insertItemWithResult(email);
 		}
 
 		@Override
-		public void done(String[] result) {
-			String registertoken = result[0];
-			String exceptiontext = result[1];
-			if (registertoken != null) registerSuccess(registertoken);
-			else DroidLib.alert(LoginActivity.this, "Sorry, could not send registration request.");
+		public void doneOk(String registertoken) {
+			registerSuccess(registertoken);
+		}
+
+		@Override
+		public void doneFail(Throwable throwable) {
+			DroidLib.alert(LoginActivity.this, "Sorry, could not send registration request.");
 		}
 	}
 	
-	protected class FetchCredentialsTask extends AsyncUITask<String[]>
+	protected class FetchCredentialsTask extends AsyncUITask<String>
 	{
 		private String logintoken = null;
 		
@@ -153,20 +149,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 
 		@Override
-		public String[] doTask() {
-			try {
-				return new String[] {Utils.getApp(LoginActivity.this).getRegisterAccessor().getItem(logintoken.substring(0, logintoken.indexOf(":"))),null};
-			} catch (Exception ex) {
-				return new String[] {null,ex.toString()};
-			}
+		public String doTask() throws Throwable {
+			return Utils.getApp(LoginActivity.this).getRegisterAccessor().getItem(logintoken.substring(0, logintoken.indexOf(":")));
 		}
 
 		@Override
-		public void done(String[] result) {
-			String credentials = result[0];
-			String exceptionText = result[1];
-			if (credentials != null) fetchCredentialsSuccess(credentials);
-			else DroidLib.alert(LoginActivity.this, "Sorry, registration failed. Please make sure you have confirmed your registration request by clicking the confirmation link in your registration email.");
+		public void doneOk(String credentials) {
+
+			fetchCredentialsSuccess(credentials);
+		}
+
+		@Override
+		public void doneFail(Throwable throwable) {
+			DroidLib.alert(LoginActivity.this, "Sorry, registration failed. Please make sure you have confirmed your registration request by clicking the confirmation link in your registration email.");
 		}
 	}
 }

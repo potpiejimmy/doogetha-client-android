@@ -26,8 +26,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-import de.letsdoo.client.entity.Event;
-import de.letsdoo.client.entity.User;
+import de.letsdoo.client.entity.EventVo;
+import de.letsdoo.client.entity.UserVo;
 import de.letsdoo.client.util.ContactsUtils;
 import de.potpiejimmy.util.DroidLib;
 
@@ -35,11 +35,11 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
 
     public static final int PICK_CONTACT    = 1;
 
-    private ArrayAdapter<User> data = null;
+    private ArrayAdapter<UserVo> data = null;
 	
 	private ImageButton addButton = null;
 	
-	private Event event = null;
+	private EventVo event = null;
 	
 	private String[] currentMailSelection = null;
 	
@@ -57,12 +57,12 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
     	
-    	this.event = (Event)getIntent().getExtras().get("event");
+    	this.event = (EventVo)getIntent().getExtras().get("event");
     	
-    	for (User user : event.getUsers())
+    	for (UserVo user : event.getUsers())
     		ContactsUtils.fillUserInfo(this, user);
     	
-    	this.data = new ArrayAdapter<User>(this, R.layout.participant_item, new ArrayList<User>(Arrays.asList(event.getUsers()))) {
+    	this.data = new ArrayAdapter<UserVo>(this, R.layout.participant_item, new ArrayList<UserVo>(Arrays.asList(event.getUsers()))) {
     		@Override
     		public View getView(int position, View convertView, ViewGroup viewGroup) {
     			if (convertView == null) {
@@ -70,7 +70,7 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     	                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	            convertView = inflater.inflate(R.layout.participant_item, null);
     	        }
-    			User user = getItem(position);
+    			UserVo user = getItem(position);
     			TextView displayName = (TextView) convertView.findViewById(R.id.participantname);
     			displayName.setText(ContactsUtils.userDisplayName(ParticipantsActivity.this, user));
     			TextView email = (TextView) convertView.findViewById(R.id.participantemail);
@@ -139,7 +139,7 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     		return;
     	}
     		
-        User newUser = new User();
+        UserVo newUser = new UserVo();
         newUser.setEmail(email);
         newUser.setState(0); /* unconfirmed/new */
         ContactsUtils.fillUserInfo(this, newUser);
@@ -154,10 +154,10 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     protected void finishOk()
     {
     	Intent returnValue = new Intent();
-    	List<User> users = new ArrayList<User>();
+    	List<UserVo> users = new ArrayList<UserVo>();
     	for (int i=0; i<data.getCount(); i++)
     		users.add(data.getItem(i));
-    	event.setUsers(users.toArray(new User[users.size()]));
+    	event.setUsers(users.toArray(new UserVo[users.size()]));
     	returnValue.putExtra("event", event);
     	setResult(RESULT_OK, returnValue);
     	

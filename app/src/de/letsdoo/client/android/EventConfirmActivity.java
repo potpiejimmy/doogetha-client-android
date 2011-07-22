@@ -10,22 +10,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.letsdoo.client.android.rest.EventsAccessor;
-import de.letsdoo.client.entity.Event;
-import de.letsdoo.client.entity.User;
+import de.letsdoo.client.entity.EventVo;
+import de.letsdoo.client.entity.UserVo;
 import de.letsdoo.client.util.ContactsUtils;
 import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 
 public class EventConfirmActivity extends Activity implements OnClickListener {
 
-	private Event event = null;
+	private EventVo event = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.eventconfirm);
     	
-    	this.event = (Event)getIntent().getExtras().get("event");
+    	this.event = (EventVo)getIntent().getExtras().get("event");
     	
 		TextView eventdatetime = (TextView) findViewById(R.id.eventconfirmdatetime);
 		eventdatetime.setText(event.getEventtime() != null ? Utils.formatDateTime(event.getEventtime()) : "");
@@ -41,9 +41,12 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
 		confirmbutton2.setOnClickListener(this);
 		
 		eventconfirmdescription.setText(event.getDescription());
+		
+		TextView activityconfirmtitle = (TextView) findViewById(R.id.activityconfirmtitle);
+        activityconfirmtitle.setText(Utils.getActivityTitle(this, event));
     	
     	LinearLayout list = (LinearLayout)findViewById(R.id.participantsconfirmlist);
-    	for (User user : event.getUsers()) {
+    	for (UserVo user : event.getUsers()) {
 			ContactsUtils.fillUserInfo(this, user);
 				
 			View vi = getLayoutInflater().inflate(R.layout.participant_confirm_item, null);
@@ -89,23 +92,23 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
 			this.state = state;
 		}
 		
-		public String doTask()
+		public String doTask() throws Throwable
 		{
-	    	try{
-    			EventsAccessor ea = Utils.getApp(EventConfirmActivity.this).getEventsAccessor();
-    			ea.getWebRequest().setParam("confirm", ""+state);
-    			ea.getItem(event.getId());
-	    		return "Gespeichert";
-	    	} catch (Exception ex) {
-	    		ex.printStackTrace();
-	    		return ex.toString();
-	    	}
+			EventsAccessor ea = Utils.getApp(EventConfirmActivity.this).getEventsAccessor();
+			ea.getWebRequest().setParam("confirm", ""+state);
+			ea.getItem(event.getId());
+    		return "Gespeichert";
 		}
 		
-		public void done(String result)
+		public void doneOk(String result)
 		{
     		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
     		finishOk();
+		}
+
+		public void doneFail(Throwable throwable)
+		{
+    		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
 		}
 	}
 

@@ -7,7 +7,8 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.widget.ImageView;
 import de.letsdoo.client.android.Letsdoo;
-import de.letsdoo.client.entity.User;
+import de.letsdoo.client.entity.EventVo;
+import de.letsdoo.client.entity.UserVo;
 
 /**
  * Static helper methods for Letsdoo app
@@ -66,7 +67,7 @@ public class Utils {
     	return stb.toString();
     }
     
-    public static void setIconForConfirmState(ImageView view, User user) {
+    public static void setIconForConfirmState(ImageView view, UserVo user) {
 		switch (user.getState()) {
 			case 0: /* new / unconfirmed */
 				view.setImageResource(android.R.drawable.btn_radio);
@@ -80,5 +81,15 @@ public class Utils {
 			default:
 				view.setImageDrawable(null);
 		}
+    }
+    
+    public static boolean isMyself(Activity activity, UserVo user) {
+    	return Utils.getApp(activity).getEmail().equalsIgnoreCase(user.getEmail());
+    }
+    
+    public static String getActivityTitle(Activity activity, EventVo event) {
+        boolean myOwn = Utils.isMyself(activity, event.getOwner());
+        if (!myOwn) ContactsUtils.fillUserInfo(activity, event.getOwner());
+        return myOwn ? "Meine Aktivität" : "Aktivität von " + ContactsUtils.userDisplayName(activity, event.getOwner());
     }
 }

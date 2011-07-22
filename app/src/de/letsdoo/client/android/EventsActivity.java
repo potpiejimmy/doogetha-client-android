@@ -23,16 +23,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import de.letsdoo.client.entity.Event;
-import de.letsdoo.client.entity.Events;
-import de.letsdoo.client.entity.User;
+import de.letsdoo.client.entity.EventVo;
+import de.letsdoo.client.entity.EventsVo;
+import de.letsdoo.client.entity.UserVo;
 import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
 public class EventsActivity extends ListActivity implements OnItemClickListener, OnClickListener {
 
-	private ArrayAdapter<Event> data = null;
+	private ArrayAdapter<EventVo> data = null;
 	
 	private Button newactivitybutton = null;
 	
@@ -49,7 +49,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
         
         newactivitybutton.setOnClickListener(this);
         
-    	this.data = new ArrayAdapter<Event>(this, R.layout.event_item) {
+    	this.data = new ArrayAdapter<EventVo>(this, R.layout.event_item) {
 			@Override
 			public View getView(int position, View convertView, ViewGroup viewGroup) {
 				if (convertView == null) {
@@ -57,7 +57,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		            convertView = inflater.inflate(R.layout.event_item, null);
 		        }
-				Event event = getItem(position);
+				EventVo event = getItem(position);
 				TextView displayName = (TextView) convertView.findViewById(R.id.eventitemname);
 				displayName.setText(event.getName());
 				TextView datetime = (TextView) convertView.findViewById(R.id.eventitemdatetime);
@@ -67,8 +67,8 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 					datetime.setText("");
 				}
 				ImageView icon = (ImageView) convertView.findViewById(R.id.eventstateiconview);
-				User myself = null;
-				for (User user : event.getUsers())
+				UserVo myself = null;
+				for (UserVo user : event.getUsers())
 					if (user.getEmail().equalsIgnoreCase(Utils.getApp(EventsActivity.this).getEmail()))
 						myself = user;
 				if (myself != null) Utils.setIconForConfirmState(icon, myself);
@@ -195,13 +195,13 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		confirmEvent(data.getItem(position));
 	}
 	
-	protected void editEvent(Event event) {
+	protected void editEvent(EventVo event) {
     	Intent intent = new Intent(getApplicationContext(), EventEditActivity.class);
     	intent.putExtra("event", event);
     	startActivityForResult(intent, 0);
 	}
 	
-	protected void confirmEvent(Event event) {
+	protected void confirmEvent(EventVo event) {
     	Intent intent = new Intent(getApplicationContext(), EventConfirmActivity.class);
     	intent.putExtra("event", event);
     	startActivityForResult(intent, 0);
@@ -227,32 +227,31 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     	});
     }
 	
-	protected class DataLoader extends AsyncUITask<Events>
+	protected class DataLoader extends AsyncUITask<EventsVo>
 	{
 		public DataLoader() { super(EventsActivity.this); }
 		
-		public Events doTask()
+		public EventsVo doTask() throws Throwable
 		{
-	    	Events msgs = null;
-	    	try{
-	    		msgs = Utils.getApp(EventsActivity.this).getEventsAccessor().getItems();
-	    	} catch (Exception ex) {
-	    		ex.printStackTrace();
-	    		msgs = new Events();
-	    		msgs.setEvents(new Event[] {new Event(ex.toString())});
-	    	}
-	    	return msgs;
+			return Utils.getApp(EventsActivity.this).getEventsAccessor().getItems();
 		}
 		
-		public void done(Events result)
+		public void doneOk(EventsVo result)
 		{
 			data.clear();
 			if (result != null && result.getEvents() != null)
-				for (Event e : result.getEvents()) data.add(e);
+				for (EventVo e : result.getEvents()) data.add(e);
+		}
+
+		public void doneFail(Throwable throwable)
+		{
+    		EventsVo msgs = new EventsVo();
+    		msgs.setEvents(new EventVo[] {new EventVo(throwable.toString())});
+    		doneOk(msgs); // XXX
 		}
 	}
 	
-	protected class SessionLoginTask extends AsyncUITask<String[]>
+	protected class SessionLoginTask extends AsyncUITask<String>
 	{
 		private String authkey = null;
 		
@@ -262,59 +261,50 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			this.authkey = authkey;
 		}
 		
-		public String[] doTask()
+		public String doTask() throws Throwable
 		{
-			String[] result = null;
-			try {
-				result = new String[] {Utils.getApp(EventsActivity.this).getLoginAccessor().insertItemWithResult(authkey),null};
-			} catch (Exception ex) {
-				result = new String[] {null,ex.toString()};
-			}
-			return result;
+			return Utils.getApp(EventsActivity.this).getLoginAccessor().insertItemWithResult(authkey);
 		}
 		
-		public void done(String[] result)
+		public void doneOk(String sessioncredentials)
 		{
-			String sessioncredentials = result[0];
-			if (sessioncredentials != null)
-			{
-		    	String userid = sessioncredentials.substring(0, sessioncredentials.indexOf(":"));
-		    	String password = sessioncredentials.substring(sessioncredentials.indexOf(":")+1);
-		    	String sessionkey = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
-		    	sessionCreateSuccess(sessionkey);
-			}
-			else
-			{
-				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
-			}
+	    	String userid = sessioncredentials.substring(0, sessioncredentials.indexOf(":"));
+	    	String password = sessioncredentials.substring(sessioncredentials.indexOf(":")+1);
+	    	String sessionkey = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
+	    	sessionCreateSuccess(sessionkey);
+		}
+		
+		public void doneFail(Throwable throwable) 
+		{
+			DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
 		}
 	}
 	
 	protected class Deleter extends AsyncUITask<String>
 	{
-		private Event event = null;
+		private EventVo event = null;
 		
-		public Deleter(Event event)
+		public Deleter(EventVo event)
 		{
 			super(EventsActivity.this);
 			this.event = event;
 		}
 		
-		public String doTask()
+		public String doTask() throws Throwable
 		{
-	    	try{
-	    		Utils.getApp(EventsActivity.this).getEventsAccessor().deleteItem(event.getId());
-	    		return "Gelšscht";
-	    	} catch (Exception ex) {
-	    		ex.printStackTrace();
-	    		return ex.toString();
-	    	}
+    		Utils.getApp(EventsActivity.this).getEventsAccessor().deleteItem(event.getId());
+    		return "Gelšscht";
 		}
 		
-		public void done(String result)
+		public void doneOk(String result)
 		{
 			data.remove(event);
     		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+		}
+
+		public void doneFail(Throwable throwable) 
+		{
+    		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -325,18 +315,12 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			super(EventsActivity.this);
 		}
 		
-		public String doTask()
+		public String doTask() throws Throwable
 		{
-			String result = null;
-			try {
-				result = Utils.getApp(EventsActivity.this).getVersionAccessor().getItems();
-			} catch (Exception ex) {
-				result = null;
-			}
-			return result;
+			return Utils.getApp(EventsActivity.this).getVersionAccessor().getItems();
 		}
 		
-		public void done(String result)
+		public void doneOk(String result)
 		{
 			if (result == null) return; // could not fetch current version, ignore
 			try {
@@ -346,6 +330,11 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			} catch (NumberFormatException nfe) {
 				// no valid version value received, just ignore and do nothing
 			}
+		}
+		
+		public void doneFail(Throwable throwable) 
+		{
+    		// just ignore
 		}
 	}	
 }

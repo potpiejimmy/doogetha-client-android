@@ -18,9 +18,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import de.letsdoo.client.android.rest.EventsAccessor;
-import de.letsdoo.client.entity.Event;
-import de.letsdoo.client.entity.User;
-import de.letsdoo.client.util.ContactsUtils;
+import de.letsdoo.client.entity.EventVo;
+import de.letsdoo.client.entity.UserVo;
 import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 
@@ -29,7 +28,7 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;
 	
-	private Event event = null;
+	private EventVo event = null;
 
 	private EditText activityname = null;
 	private EditText activitydescription = null;
@@ -62,28 +61,25 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
     	editdatetime.setOnClickListener(this);
         
         if (getIntent().getExtras() != null && getIntent().getExtras().get("event") != null)
-        	event = (Event)getIntent().getExtras().get("event");
+        	event = (EventVo)getIntent().getExtras().get("event");
         else {
-        	event = new Event("");
-        	User myself = new User();
+        	event = new EventVo("");
+        	UserVo myself = new UserVo();
         	myself.setEmail(Utils.getApp(this).getEmail());
         	myself.setState(1); /* confirmed */
-        	event.setUsers(new User[] {myself});
+        	event.setUsers(new UserVo[] {myself});
         	event.setOwner(myself);
         }
         
-        this.myOwn = Utils.getApp(this).getEmail().equalsIgnoreCase(event.getOwner().getEmail());
+        this.myOwn = Utils.isMyself(this, event.getOwner());
 
         if (!myOwn) {
-            // resolve owner name
-        	ContactsUtils.fillUserInfo(this, event.getOwner());
-        	
         	buttonok.setEnabled(false);  // XXX
         }
         
         activityname.setText(event.getName());
         activitydescription.setText(event.getDescription());
-        activitytitle.setText(myOwn ? "Meine Aktivität" : "Aktivität von " + ContactsUtils.userDisplayName(this, event.getOwner()));
+        activitytitle.setText(Utils.getActivityTitle(this, event));
         
         updateUI();
     }
@@ -137,7 +133,7 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (resultCode == RESULT_OK)
     	{
-    		event.setUsers(((Event)data.getExtras().get("event")).getUsers());
+    		event.setUsers(((EventVo)data.getExtras().get("event")).getUsers());
     		updateUI();
     	}
     }
@@ -151,25 +147,25 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
 	{
 		public Updater() { super(EventEditActivity.this); }
 		
-		public String doTask()
+		public String doTask() throws Throwable
 		{
-	    	try{
-	    		EventsAccessor ea = Utils.getApp(EventEditActivity.this).getEventsAccessor();
-	    		if (event.getId() != null)
-	    			ea.updateItem(event.getId(), event);
-	    		else
-	    			ea.insertItem(event);
-	    		return "Gespeichert";
-	    	} catch (Exception ex) {
-	    		ex.printStackTrace();
-	    		return ex.toString();
-	    	}
+    		EventsAccessor ea = Utils.getApp(EventEditActivity.this).getEventsAccessor();
+    		if (event.getId() != null)
+    			ea.updateItem(event.getId(), event);
+    		else
+    			ea.insertItem(event);
+    		return "Gespeichert";
 		}
 		
-		public void done(String result)
+		public void doneOk(String result)
 		{
     		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
     		finishOk();
+		}
+
+		public void doneFail(Throwable throwable)
+		{
+    		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
 		}
 	}
 

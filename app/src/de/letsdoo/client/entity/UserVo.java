@@ -3,7 +3,7 @@ package de.letsdoo.client.entity;
 /**
  *
  */
-public class User implements java.io.Serializable {
+public class UserVo implements java.io.Serializable {
     
 	/* User values */
 	private Integer id;
@@ -14,7 +14,7 @@ public class User implements java.io.Serializable {
     /* UserEvent values */
     private Integer state = null;
 
-    public User() {
+    public UserVo() {
     }
     
     public String getEmail() {

@@ -7,8 +7,8 @@ import java.util.Calendar;
 import android.app.Activity;
 import android.widget.ImageView;
 import de.letsdoo.client.android.Letsdoo;
-import de.letsdoo.client.entity.EventVo;
-import de.letsdoo.client.entity.UserVo;
+import de.letsdoo.server.vo.EventVo;
+import de.letsdoo.server.vo.UserVo;
 
 /**
  * Static helper methods for Letsdoo app

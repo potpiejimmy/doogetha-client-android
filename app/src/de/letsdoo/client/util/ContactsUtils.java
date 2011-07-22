@@ -3,11 +3,10 @@ package de.letsdoo.client.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.letsdoo.client.entity.UserVo;
-
 import android.app.Activity;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import de.letsdoo.server.vo.UserVo;
 
 public class ContactsUtils {
 	

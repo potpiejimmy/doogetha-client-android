@@ -18,9 +18,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import de.letsdoo.client.android.rest.EventsAccessor;
-import de.letsdoo.client.entity.EventVo;
-import de.letsdoo.client.entity.UserVo;
 import de.letsdoo.client.util.Utils;
+import de.letsdoo.server.vo.EventVo;
+import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 
 public class EventEditActivity extends Activity implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -63,7 +63,8 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
         if (getIntent().getExtras() != null && getIntent().getExtras().get("event") != null)
         	event = (EventVo)getIntent().getExtras().get("event");
         else {
-        	event = new EventVo("");
+        	event = new EventVo();
+        	event.setName("");
         	UserVo myself = new UserVo();
         	myself.setEmail(Utils.getApp(this).getEmail());
         	myself.setState(1); /* confirmed */

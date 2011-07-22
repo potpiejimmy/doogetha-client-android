@@ -26,9 +26,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-import de.letsdoo.client.entity.EventVo;
-import de.letsdoo.client.entity.UserVo;
 import de.letsdoo.client.util.ContactsUtils;
+import de.letsdoo.server.vo.EventVo;
+import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.DroidLib;
 
 public class ParticipantsActivity extends ListActivity implements OnItemClickListener, OnClickListener {

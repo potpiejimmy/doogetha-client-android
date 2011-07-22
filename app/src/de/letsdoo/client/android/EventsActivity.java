@@ -1,5 +1,7 @@
 package de.letsdoo.client.android;
 
+import java.util.Arrays;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,10 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import de.letsdoo.client.entity.EventVo;
-import de.letsdoo.client.entity.EventsVo;
-import de.letsdoo.client.entity.UserVo;
 import de.letsdoo.client.util.Utils;
+import de.letsdoo.server.vo.EventVo;
+import de.letsdoo.server.vo.EventsVo;
+import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
@@ -246,7 +248,9 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		public void doneFail(Throwable throwable)
 		{
     		EventsVo msgs = new EventsVo();
-    		msgs.setEvents(new EventVo[] {new EventVo(throwable.toString())});
+    		EventVo vo = new EventVo();
+    		vo.setName(throwable.toString());
+    		msgs.setEvents(Arrays.asList(new EventVo[] {vo}));
     		doneOk(msgs); // XXX
 		}
 	}

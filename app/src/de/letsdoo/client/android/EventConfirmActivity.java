@@ -10,10 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.letsdoo.client.android.rest.EventsAccessor;
-import de.letsdoo.client.entity.EventVo;
-import de.letsdoo.client.entity.UserVo;
 import de.letsdoo.client.util.ContactsUtils;
 import de.letsdoo.client.util.Utils;
+import de.letsdoo.server.vo.EventVo;
+import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 
 public class EventConfirmActivity extends Activity implements OnClickListener {

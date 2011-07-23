@@ -50,7 +50,11 @@ public abstract class AsyncUITask<T> implements Runnable
 				doneFail(throwable);
 			else
 				doneOk(result);
-    		dialog.cancel();
+			try {
+				dialog.cancel();
+			} catch (Exception ex) {
+				// ignore
+			}
 		}
 	}
 }

@@ -34,7 +34,9 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
 	private EditText activitydescription = null;
 	private ImageButton editdatetime = null;
 	private ImageButton editparticipants = null;
+	private ImageButton editsurveys = null;
 	private TextView participantssummary = null;
+	private TextView surveyssummary = null;
 	private TextView activitytitle = null;
 	private TextView datetimelabel = null;
 	
@@ -51,13 +53,16 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
     	this.activitydescription = (EditText) findViewById(R.id.activitydescription);
     	this.editdatetime = (ImageButton) findViewById(R.id.editdatetime);
     	this.editparticipants = (ImageButton) findViewById(R.id.editparticipants);
+    	this.editsurveys = (ImageButton) findViewById(R.id.editsurveys);
     	this.participantssummary = (TextView) findViewById(R.id.participantssummary);
+    	this.surveyssummary = (TextView) findViewById(R.id.surveyssummary);
     	this.activitytitle = (TextView) findViewById(R.id.activitytitle);
     	this.datetimelabel = (TextView) findViewById(R.id.datetimelabel);
     	
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
     	editparticipants.setOnClickListener(this);
+    	editsurveys.setOnClickListener(this);
     	editdatetime.setOnClickListener(this);
         
         if (getIntent().getExtras() != null && getIntent().getExtras().get("event") != null)
@@ -111,6 +116,13 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
     	startActivityForResult(intent, 0);
     }
     
+    protected void editSurveys()
+    {
+    	Intent intent = new Intent(getApplicationContext(), EventSurveysActivity.class);
+    	intent.putExtra("event", event);
+    	startActivityForResult(intent, 0);
+    }
+    
     protected void editDatetime()
     {
     	showDialog(DATE_DIALOG_ID);
@@ -135,12 +147,15 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
     	if (resultCode == RESULT_OK)
     	{
     		event.setUsers(((EventVo)data.getExtras().get("event")).getUsers());
+    		event.setSurveys(((EventVo)data.getExtras().get("event")).getSurveys());
     		updateUI();
     	}
     }
     
     protected void updateUI() {
     	participantssummary.setText(event.getUsers().length + " Teilnehmer");
+    	int snum = event.getSurveys() != null ? event.getSurveys().length : 0;
+    	surveyssummary.setText((snum == 0 ? "Keine" : ""+snum) + (snum == 1 ? " Abstimmung" : " Abstimmungen"));
     	datetimelabel.setText(event.getEventtime()==null ? "Nicht festgelegt" : Utils.formatDateTime(event.getEventtime()));
     }
     
@@ -181,6 +196,9 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
 			break;
 		case R.id.editparticipants:
 			editParticipants();
+			break;
+		case R.id.editsurveys:
+			editSurveys();
 			break;
 		case R.id.editdatetime:
 			editDatetime();

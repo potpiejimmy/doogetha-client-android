@@ -22,6 +22,7 @@ import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
+import de.potpiejimmy.util.DroidLib;
 
 public class EventEditActivity extends Activity implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 	
@@ -95,6 +96,14 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
     	event.setName(activityname.getText().toString());
     	event.setDescription(activitydescription.getText().toString());
 		new Updater().go("Speichern...");
+    }
+    
+    protected void validateAndSave() {
+    	if (activityname.getText().toString().trim().length() == 0) {
+    		DroidLib.toast(this, "Bitte geben Sie einen Namen für die Aktivität an");
+    		return;
+    	}
+    	addOrUpdate();
     }
     
     protected void finishOk()
@@ -189,7 +198,7 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
 		switch (view.getId())
 		{
 		case R.id.editok:
-			addOrUpdate();
+			validateAndSave();
 			break;
 		case R.id.editcancel:
 			finishCancel();

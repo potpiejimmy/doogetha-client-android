@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="de.letsdoo.client.android"
-      android:versionCode="15"
-      android:versionName="0.4.8">
+      android:versionCode="16"
+      android:versionName="0.4.9">
 
     <uses-permission
       android:name="android.permission.INTERNET" />
@@ -45,6 +45,10 @@
                   android:configChanges="keyboardHidden|orientation">
         </activity>
         <activity android:name="EventConfirmActivity"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:configChanges="keyboardHidden|orientation">
+        </activity>
+        <activity android:name="SurveyConfirmActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation">
         </activity>

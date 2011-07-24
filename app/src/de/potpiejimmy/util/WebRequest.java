@@ -65,7 +65,7 @@ public class WebRequest implements ResponseHandler<String>
         headers = new HashMap<String,String>();
 
         HttpParams httpParams = new BasicHttpParams();
-    	HttpConnectionParams.setSoTimeout(httpParams, 5000);
+    	HttpConnectionParams.setSoTimeout(httpParams, 10000);
     	
     	SchemeRegistry schemeRegistry = new SchemeRegistry ();
 
@@ -141,7 +141,7 @@ public class WebRequest implements ResponseHandler<String>
  
        setRequestHeaders(request);
        
-       return executeRequest(request);
+       return executeRequest(request, 3);
     }
 
 	public String put(String url, String msg) throws Exception
@@ -188,9 +188,8 @@ public class WebRequest implements ResponseHandler<String>
        }
 	}
  
-    protected String executeRequestImpl(HttpUriRequest request) throws Exception
+    protected String executeRequestImpl(HttpUriRequest request, int tries) throws Exception
     {
-    	final int tries = 10;
     	for (int i=0; i<tries; i++) {
     		try {
     	    	return client.execute(request, this);
@@ -203,7 +202,12 @@ public class WebRequest implements ResponseHandler<String>
     
     protected String executeRequest(HttpUriRequest request) throws Exception
     {
-    	String result = executeRequestImpl(request);
+    	return executeRequest(request, 1);
+    }
+    
+    protected String executeRequest(HttpUriRequest request, int tries) throws Exception
+    {
+    	String result = executeRequestImpl(request, tries);
     	assertResponseCode();
     	return result;
     }

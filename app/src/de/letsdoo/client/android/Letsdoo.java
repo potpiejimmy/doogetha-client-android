@@ -14,10 +14,10 @@ import de.letsdoo.client.android.rest.VersionAccessor;
 public class Letsdoo extends Application {
 	
 	public final static String PROTO    = "http://";
-	public final static String PROTOSEC = "https://";
+	public final static String PROTOSEC = "http://";
 	
-	public final static String URI = "www.potpiejimmy.de/doogetha/res/";
-	//public final static String URI = "192.168.100.30:8080/doogetha/res/";
+	//public final static String URI = "www.potpiejimmy.de/doogetha/res/";
+	public final static String URI = "192.168.100.30:8080/doogetha/res/";
 	//public final static String URI = "192.168.100.22:8089/doogetha/res/";
 	//public final static String URI = "172.18.119.203:8089/doogetha/res/";
 	

@@ -40,8 +40,6 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
 		confirmbutton1.setOnClickListener(this);
 		confirmbutton2.setOnClickListener(this);
 		
-		eventconfirmdescription.setText(event.getDescription());
-		
 		TextView activityconfirmtitle = (TextView) findViewById(R.id.activityconfirmtitle);
         activityconfirmtitle.setText(Utils.getActivityTitle(this, event));
     	

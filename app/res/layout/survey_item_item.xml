@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     >
-    <ImageView android:src="@android:drawable/checkbox_off_background"
-               android:id="@+id/imageView1"
-               android:layout_width="wrap_content"
-               android:gravity="left|center_vertical"
-               android:layout_height="match_parent"></ImageView>
-	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/surveyitemname"
-	    android:layout_width="wrap_content"
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:padding="10dip"
-	    android:textColor="#000"
-	    android:text="Welcher Film?">
-    </TextView>
+	    >
+	    <ImageView android:src="@android:drawable/checkbox_off_background"
+	               android:id="@+id/imageView1"
+	               android:layout_width="wrap_content"
+	               android:gravity="left|center_vertical"
+	               android:layout_height="match_parent"></ImageView>
+		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:id="@+id/surveyitemname"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:padding="10dip"
+		    android:textColor="#000"
+		    android:text="Welcher Film?">
+	    </TextView>
+	</LinearLayout>
+
+    <View android:id="@+id/view1" android:layout_width="wrap_content" android:layout_height="1dip" android:background="#fff"></View>
+
 </LinearLayout>

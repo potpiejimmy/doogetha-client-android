@@ -1,9 +1,11 @@
 package de.letsdoo.client.android;
 
+import java.net.ConnectException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.EventsVo;
+import de.letsdoo.server.vo.SurveyVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
@@ -207,7 +210,22 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 	}
 	
 	protected void confirmEvent(EventVo event) {
-    	Intent intent = new Intent(getApplicationContext(), EventConfirmActivity.class);
+		
+		boolean hasOpenSurveys = false;
+		if (event.getSurveys() != null) {
+			for (SurveyVo s : event.getSurveys())
+				if (s.getState() == 0) hasOpenSurveys = true;
+		}
+		
+		if (hasOpenSurveys) {
+			startEventActivityClass(SurveyConfirmActivity.class, event);
+		} else {
+			startEventActivityClass(EventConfirmActivity.class, event);
+		}
+	}
+	
+	protected void startEventActivityClass(Class<? extends Activity> clazz, EventVo event) {
+    	Intent intent = new Intent(getApplicationContext(), clazz);
     	intent.putExtra("event", event);
     	startActivityForResult(intent, 0);
 	}
@@ -292,8 +310,12 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		
 		public void doneFail(Throwable throwable) 
 		{
-			DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
-			if (!versionChecked) checkVersion();
+			if (throwable instanceof ConnectException) {
+				DroidLib.alert(EventsActivity.this, "Server nicht erreichbar.");
+			} else {
+				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
+				if (!versionChecked) checkVersion();
+			}
 		}
 	}
 	

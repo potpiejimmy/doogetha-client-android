@@ -61,8 +61,10 @@ public class EventSurveysActivity extends ListActivity implements OnItemClickLis
     	            convertView = inflater.inflate(R.layout.survey_item, null);
     	        }
     			SurveyVo survey = getItem(position);
-    			TextView displayName = (TextView) convertView.findViewById(R.id.surveyname);
-    			displayName.setText(survey.getName());
+    			TextView name = (TextView) convertView.findViewById(R.id.surveyname);
+    			name.setText(survey.getName());
+    			TextView description = (TextView) convertView.findViewById(R.id.surveydescription);
+    			description.setText(survey.getDescription());
     	        return convertView;
     		}
     	};
@@ -105,9 +107,11 @@ public class EventSurveysActivity extends ListActivity implements OnItemClickLis
     	if (resultCode == RESULT_OK)
     	{
     		SurveyVo survey = (SurveyVo)data.getExtras().get("survey");
-    		if (reqCode > 0)
+    		if (reqCode > 0) {
     			this.data.remove(this.data.getItem(reqCode-1));
-			this.data.add(survey);
+    			this.data.insert(survey, reqCode-1);
+    		} else
+    			this.data.add(survey);
     	}
     }
     
@@ -115,14 +119,20 @@ public class EventSurveysActivity extends ListActivity implements OnItemClickLis
     	Intent intent = new Intent(getApplicationContext(), SurveyEditActivity.class);
     	startActivityForResult(intent, 0);
 	}
-	
-    protected void finishOk()
+    
+    protected void saveValues()
     {
-    	Intent returnValue = new Intent();
     	List<SurveyVo> surveys = new ArrayList<SurveyVo>();
     	for (int i=0; i<data.getCount(); i++)
     		surveys.add(data.getItem(i));
-    	event.setSurveys(surveys.toArray(new SurveyVo[surveys.size()]));
+    	event.setSurveys(surveys.size() == 0 ? null : surveys.toArray(new SurveyVo[surveys.size()]));
+    }
+	
+    protected void finishOk()
+    {
+    	saveValues();
+    	
+    	Intent returnValue = new Intent();
     	returnValue.putExtra("event", event);
     	setResult(RESULT_OK, returnValue);
     	

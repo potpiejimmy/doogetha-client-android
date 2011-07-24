@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="#adf"
+  >
+    
+    <ScrollView android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
+    <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        
+    <LinearLayout android:layout_height="wrap_content"
+                  android:id="@+id/linearLayout3" 
+                  android:layout_width="match_parent"
+                  android:background="#606060">
+        <TextView android:id="@+id/activityconfirmtitle" 
+                  android:layout_width="match_parent" 
+                  android:layout_margin="3dip" 
+                  android:text="Aktivität" 
+                  android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    <TextView android:layout_width="wrap_content"
+              android:id="@+id/eventconfirmdatetime" 
+              android:layout_height="wrap_content" 
+              android:text="28.05.2011 18:00" 
+              android:layout_margin="5dip"
+              android:textColor="#000">
+    </TextView>
+    <TextView android:layout_width="wrap_content" 
+              android:id="@+id/eventconfirmtitle" 
+              android:layout_height="wrap_content" 
+              android:textAppearance="?android:attr/textAppearanceLarge" 
+              android:text="Bowlingabend in Sachsenhausen" 
+              android:layout_margin="5dip"
+              android:textColor="#000">
+    </TextView>
+    <TextView android:layout_width="wrap_content" 
+              android:id="@+id/eventconfirmdescription" 
+              android:layout_height="wrap_content" 
+              android:textAppearance="?android:attr/textAppearanceSmall" 
+              android:text="Dies wird ein wunderschöner Abend im Herzen Frankfurts. Es wird Bowling gespielt, Bier getrunken, gesungen, gelacht und getanzt. Dazu gibt es frische Burger und Pommes." 
+              android:layout_margin="5dip"
+              android:textColor="#000">
+    </TextView>
+
+    <LinearLayout android:layout_height="wrap_content"
+                  android:id="@+id/linearLayout3" 
+                  android:layout_width="match_parent"
+                  android:background="#606060">
+        <TextView android:id="@+id/activityconfirmtitle" 
+                  android:layout_width="match_parent" 
+                  android:layout_margin="3dip" 
+                  android:text="Bitte stimmen Sie ab:" 
+                  android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    <RelativeLayout android:id="@+id/relativeLayout1" android:layout_gravity="center_horizontal" android:gravity="center_horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <ImageButton android:id="@+id/previousbutton" android:src="@android:drawable/ic_media_rew" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true"></ImageButton>
+        <ImageButton android:id="@+id/nextbutton" android:src="@android:drawable/ic_media_ff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true"></ImageButton>
+        <TextView android:text="Terminfindung" 
+                  android:id="@+id/surveyname"
+                  android:textColor="#000" 
+                  android:textAppearance="?android:attr/textAppearanceMedium" 
+                  android:gravity="center_vertical|center_horizontal" 
+                  android:layout_width="match_parent" 
+                  android:layout_height="match_parent" android:layout_marginLeft="64dip" android:layout_marginRight="64dip" android:layout_marginTop="8dip" android:layout_marginBottom="8dip"></TextView>
+    </RelativeLayout>
+    
+		    <ViewFlipper android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/viewFlipper">
+		    </ViewFlipper>
+
+	</LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

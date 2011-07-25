@@ -98,6 +98,6 @@ public class VerticalLabelView extends View {
 
         canvas.translate(0, 0);
         canvas.rotate(-90);
-        canvas.drawText(mText, -getWidth()+text_bounds.width(), (getHeight()/2f - mAscent)/2f, mTextPaint);
+        canvas.drawText(mText, 3-getHeight()+text_bounds.width(), (getWidth() - mAscent)/2f, mTextPaint);
     }
 }

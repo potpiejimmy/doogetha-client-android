@@ -177,12 +177,14 @@ public class SurveyEditActivity extends Activity implements OnClickListener {
 							break;
 						case 1:
 							removeSurveyItem(currentSelection);
+							currentSelection = -1;
 							break;
 					}
 				}
 			}, new android.content.DialogInterface.OnDismissListener() {
 				public void onDismiss(DialogInterface dialog) {
-		    		surveyItemsList.getChildAt(currentSelection).setBackgroundDrawable(lastBackground);
+					if (currentSelection >= 0)
+						surveyItemsList.getChildAt(currentSelection).setBackgroundDrawable(lastBackground);
 				}
 			});
 		}

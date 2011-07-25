@@ -1,5 +1,8 @@
 package de.letsdoo.client.android;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,6 +35,10 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	private ImageButton nextbutton = null;
 	private ImageButton previousbutton = null;
 	
+	private List<List<ImageView>> selectionViews = new ArrayList<List<ImageView>>();
+	
+	private UserVo myself = null;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +61,10 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 		TextView activityconfirmtitle = (TextView) findViewById(R.id.activityconfirmtitle);
         activityconfirmtitle.setText(Utils.getActivityTitle(this, event));
     	
+        for (UserVo user : event.getUsers())
+        	if (Utils.getApp(this).getEmail().equalsIgnoreCase(user.getEmail()))
+        		myself = user;
+        
         for (SurveyVo survey : event.getSurveys())
         	addSurveyView(survey);
         
@@ -91,14 +102,20 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.FILL_PARENT);
     	
     	// add header
+    	table.addView(horizontalSeparator(), tableParams);
+    	
     	TableRow row = new TableRow(this);
-    	row.addView(new TextView(this), tableParams);
+    	row.addView(verticalSeparator(), tableParams);
+    	TextView emptyCorner = new TextView(this);
+		emptyCorner.setBackgroundColor(Color.LTGRAY);
+    	row.addView(emptyCorner, tableParams);
     	row.addView(verticalSeparator(), tableParams);
     	row.setLayoutParams(tableParams);
     	
-    	for (UserVo user : event.getUsers()) {
+    	for (int i=0; i<event.getUsers().length; i++) {
+    		UserVo user = event.getUsers()[i];
     		ContactsUtils.fillUserInfo(this, user);
-    		row.addView(tableTextView(ContactsUtils.userDisplayName(this, user), true), tableParams);
+    		row.addView(tableTextView(ContactsUtils.userDisplayName(this, user), true, i==0), tableParams);
         	row.addView(verticalSeparator(), tableParams);
     	}
     	
@@ -109,16 +126,22 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	if (survey.getSurveyItems() != null) {
 	    	for (SurveyItemVo item : survey.getSurveyItems()) {
 	    		row = new TableRow(this);
+	        	row.addView(verticalSeparator(), tableParams);
 	        	row.setLayoutParams(tableParams);
-	    		row.addView(tableTextView(item.getName(), false), tableParams);
+	    		row.addView(tableTextView(item.getName(), false, false), tableParams);
 	        	row.addView(verticalSeparator(), tableParams);
 	    		
-	    		for (UserVo user : event.getUsers()) {
+	        	List<ImageView> currentSelectionViews = new ArrayList<ImageView>();
+	    		for (int i=0; i<event.getUsers().length; i++) {
+	    			UserVo user = event.getUsers()[i];
 	    			ImageView iv = new ImageView(this);
-	    			setImageForUserStatus(iv, item, user);
+	    			setImageForUserStatus(iv, item, user, i==0);
+	    			if (i==0) currentSelectionViews.add(iv);
+	    			if (i==0) iv.setOnClickListener(this);
 	    			row.addView(iv, tableParams);
 	    	    	row.addView(verticalSeparator(), tableParams);
 	    		}
+	    		this.selectionViews.add(currentSelectionViews);
 	        	table.addView(row, tableParams);
 	        	table.addView(horizontalSeparator(), tableParams);
 	    	}
@@ -127,10 +150,12 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	flipper.addView(surveyconfirmview);
     }
     
-    protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user) {
+    protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean myColumn) {
     	// find user status:
 		view.setImageResource(android.R.drawable.presence_offline);
-		view.setPadding(20,20,20,20);
+		int padding = myColumn ? 20 : 5;
+		view.setPadding(padding,padding,padding,padding);
+		if (!myColumn) view.setBackgroundColor(Color.LTGRAY);
     	if (item.getConfirmations() != null) {
     		for (SurveyItemUserVo confirmation : item.getConfirmations()) {
     			if (confirmation.getUserId() == user.getId()) {
@@ -150,13 +175,23 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	}
     }
     
-    protected View tableTextView(String text, boolean vertical) {
+    protected String trimParticipantName(String name) {
+    	final int MAXLEN = 20;
+    	name = name.trim();
+    	if (name.length() <= MAXLEN) return name;
+    	return name.substring(0, MAXLEN) + "...";
+    }
+    
+    protected View tableTextView(String text, boolean vertical, boolean myColumn) {
     	if (vertical) {
     		VerticalLabelView v = new VerticalLabelView(this);
-    		v.setText(text);
+    		if (!myColumn) v.setBackgroundColor(Color.LTGRAY);
+    		v.setText(trimParticipantName(text));
     		return v;
     	} else {
 			TextView v = new TextView(this);
+			if (!myColumn) v.setBackgroundColor(Color.LTGRAY);
+			v.setWidth(120);
 			v.setText(text);
 			v.setGravity(Gravity.CENTER_VERTICAL);
 			v.setPadding(5,5,5,5);
@@ -175,6 +210,34 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     }
     
 	public void onClick(View v) {
+		if (v.getId() < 0) {
+			List<ImageView> currentSelectionViews = this.selectionViews.get(currentIndex);
+			for (int i=0; i<currentSelectionViews.size(); i++) {
+				if (currentSelectionViews.get(i) == v) {
+					SurveyItemVo item = event.getSurveys()[currentIndex].getSurveyItems()[i];
+					SurveyItemUserVo itemUser = null;
+					if (item.getConfirmations() != null) {
+						for (SurveyItemUserVo user : item.getConfirmations())
+							if (user.getUserId() == myself.getId())
+								itemUser = user;
+					}
+					if (itemUser == null) {
+						itemUser = new SurveyItemUserVo();
+						itemUser.setUserId(myself.getId());
+					}
+					itemUser.setState((itemUser.getState()+1) % 3);
+					if (item.getConfirmations() == null) {
+						item.setConfirmations(new SurveyItemUserVo[] {itemUser});
+					} else {
+						SurveyItemUserVo[] newArray = new SurveyItemUserVo[item.getConfirmations().length+1];
+						System.arraycopy(item.getConfirmations(), 0, newArray, 0, item.getConfirmations().length);
+						newArray[newArray.length-1] = itemUser;
+						item.setConfirmations(newArray);
+					}
+					setImageForUserStatus((ImageView)v, item, myself, true);
+				}
+			}
+		}
 		switch (v.getId())
 		{
 			case R.id.nextbutton:

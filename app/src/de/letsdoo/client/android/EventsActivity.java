@@ -73,7 +73,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 				if (event.getEventtime() != null) {
 					datetime.setText(Utils.formatDateTime(event.getEventtime()));
 				} else {
-					datetime.setText("");
+					datetime.setText("???");
 				}
 				ImageView icon = (ImageView) convertView.findViewById(R.id.eventstateiconview);
 				UserVo myself = null;
@@ -250,6 +250,21 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			}
     	});
     }
+    
+    protected EventVo meFirst(EventVo e) {
+    	int found = -1;
+    	UserVo[] users = e.getUsers();
+    	for (int i=0; i<users.length; i++) {
+    		if (users[i].getEmail().equalsIgnoreCase(Utils.getApp(this).getEmail()))
+    			{ found = i; break; }
+    	}
+    	if (found>0) {
+    		UserVo me = users[found];
+    		users[found] = users[0];
+    		users[0] = me;
+    	}
+    	return e;
+    }
 	
 	protected class DataLoader extends AsyncUITask<EventsVo>
 	{
@@ -266,7 +281,7 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			Map<String,String> allMails = new HashMap<String,String>();
 			if (result != null && result.getEvents() != null)
 				for (EventVo e : result.getEvents()) {
-					data.add(e);
+					data.add(meFirst(e));
 					for (UserVo user : e.getUsers())
 						allMails.put(user.getEmail(), user.getEmail());
 				}

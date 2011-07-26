@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -52,6 +53,11 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 		eventconfirmtitle.setText(event.getName());
 		TextView eventconfirmdescription = (TextView) findViewById(R.id.eventconfirmdescription);
 		eventconfirmdescription.setText(event.getDescription());
+
+		Button buttonok = (Button) findViewById(R.id.editok);
+    	Button buttoncancel = (Button) findViewById(R.id.editcancel);
+    	buttonok.setOnClickListener(this);
+    	buttoncancel.setOnClickListener(this);
 		
 		previousbutton = (ImageButton) findViewById(R.id.previousbutton);
 		nextbutton = (ImageButton) findViewById(R.id.nextbutton);
@@ -72,7 +78,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     }
     
     protected void showSurvey(int index) {
-    	((TextView)findViewById(R.id.surveyname)).setText(event.getSurveys()[index].getName());
+    	((TextView)findViewById(R.id.surveyname)).setText(event.getSurveys()[index].getName() + " (" + (index+1) + "/" + event.getSurveys().length + ")");
     	ViewFlipper flipper = (ViewFlipper)findViewById(R.id.viewFlipper);
     	
     	if (index > currentIndex)
@@ -123,6 +129,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	table.addView(horizontalSeparator(), tableParams);
     	
     	// add survey items:
+    	List<ImageView> currentSelectionViews = new ArrayList<ImageView>();
     	if (survey.getSurveyItems() != null) {
 	    	for (SurveyItemVo item : survey.getSurveyItems()) {
 	    		row = new TableRow(this);
@@ -131,28 +138,31 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	    		row.addView(tableTextView(item.getName(), false, false), tableParams);
 	        	row.addView(verticalSeparator(), tableParams);
 	    		
-	        	List<ImageView> currentSelectionViews = new ArrayList<ImageView>();
 	    		for (int i=0; i<event.getUsers().length; i++) {
+	    			
 	    			UserVo user = event.getUsers()[i];
 	    			ImageView iv = new ImageView(this);
 	    			setImageForUserStatus(iv, item, user, i==0);
-	    			if (i==0) currentSelectionViews.add(iv);
-	    			if (i==0) iv.setOnClickListener(this);
 	    			row.addView(iv, tableParams);
 	    	    	row.addView(verticalSeparator(), tableParams);
+
+	    	    	if (i==0) {
+	    				currentSelectionViews.add(iv);
+	    				iv.setOnClickListener(this);
+	    			}
 	    		}
-	    		this.selectionViews.add(currentSelectionViews);
 	        	table.addView(row, tableParams);
 	        	table.addView(horizontalSeparator(), tableParams);
 	    	}
     	}
+		this.selectionViews.add(currentSelectionViews);
     	
     	flipper.addView(surveyconfirmview);
     }
     
     protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean myColumn) {
     	// find user status:
-		view.setImageResource(android.R.drawable.presence_offline);
+		view.setImageResource(R.drawable.survey_neutral);
 		int padding = myColumn ? 20 : 5;
 		view.setPadding(padding,padding,padding,padding);
 		if (!myColumn) view.setBackgroundColor(Color.LTGRAY);
@@ -161,13 +171,13 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     			if (confirmation.getUserId() == user.getId()) {
     				switch (confirmation.getState()) {
     				case 0:
-    		    		view.setImageResource(android.R.drawable.presence_offline);
+    		    		view.setImageResource(R.drawable.survey_neutral);
     		    		break;
     				case 1:
-    		    		view.setImageResource(android.R.drawable.presence_online);
+    		    		view.setImageResource(R.drawable.survey_confirm);
     		    		break;
     				case 2:
-    		    		view.setImageResource(android.R.drawable.presence_busy);
+    		    		view.setImageResource(R.drawable.survey_deny);
     		    		break;
     				}
     			}
@@ -245,6 +255,10 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 				break;
 			case R.id.previousbutton:
 				showSurvey(currentIndex-1);
+				break;
+			case R.id.editok:
+				break;
+			case R.id.editcancel:
 				break;
 		}
 	}

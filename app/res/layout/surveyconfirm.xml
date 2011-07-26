@@ -68,9 +68,28 @@
                   android:layout_height="match_parent" android:layout_marginLeft="64dip" android:layout_marginRight="64dip" android:layout_marginTop="8dip" android:layout_marginBottom="8dip"></TextView>
     </RelativeLayout>
     
-		    <ViewFlipper android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/viewFlipper">
-		    </ViewFlipper>
+    <ViewFlipper android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/viewFlipper">
+    </ViewFlipper>
 
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    >
+		<Button android:id="@+id/editok"
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+	               android:layout_weight="0.5"
+		    android:text="@string/save"
+		    />
+		<Button android:id="@+id/editcancel"
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+	               android:layout_weight="0.5"
+		    android:text="@string/cancel"
+		    />
+	</LinearLayout>
+	
 	</LinearLayout>
     </ScrollView>
 

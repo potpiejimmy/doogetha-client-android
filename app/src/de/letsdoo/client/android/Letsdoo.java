@@ -8,6 +8,7 @@ import android.util.Log;
 import de.letsdoo.client.android.rest.EventsAccessor;
 import de.letsdoo.client.android.rest.LoginAccessor;
 import de.letsdoo.client.android.rest.RegisterAccessor;
+import de.letsdoo.client.android.rest.SurveysAccessor;
 import de.letsdoo.client.android.rest.UsersAccessor;
 import de.letsdoo.client.android.rest.VersionAccessor;
 
@@ -24,6 +25,7 @@ public class Letsdoo extends Application {
 	public final static String DOWNLOADURL = "http://www.potpiejimmy.de/download/Doogetha.apk";
 	
 	private EventsAccessor eventsAccessor = null;
+	private SurveysAccessor surveysAccessor = null;
 	private UsersAccessor usersAccessor = null;
 	private RegisterAccessor registerAccessor = null;
 	private LoginAccessor loginAccessor = null;
@@ -39,6 +41,7 @@ public class Letsdoo extends Application {
 	@Override
 	public void onCreate() {
 		eventsAccessor = new EventsAccessor(PROTOSEC + URI + "events");
+		surveysAccessor = new SurveysAccessor(PROTOSEC + URI + "surveys");
 		usersAccessor = new UsersAccessor(PROTOSEC + URI + "users");
 		registerAccessor = new RegisterAccessor(PROTOSEC + URI + "register");
 		loginAccessor = new LoginAccessor(PROTOSEC + URI + "login");
@@ -58,6 +61,10 @@ public class Letsdoo extends Application {
 	
 	public EventsAccessor getEventsAccessor() {
 		return eventsAccessor;
+	}
+	
+	public SurveysAccessor getSurveysAccessor() {
+		return surveysAccessor;
 	}
 	
 	public UsersAccessor getUsersAccessor() {
@@ -130,6 +137,7 @@ public class Letsdoo extends Application {
 	
 	public void newSession(String sessionkey) {
     	eventsAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
+    	surveysAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
     	usersAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
 	}
 	

@@ -17,6 +17,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+import de.letsdoo.client.android.rest.SurveysAccessor;
 import de.letsdoo.client.util.ContactsUtils;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.client.util.VerticalLabelView;
@@ -257,14 +258,16 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 				showSurvey(currentIndex-1);
 				break;
 			case R.id.editok:
+				confirm();
 				break;
 			case R.id.editcancel:
+				finishCancel();
 				break;
 		}
 	}
 	
-	protected void confirm(int state) {
-		new Confirmer(state).go("Speichern...");
+	protected void confirm() {
+		new Confirmer().go("Speichern...");
 	}
 	
     protected void finishOk()
@@ -273,20 +276,23 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	finish();
     }
     
+    protected void finishCancel()
+    {
+    	setResult(RESULT_CANCELED);
+    	finish();
+    }
+    
 	protected class Confirmer extends AsyncUITask<String>
 	{
-		private int state = 0;
-		
-		public Confirmer(int state) {
+		public Confirmer() {
 			super(SurveyConfirmActivity.this);
-			this.state = state;
 		}
 		
 		public String doTask() throws Throwable
 		{
-			//EventsAccessor ea = Utils.getApp(SurveyConfirmActivity.this).getEventsAccessor();
-			//ea.getWebRequest().setParam("confirm", ""+state);
-			//ea.getItem(event.getId());
+			SurveysAccessor sa = Utils.getApp(SurveyConfirmActivity.this).getSurveysAccessor();
+			for (SurveyVo survey : event.getSurveys())
+				sa.updateItem(survey.getId(), survey);
     		return "Gespeichert";
 		}
 		

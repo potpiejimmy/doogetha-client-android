@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#adf"
+    android:background="#afd"
     >
     <LinearLayout android:layout_height="wrap_content"
     		      android:id="@+id/linearLayout1"
@@ -22,7 +22,7 @@
                   android:layout_weight="0.0" 
                   android:layout_width="wrap_content" 
                   android:layout_marginLeft="10dip"
-                  android:textColor="#adf">
+                  android:textColor="#afd">
         </TextView>
         <TextView android:textAppearance="?android:attr/textAppearanceSmall"
                   android:id="@+id/versionlabel"
@@ -32,7 +32,7 @@
                   android:gravity="right|bottom"
                   android:layout_margin="2dip"
                   android:textSize="11.0sp"
-                  android:textColor="#adf">
+                  android:textColor="#afd">
         </TextView>
     </LinearLayout>
     <LinearLayout android:id="@+id/linearLayout2"
@@ -56,8 +56,8 @@
 <ListView android:id="@id/android:list"
                android:layout_width="match_parent"
                android:layout_height="match_parent"
-               android:background="#adf"
-               android:cacheColorHint="#adf"
+               android:background="#afd"
+               android:cacheColorHint="#afd"
                android:layout_weight="1"
                android:drawSelectorOnTop="false"/>
 </LinearLayout>

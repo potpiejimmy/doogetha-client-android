@@ -13,6 +13,8 @@ import de.letsdoo.client.android.rest.EventsAccessor;
 import de.letsdoo.client.util.ContactsUtils;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
+import de.letsdoo.server.vo.SurveyItemVo;
+import de.letsdoo.server.vo.SurveyVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 
@@ -28,11 +30,14 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
     	this.event = (EventVo)getIntent().getExtras().get("event");
     	
 		TextView eventdatetime = (TextView) findViewById(R.id.eventconfirmdatetime);
-		eventdatetime.setText(event.getEventtime() != null ? Utils.formatDateTime(event.getEventtime()) : "");
+		if (event.getEventtime() != null)
+			eventdatetime.setText(Utils.formatDateTime(event.getEventtime()));
+		else
+			eventdatetime.setVisibility(View.GONE);
 		TextView eventconfirmtitle = (TextView) findViewById(R.id.eventconfirmtitle);
 		eventconfirmtitle.setText(event.getName());
 		TextView eventconfirmdescription = (TextView) findViewById(R.id.eventconfirmdescription);
-		eventconfirmdescription.setText(event.getDescription());
+		eventconfirmdescription.setText(getEventDescription());
 
 		Button confirmbutton1 = (Button) findViewById(R.id.eventconfirmbutton1);
 		Button confirmbutton2 = (Button) findViewById(R.id.eventconfirmbutton2);
@@ -57,6 +62,24 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
 			list.addView(vi);
 		}
 
+    }
+    
+    protected String getEventDescription() {
+    	StringBuilder stb = new StringBuilder();
+    	stb.append(event.getDescription());
+    	if (event.getSurveys() != null) {
+    		for (SurveyVo survey : event.getSurveys()) {
+    			stb.append("\n\n");
+    			stb.append(survey.getName());
+    			stb.append(": ");
+    			if (survey.getSurveyItems() != null) {
+	    			for (SurveyItemVo item : survey.getSurveyItems())
+	    				if (item.getState() == 1) /* closed survey result item */
+	    					stb.append(item.getName());
+    			}
+    		}
+    	}
+    	return stb.toString();
     }
 
 	public void onClick(View v) {

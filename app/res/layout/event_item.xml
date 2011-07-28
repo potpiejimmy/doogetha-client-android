@@ -15,12 +15,12 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    >
+	    <LinearLayout android:layout_width="fill_parent" android:layout_height="10dip"/>
 		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:id="@+id/eventitemdatetime"
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
-		    android:paddingLeft="5dp"
-		    android:paddingTop="10dp"
+		    android:paddingLeft="5dip"
 		    android:textSize="10sp"
 		    android:textColor="#000"
 		    android:text="eventitemdatetime">
@@ -29,10 +29,11 @@
 			android:id="@+id/eventitemname"
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
-		    android:paddingLeft="5dp"
-		    android:paddingBottom="10dp"
+		    android:paddingLeft="5dip"
+		    android:paddingBottom="10dip"
 		    android:textSize="18sp"
-		    android:textColor="#000">
+		    android:textColor="#000"
+		    android:text="Ein tolles Event">
 		</TextView>
 	</LinearLayout>
 </LinearLayout>

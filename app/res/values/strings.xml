@@ -10,4 +10,8 @@
     <string name="save">Speichern</string>
     <string name="deleteitem">Eintrag löschen</string>
     <string name="edititem">Eintrag bearbeiten</string>
+    <string name="createnewactivity">Neue\nAktivität...</string>
+    <string name="currentactivities">Aktuelle\nAktivitäten</string>
+    <string name="myactivities">Meine\nAktivitäten</string>
+    <string name="publicactivities">Community</string>
 </resources>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -27,6 +28,7 @@ import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
+import de.potpiejimmy.util.DroidLib;
 
 public class SurveyConfirmActivity extends Activity implements OnClickListener {
 
@@ -37,9 +39,12 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	private ImageButton nextbutton = null;
 	private ImageButton previousbutton = null;
 	
-	private List<List<ImageView>> selectionViews = new ArrayList<List<ImageView>>();
+	private List<List<ImageView>> confirmViews = new ArrayList<List<ImageView>>();
+	private List<List<View>> closeViews = new ArrayList<List<View>>();
 	
 	private UserVo myself = null;
+	
+	private boolean myOwn = false;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,10 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	this.event = (EventVo)getIntent().getExtras().get("event");
     	
 		TextView eventdatetime = (TextView) findViewById(R.id.eventconfirmdatetime);
-		eventdatetime.setText(event.getEventtime() != null ? Utils.formatDateTime(event.getEventtime()) : "");
+		if (event.getEventtime() != null)
+			eventdatetime.setText(Utils.formatDateTime(event.getEventtime()));
+		else
+			eventdatetime.setVisibility(View.GONE);
 		TextView eventconfirmtitle = (TextView) findViewById(R.id.eventconfirmtitle);
 		eventconfirmtitle.setText(event.getName());
 		TextView eventconfirmdescription = (TextView) findViewById(R.id.eventconfirmdescription);
@@ -71,6 +79,8 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
         for (UserVo user : event.getUsers())
         	if (Utils.getApp(this).getEmail().equalsIgnoreCase(user.getEmail()))
         		myself = user;
+        
+        this.myOwn = event.getOwner().getId() == myself.getId();
         
         for (SurveyVo survey : event.getSurveys())
         	addSurveyView(survey);
@@ -130,14 +140,22 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	table.addView(horizontalSeparator(), tableParams);
     	
     	// add survey items:
-    	List<ImageView> currentSelectionViews = new ArrayList<ImageView>();
+    	List<ImageView> currentConfirmViews = new ArrayList<ImageView>();
+    	List<View> currentCloseViews = new ArrayList<View>();
     	if (survey.getSurveyItems() != null) {
 	    	for (SurveyItemVo item : survey.getSurveyItems()) {
+	    		
 	    		row = new TableRow(this);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	row.setLayoutParams(tableParams);
-	    		row.addView(tableTextView(item.getName(), false, false), tableParams);
+	        	View itemLabel = tableTextView(item.getName(), false, false);
+	    		row.addView(itemLabel, tableParams);
 	        	row.addView(verticalSeparator(), tableParams);
+	        	
+	        	if (this.myOwn) {
+	        		currentCloseViews.add(itemLabel);
+	        		itemLabel.setOnClickListener(this);
+	        	}
 	    		
 	    		for (int i=0; i<event.getUsers().length; i++) {
 	    			
@@ -148,7 +166,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	    	    	row.addView(verticalSeparator(), tableParams);
 
 	    	    	if (i==0) {
-	    				currentSelectionViews.add(iv);
+	    				currentConfirmViews.add(iv);
 	    				iv.setOnClickListener(this);
 	    			}
 	    		}
@@ -156,7 +174,8 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	        	table.addView(horizontalSeparator(), tableParams);
 	    	}
     	}
-		this.selectionViews.add(currentSelectionViews);
+		this.confirmViews.add(currentConfirmViews);
+		this.closeViews.add(currentCloseViews);
     	
     	flipper.addView(surveyconfirmview);
     }
@@ -164,7 +183,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean myColumn) {
     	// find user status:
 		view.setImageResource(R.drawable.survey_neutral);
-		int padding = myColumn ? 20 : 5;
+		int padding = myColumn ? 20 : (event.getUsers().length <= 5 ? 20 : 5);
 		view.setPadding(padding,padding,padding,padding);
 		if (!myColumn) view.setBackgroundColor(Color.LTGRAY);
     	if (item.getConfirmations() != null) {
@@ -187,10 +206,10 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     }
     
     protected String trimParticipantName(String name) {
-    	final int MAXLEN = 20;
+    	final int MAXLEN = 22;
     	name = name.trim();
     	if (name.length() <= MAXLEN) return name;
-    	return name.substring(0, MAXLEN) + "...";
+    	return name.substring(0, MAXLEN-2) + "...";
     }
     
     protected View tableTextView(String text, boolean vertical, boolean myColumn) {
@@ -201,13 +220,13 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     		return v;
     	} else {
 			TextView v = new TextView(this);
-			if (!myColumn) v.setBackgroundColor(Color.LTGRAY);
+			if (!myColumn && !myOwn) v.setBackgroundColor(Color.LTGRAY);
 			v.setWidth(120);
 			v.setText(text);
 			v.setGravity(Gravity.CENTER_VERTICAL);
 			v.setPadding(5,5,5,5);
 			v.setTextColor(Color.BLACK);
-			v.setTextSize(10f);
+			v.setTextSize(11f);
 			return v;
     	}
     }
@@ -220,32 +239,53 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	return getLayoutInflater().inflate(R.layout.horizontal_separator, null).findViewById(R.id.horizontal_separator);
     }
     
+    protected void toggleConfirmation(SurveyItemVo item, ImageView v) {
+		SurveyItemUserVo itemUser = null;
+		if (item.getConfirmations() != null) {
+			for (SurveyItemUserVo user : item.getConfirmations())
+				if (user.getUserId() == myself.getId())
+					itemUser = user;
+		}
+		if (itemUser == null) {
+			itemUser = new SurveyItemUserVo();
+			itemUser.setUserId(myself.getId());
+		}
+		itemUser.setState((itemUser.getState()+1) % 3);
+		if (item.getConfirmations() == null) {
+			item.setConfirmations(new SurveyItemUserVo[] {itemUser});
+		} else {
+			SurveyItemUserVo[] newArray = new SurveyItemUserVo[item.getConfirmations().length+1];
+			System.arraycopy(item.getConfirmations(), 0, newArray, 0, item.getConfirmations().length);
+			newArray[newArray.length-1] = itemUser;
+			item.setConfirmations(newArray);
+		}
+		setImageForUserStatus(v, item, myself, true);
+    }
+    
+    protected void closeSurvey(final SurveyItemVo closeItem) {
+    	DroidLib.alert(this, "Abstimmung jetzt schlie§en mit dem Ergebnis\n\""+closeItem.getName()+"\"?", "Abstimmung schlie§en", new android.content.DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				event.getSurveys()[currentIndex].setState(1);
+				closeItem.setState(1);
+			}
+    	});
+    }
+    
 	public void onClick(View v) {
 		if (v.getId() < 0) {
-			List<ImageView> currentSelectionViews = this.selectionViews.get(currentIndex);
-			for (int i=0; i<currentSelectionViews.size(); i++) {
-				if (currentSelectionViews.get(i) == v) {
-					SurveyItemVo item = event.getSurveys()[currentIndex].getSurveyItems()[i];
-					SurveyItemUserVo itemUser = null;
-					if (item.getConfirmations() != null) {
-						for (SurveyItemUserVo user : item.getConfirmations())
-							if (user.getUserId() == myself.getId())
-								itemUser = user;
+			List<ImageView> currentConfirmViews = this.confirmViews.get(currentIndex);
+			for (int i=0; i<currentConfirmViews.size(); i++) {
+				if (currentConfirmViews.get(i) == v) {
+					toggleConfirmation(event.getSurveys()[currentIndex].getSurveyItems()[i], (ImageView)v);
+				}
+			}
+			
+			if (this.myOwn) {
+				List<View> currentCloseViews = this.closeViews.get(currentIndex);
+				for (int i=0; i<currentCloseViews.size(); i++) {
+					if (currentCloseViews.get(i) == v) {
+						closeSurvey(event.getSurveys()[currentIndex].getSurveyItems()[i]);
 					}
-					if (itemUser == null) {
-						itemUser = new SurveyItemUserVo();
-						itemUser.setUserId(myself.getId());
-					}
-					itemUser.setState((itemUser.getState()+1) % 3);
-					if (item.getConfirmations() == null) {
-						item.setConfirmations(new SurveyItemUserVo[] {itemUser});
-					} else {
-						SurveyItemUserVo[] newArray = new SurveyItemUserVo[item.getConfirmations().length+1];
-						System.arraycopy(item.getConfirmations(), 0, newArray, 0, item.getConfirmations().length);
-						newArray[newArray.length-1] = itemUser;
-						item.setConfirmations(newArray);
-					}
-					setImageForUserStatus((ImageView)v, item, myself, true);
 				}
 			}
 		}
@@ -293,6 +333,20 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 			SurveysAccessor sa = Utils.getApp(SurveyConfirmActivity.this).getSurveysAccessor();
 			for (SurveyVo survey : event.getSurveys())
 				sa.updateItem(survey.getId(), survey);
+			
+			if (SurveyConfirmActivity.this.myOwn) {
+				// if this is my own event, also close the surveys if they're marked as closed
+				for (SurveyVo survey : event.getSurveys()) {
+					if (survey.getState() == 1)  /* closed */ {
+						for (SurveyItemVo item : survey.getSurveyItems()) {
+							if (item.getState() == 1) { /* survey result */
+								sa.getWebRequest().setParam("close", ""+item.getId());
+								sa.getItem(survey.getId());
+							}
+						}
+					}
+				}
+			}
     		return "Gespeichert";
 		}
 		

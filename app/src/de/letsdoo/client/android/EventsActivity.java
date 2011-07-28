@@ -10,6 +10,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.ContextMenu;
@@ -71,9 +72,10 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 				displayName.setText(event.getName());
 				TextView datetime = (TextView) convertView.findViewById(R.id.eventitemdatetime);
 				if (event.getEventtime() != null) {
+					datetime.setVisibility(View.VISIBLE);
 					datetime.setText(Utils.formatDateTime(event.getEventtime()));
 				} else {
-					datetime.setText("???");
+					datetime.setVisibility(View.GONE);
 				}
 				ImageView icon = (ImageView) convertView.findViewById(R.id.eventstateiconview);
 				UserVo myself = null;

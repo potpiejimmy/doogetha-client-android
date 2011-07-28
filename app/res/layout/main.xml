@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#afd"
+    android:background="#cfc"
     >
     <LinearLayout android:layout_height="wrap_content"
     		      android:id="@+id/linearLayout1"
@@ -22,7 +22,7 @@
                   android:layout_weight="0.0" 
                   android:layout_width="wrap_content" 
                   android:layout_marginLeft="10dip"
-                  android:textColor="#afd">
+                  android:textColor="#cfc">
         </TextView>
         <TextView android:textAppearance="?android:attr/textAppearanceSmall"
                   android:id="@+id/versionlabel"
@@ -32,13 +32,14 @@
                   android:gravity="right|bottom"
                   android:layout_margin="2dip"
                   android:textSize="11.0sp"
-                  android:textColor="#afd">
+                  android:textColor="#cfc">
         </TextView>
     </LinearLayout>
     <LinearLayout android:id="@+id/linearLayout2"
-                  android:layout_width="wrap_content" 
-                  android:layout_height="wrap_content">
-        <Button android:layout_width="wrap_content" android:layout_margin="3dip" android:id="@+id/newactivitybutton" android:layout_height="wrap_content" android:text="Neue Aktivität planen...">
+                  android:layout_width="fill_parent" 
+                  android:layout_height="wrap_content"
+                  android:gravity="left">
+        <Button android:layout_width="wrap_content" android:layout_margin="3dip" android:id="@+id/newactivitybutton" android:layout_height="wrap_content" android:singleLine="false" android:text="@string/createnewactivity">
         </Button>
     </LinearLayout>
     <LinearLayout android:layout_height="wrap_content"
@@ -56,8 +57,21 @@
 <ListView android:id="@id/android:list"
                android:layout_width="match_parent"
                android:layout_height="match_parent"
-               android:background="#afd"
-               android:cacheColorHint="#afd"
+               android:background="#cfc"
+               android:cacheColorHint="#cfc"
                android:layout_weight="1"
                android:drawSelectorOnTop="false"/>
+
+    <LinearLayout android:id="@+id/linearLayout3" 
+                  android:layout_width="match_parent"
+                  android:layout_height="3dip"
+                  android:background="#606060">
+    </LinearLayout>
+    <LinearLayout android:layout_height="wrap_content"
+                  android:id="@+id/linearLayout3" 
+                  android:layout_width="match_parent">
+        <Button android:layout_width="wrap_content" android:background="#8f8" android:drawableTop="@drawable/button_activities" android:id="@+id/currentactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/currentactivities" android:layout_margin="3dip" android:padding="5dip"/>
+        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/myactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/myactivities" android:layout_margin="3dip" android:padding="5dip"/>
+        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/publicactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/publicactivities" android:layout_margin="3dip" android:padding="5dip"/>
+    </LinearLayout>
 </LinearLayout>

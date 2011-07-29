@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#cfc"
+    android:background="#ded"
     >
 
     <LinearLayout android:layout_height="wrap_content"
@@ -14,6 +14,7 @@
                   android:layout_width="match_parent" 
                   android:layout_margin="3dip" 
                   android:text="Abstimmungen bearbeiten" 
+                  android:textColor="#fff"
                   android:layout_height="wrap_content">
         </TextView>
     </LinearLayout>
@@ -40,8 +41,8 @@
 	<ListView android:id="@id/android:list"
 	               android:layout_width="match_parent"
 	               android:layout_height="match_parent"
-	               android:background="#cfc"
-	               android:cacheColorHint="#cfc"
+	               android:background="#ded"
+	               android:cacheColorHint="#ded"
 	               android:layout_weight="1"
 	               android:drawSelectorOnTop="false"/>
 	               

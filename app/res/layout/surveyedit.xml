@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#cfc"
+    android:background="#ded"
     >
     
     <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
@@ -17,6 +17,7 @@
                   android:layout_width="match_parent" 
                   android:layout_margin="3dip" 
                   android:text="Abstimmung bearbeiten" 
+                  android:textColor="#fff"
                   android:layout_height="wrap_content">
         </TextView>
     </LinearLayout>
@@ -56,6 +57,7 @@
                   android:layout_width="match_parent" 
                   android:layout_margin="3dip" 
                   android:text="Auswahlmöglichkeiten" 
+                  android:textColor="#fff"
                   android:layout_height="wrap_content">
         </TextView>
     </LinearLayout>

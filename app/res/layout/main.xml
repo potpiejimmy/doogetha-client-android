@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#cfc"
+    android:background="#ded"
     >
     <LinearLayout android:layout_height="wrap_content"
     		      android:id="@+id/linearLayout1"
@@ -22,7 +22,7 @@
                   android:layout_weight="0.0" 
                   android:layout_width="wrap_content" 
                   android:layout_marginLeft="10dip"
-                  android:textColor="#cfc">
+                  android:textColor="#ded">
         </TextView>
         <TextView android:textAppearance="?android:attr/textAppearanceSmall"
                   android:id="@+id/versionlabel"
@@ -32,7 +32,7 @@
                   android:gravity="right|bottom"
                   android:layout_margin="2dip"
                   android:textSize="11.0sp"
-                  android:textColor="#cfc">
+                  android:textColor="#ded">
         </TextView>
     </LinearLayout>
     <LinearLayout android:id="@+id/linearLayout2"
@@ -50,6 +50,7 @@
                   android:layout_width="match_parent" 
                   android:layout_margin="3dip" 
                   android:text="Aktuelle Aktivitäten" 
+                  android:textColor="#fff"
                   android:layout_height="wrap_content">
         </TextView>
     </LinearLayout>
@@ -57,8 +58,8 @@
 <ListView android:id="@id/android:list"
                android:layout_width="match_parent"
                android:layout_height="match_parent"
-               android:background="#cfc"
-               android:cacheColorHint="#cfc"
+               android:background="#ded"
+               android:cacheColorHint="#ded"
                android:layout_weight="1"
                android:drawSelectorOnTop="false"/>
 
@@ -70,7 +71,7 @@
     <LinearLayout android:layout_height="wrap_content"
                   android:id="@+id/linearLayout3" 
                   android:layout_width="match_parent">
-        <Button android:layout_width="wrap_content" android:background="#8f8" android:drawableTop="@drawable/button_activities" android:id="@+id/currentactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/currentactivities" android:layout_margin="3dip" android:padding="5dip"/>
+        <Button android:layout_width="wrap_content" android:background="#beb" android:drawableTop="@drawable/button_activities" android:id="@+id/currentactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/currentactivities" android:layout_margin="3dip" android:padding="5dip"/>
         <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/myactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/myactivities" android:layout_margin="3dip" android:padding="5dip"/>
         <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/publicactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/publicactivities" android:layout_margin="3dip" android:padding="5dip"/>
     </LinearLayout>

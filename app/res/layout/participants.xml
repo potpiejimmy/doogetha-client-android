@@ -3,21 +3,12 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ded"
+    android:background="@color/doogetha_bg"
     >
 
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/textView4" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Teilnehmer bearbeiten" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Teilnehmer bearbeiten"/>
 	
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="horizontal"
@@ -41,8 +32,8 @@
 	<ListView android:id="@id/android:list"
 	               android:layout_width="match_parent"
 	               android:layout_height="match_parent"
-	               android:background="#ded"
-	               android:cacheColorHint="#ded"
+	               android:background="@color/doogetha_bg"
+	               android:cacheColorHint="@color/doogetha_bg"
 	               android:layout_weight="1"
 	               android:drawSelectorOnTop="false"/>
 	               

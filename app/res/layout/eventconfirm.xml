@@ -4,24 +4,17 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="#ded"
+  android:background="@color/doogetha_bg"
   >
     
     <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
     <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/activityconfirmtitle" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Aktivität" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:id="@+id/activityconfirmtitle"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Aktivität"/>
+		    
     <TextView android:layout_width="wrap_content"
               android:id="@+id/eventconfirmdatetime" 
               android:layout_height="wrap_content" 
@@ -50,18 +43,10 @@
         <Button android:id="@+id/eventconfirmbutton2" android:text=" Ich nehme nicht teil" android:textSize="11sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="left|center_vertical" android:drawableLeft="@android:drawable/presence_busy"></Button>
     </LinearLayout>
     
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/textView3" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Teilnehmer" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Teilnehmer"/>
+		    
     <LinearLayout android:layout_height="wrap_content" 
                   android:layout_width="match_parent" 
                   android:id="@+id/participantsconfirmlist" 

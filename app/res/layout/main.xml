@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ded"
+    android:background="@color/doogetha_bg"
     >
     <LinearLayout android:layout_height="wrap_content"
     		      android:id="@+id/linearLayout1"
@@ -22,7 +22,7 @@
                   android:layout_weight="0.0" 
                   android:layout_width="wrap_content" 
                   android:layout_marginLeft="10dip"
-                  android:textColor="#ded">
+                  android:textColor="@color/doogetha_bg">
         </TextView>
         <TextView android:textAppearance="?android:attr/textAppearanceSmall"
                   android:id="@+id/versionlabel"
@@ -32,7 +32,7 @@
                   android:gravity="right|bottom"
                   android:layout_margin="2dip"
                   android:textSize="11.0sp"
-                  android:textColor="#ded">
+                  android:textColor="@color/doogetha_bg">
         </TextView>
     </LinearLayout>
     <LinearLayout android:id="@+id/linearLayout2"
@@ -42,36 +42,67 @@
         <Button android:layout_width="wrap_content" android:layout_margin="3dip" android:id="@+id/newactivitybutton" android:layout_height="wrap_content" android:singleLine="false" android:text="@string/createnewactivity">
         </Button>
     </LinearLayout>
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/textView2" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Aktuelle Aktivitäten" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
-    
-<ListView android:id="@id/android:list"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:background="#ded"
-               android:cacheColorHint="#ded"
-               android:layout_weight="1"
-               android:drawSelectorOnTop="false"/>
+
+    <ViewFlipper android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/viewFlipper">
+
+	    <LinearLayout android:id="@+id/linearLayout4" 
+	                  android:layout_height="match_parent"
+	                  android:layout_width="match_parent"
+	                  android:orientation="vertical">
+
+		    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+	                  android:layout_width="match_parent"
+	                  android:text="Aktuelle Aktivitäten"/>
+		    
+			<ListView android:id="@+id/currenteventslist"
+		               android:layout_width="match_parent"
+		               android:layout_height="match_parent"
+		               android:background="@color/doogetha_bg"
+		               android:cacheColorHint="@color/doogetha_bg"
+		               android:layout_weight="1"
+		               android:drawSelectorOnTop="false"/>
+       </LinearLayout>
+
+	    <LinearLayout android:id="@+id/linearLayout5" 
+	                  android:layout_height="match_parent"
+	                  android:layout_width="match_parent"
+	                  android:orientation="vertical">
+
+		    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+	                  android:layout_width="match_parent"
+	                  android:text="Meine Aktivitäten"/>
+		    
+			<ListView android:id="@+id/myeventslist"
+		               android:layout_width="match_parent"
+		               android:layout_height="match_parent"
+		               android:background="@color/doogetha_bg"
+		               android:cacheColorHint="@color/doogetha_bg"
+		               android:layout_weight="1"
+		               android:drawSelectorOnTop="false"/>
+       </LinearLayout>
+
+	    <LinearLayout android:id="@+id/linearLayout5" 
+	                  android:layout_height="match_parent"
+	                  android:layout_width="match_parent"
+	                  android:orientation="vertical">
+
+		    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+	                  android:layout_width="match_parent"
+	                  android:text="Community"/>
+		    
+       </LinearLayout>
+
+    </ViewFlipper>
 
     <LinearLayout android:id="@+id/linearLayout3" 
                   android:layout_width="match_parent"
                   android:layout_height="3dip"
-                  android:background="#606060">
+                  android:background="@color/doogetha_titlebar">
     </LinearLayout>
     <LinearLayout android:layout_height="wrap_content"
                   android:id="@+id/linearLayout3" 
                   android:layout_width="match_parent">
-        <Button android:layout_width="wrap_content" android:background="#beb" android:drawableTop="@drawable/button_activities" android:id="@+id/currentactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/currentactivities" android:layout_margin="3dip" android:padding="5dip"/>
+        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/currentactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/currentactivities" android:layout_margin="3dip" android:padding="5dip"/>
         <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/myactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/myactivities" android:layout_margin="3dip" android:padding="5dip"/>
         <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/publicactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/publicactivities" android:layout_margin="3dip" android:padding="5dip"/>
     </LinearLayout>

@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ded"
+    android:background="@color/doogetha_bg"
     >
     
     <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
@@ -26,21 +26,13 @@
                   android:layout_weight="0.0" 
                   android:layout_width="wrap_content" 
                   android:layout_marginLeft="10dip"
-                  android:textColor="#ded"></TextView>
+                  android:textColor="@color/doogetha_bg"></TextView>
     </LinearLayout>
 
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/activitytitle" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Aktivität" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:id="@+id/activitytitle"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Aktivität"/>
 	
 	<TextView android:id="@+id/editlabel"
 	    android:layout_width="fill_parent" 
@@ -69,18 +61,9 @@
 	          android:inputType="textMultiLine">
 	</EditText>
 	
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout4" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/datetimetitle" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Zeitpunkt" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Zeitpunkt"/>
     <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout5" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
         <TextView android:text="Nicht festgelegt" 
                   android:textAppearance="?android:attr/textAppearanceSmall" 
@@ -98,18 +81,9 @@
         </ImageButton>
     </RelativeLayout>
 	
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/textView3" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Teilnehmer" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Teilnehmer"/>
     <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout2" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
         <TextView android:text="1 Teilnehmer (Du)" 
                   android:textAppearance="?android:attr/textAppearanceSmall" 
@@ -127,18 +101,9 @@
         </ImageButton>
     </RelativeLayout>
 	
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout7" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/textView7" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Abstimmungen" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Abstimmungen"/>
     <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout7" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
         <TextView android:text="Keine Abstimmungen" 
                   android:textAppearance="?android:attr/textAppearanceSmall" 

@@ -3,24 +3,15 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#ded"
+    android:background="@color/doogetha_bg"
     >
     
     <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
     <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         
-     <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/activitytitle" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Abstimmung bearbeiten" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="Abstimmung bearbeiten"/>
 	
 	<TextView android:id="@+id/editlabel"
 	    android:layout_width="fill_parent" 
@@ -49,18 +40,9 @@
 	          android:inputType="textMultiLine">
 	</EditText>
 	
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout4" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/datetimetitle" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Auswahlmöglichkeiten" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="Auswahlmöglichkeiten"/>
     
     <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout5" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
         <TextView android:text="Legen Sie hier die Auswahlmöglichkeiten der Abstimmung fest" 

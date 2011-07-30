@@ -4,18 +4,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/textView2" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Registration" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Registration"/>
     <TextView android:id="@+id/textView2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pleaseregister" android:layout_margin="3dip"></TextView>
     <TableLayout android:id="@+id/tableLayout1" android:layout_height="wrap_content" android:layout_width="match_parent">
         <TableRow android:layout_height="wrap_content" android:id="@+id/tableRow1" android:layout_width="wrap_content">
@@ -27,18 +18,9 @@
         <Button android:text="Register" android:layout_width="wrap_content" android:id="@+id/registerbutton" android:layout_height="wrap_content"></Button>
         <Button android:text="Unregister" android:layout_width="wrap_content" android:id="@+id/unregisterbutton" android:layout_height="wrap_content"></Button>
     </LinearLayout>
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/textView2" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Login" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Login"/>
     <TextView android:text=" " android:id="@+id/registerresulttext" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="3dip"></TextView>
     <Button android:text="Login" android:id="@+id/loginbutton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 </LinearLayout>

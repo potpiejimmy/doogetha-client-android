@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="doogetha_bg">#ded</color>
+    <color name="doogetha_bgsel">#beb</color>
+    <color name="doogetha_titlebar">#ff606060</color>
+</resources>

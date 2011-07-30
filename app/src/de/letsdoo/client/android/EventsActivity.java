@@ -6,11 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.ContextMenu;
@@ -26,10 +24,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import de.letsdoo.client.android.rest.EventsAccessor;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.EventsVo;
@@ -38,15 +39,23 @@ import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
-public class EventsActivity extends ListActivity implements OnItemClickListener, OnClickListener {
+public class EventsActivity extends Activity implements OnItemClickListener, OnClickListener {
 
+	private final static int NUMBER_OF_SCREENS = 3;
+	
 	private ArrayAdapter<EventVo> data = null;
 	
 	private Button newactivitybutton = null;
+	private Button[] screenButtons = new Button[NUMBER_OF_SCREENS];
 	
 	private DataLoader dataLoader = null;
 	
 	private boolean versionChecked = false;
+	
+	private ListView currentEventsList = null;
+	private ListView myEventsList = null;
+	
+	private int currentScreen = 0;
 	
     /** Called when the activity is first created. */
     @Override
@@ -54,10 +63,17 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.main);
         ((TextView)findViewById(R.id.versionlabel)).setText("Version " + Utils.getApp(this).getVersionName());
+
+        this.currentEventsList = (ListView) findViewById(R.id.currenteventslist);
+        this.myEventsList = (ListView) findViewById(R.id.myeventslist);
         
         newactivitybutton = (Button) findViewById(R.id.newactivitybutton);
+        screenButtons[0] = (Button) findViewById(R.id.currentactivitiesbutton);
+        screenButtons[1] = (Button) findViewById(R.id.myactivitiesbutton);
+        screenButtons[2] = (Button) findViewById(R.id.publicactivitiesbutton);
         
         newactivitybutton.setOnClickListener(this);
+        for (Button screenButton : screenButtons) screenButton.setOnClickListener(this);
         
     	this.data = new ArrayAdapter<EventVo>(this, R.layout.event_item) {
 			@Override
@@ -88,13 +104,12 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 			}
     	};
     	
-    	this.setListAdapter(data);
-    	getListView().setTextFilterEnabled(true);
-    	getListView().setOnItemClickListener(this);
-    	registerForContextMenu(getListView());
+    	setupListView(currentEventsList);
+    	setupListView(myEventsList);
     	
     	this.dataLoader = new DataLoader();
     	
+    	showScreen(0, false);
     	updateUI();
     	
     	if (!Utils.getApp(this).isRegistered()) {
@@ -103,6 +118,41 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
     	} else {
 			startSession();
     	}
+    }
+    
+    protected void showScreen(int index, boolean refresh) {
+    	if (refresh) {
+	    	if (currentScreen == index) {
+	    		refresh();
+	    		return;
+	    	} else {
+	    		data.clear();
+	    	}
+    	}
+    	
+    	screenButtons[currentScreen].setBackgroundResource(android.R.color.transparent);
+    	
+    	screenButtons[index].setBackgroundResource(R.color.doogetha_bgsel);
+    	
+    	ViewFlipper flipper = (ViewFlipper)findViewById(R.id.viewFlipper);
+    	
+    	if (index > currentScreen)
+    		for (int i=0; i<(index-currentScreen); i++)
+    			flipper.showNext();
+    	else if (index < currentScreen)
+    		for (int i=0; i<(currentScreen-index); i++)
+    			flipper.showPrevious();
+    	
+    	currentScreen = index;
+
+    	if (refresh) refresh();
+    }
+    
+    protected void setupListView(ListView listView) {
+    	listView.setAdapter(data);
+    	listView.setTextFilterEnabled(true);
+    	listView.setOnItemClickListener(this);
+    	registerForContextMenu(listView);
     }
     
     protected void updateUI() {
@@ -157,6 +207,15 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		{
 			case R.id.newactivitybutton:
 				addEvent();
+				break;
+			case R.id.currentactivitiesbutton:
+				showScreen(0, true);
+				break;
+			case R.id.myactivitiesbutton:
+				showScreen(1, true);
+				break;
+			case R.id.publicactivitiesbutton:
+				showScreen(2, false);
 				break;
 		}
 	}
@@ -274,7 +333,12 @@ public class EventsActivity extends ListActivity implements OnItemClickListener,
 		
 		public EventsVo doTask() throws Throwable
 		{
-			return Utils.getApp(EventsActivity.this).getEventsAccessor().getItems();
+			EventsAccessor ea = Utils.getApp(EventsActivity.this).getEventsAccessor();
+			if (currentScreen == 1)
+				ea.getWebRequest().setParam("mine", "true");
+			else
+				ea.getWebRequest().removeParam("mine");
+			return ea.getItems();
 		}
 		
 		public void doneOk(EventsVo result)

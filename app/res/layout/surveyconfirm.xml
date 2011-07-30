@@ -4,24 +4,16 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="#ded"
+  android:background="@color/doogetha_bg"
   >
     
     <ScrollView android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
     <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/activityconfirmtitle" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Aktivität" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:id="@+id/activityconfirmtitle"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Aktivität"/>
     <TextView android:layout_width="wrap_content"
               android:id="@+id/eventconfirmdatetime" 
               android:layout_height="wrap_content" 
@@ -46,18 +38,9 @@
               android:textColor="#000">
     </TextView>
 
-    <LinearLayout android:layout_height="wrap_content"
-                  android:id="@+id/linearLayout3" 
-                  android:layout_width="match_parent"
-                  android:background="#606060">
-        <TextView android:id="@+id/activityconfirmtitle" 
-                  android:layout_width="match_parent" 
-                  android:layout_margin="3dip" 
-                  android:text="Bitte stimme ab:" 
-                  android:textColor="#fff"
-                  android:layout_height="wrap_content">
-        </TextView>
-    </LinearLayout>
+    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Bitte stimme ab:"/>
     <RelativeLayout android:id="@+id/relativeLayout1" android:layout_gravity="center_horizontal" android:gravity="center_horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
         <ImageButton android:id="@+id/previousbutton" android:src="@android:drawable/ic_media_rew" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true"></ImageButton>
         <ImageButton android:id="@+id/nextbutton" android:src="@android:drawable/ic_media_ff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true"></ImageButton>

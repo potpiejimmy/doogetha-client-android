@@ -5,6 +5,13 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
+    <TextView android:id="@+id/surveyclosedlabel"
+              android:textColor="#f00"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:drawableLeft="@android:drawable/stat_sys_warning" 
+              android:text="Diese Abstimmung ist bereits geschlossen."/>
+
     <TextView android:textColor="#000" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="5dip" android:text="In welchen Kinofilm möchtet Ihr gerne gehen?" android:id="@+id/surveydescription"></TextView>
     
     <HorizontalScrollView 

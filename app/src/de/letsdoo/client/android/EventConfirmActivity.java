@@ -1,10 +1,12 @@
 package de.letsdoo.client.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,13 +39,23 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
 		TextView eventconfirmtitle = (TextView) findViewById(R.id.eventconfirmtitle);
 		eventconfirmtitle.setText(event.getName());
 		TextView eventconfirmdescription = (TextView) findViewById(R.id.eventconfirmdescription);
-		eventconfirmdescription.setText(getEventDescription());
+		eventconfirmdescription.setText(event.getDescription());
+		
+		/* survey results */
+		if (event.getSurveys() != null && event.getSurveys().length > 0) {
+			TextView surveyResultsLabel = (TextView) findViewById(R.id.eventconfirmsurveyresultslabel);
+			surveyResultsLabel.setText(getSurveyResultsLabel());
+		} else {
+			findViewById(R.id.eventconfirmsurveyresults).setVisibility(View.GONE);
+		}
 
 		Button confirmbutton1 = (Button) findViewById(R.id.eventconfirmbutton1);
 		Button confirmbutton2 = (Button) findViewById(R.id.eventconfirmbutton2);
+		ImageButton surveyresultsbutton = (ImageButton) findViewById(R.id.showsurveyresultsbutton);
 		
 		confirmbutton1.setOnClickListener(this);
 		confirmbutton2.setOnClickListener(this);
+		surveyresultsbutton.setOnClickListener(this);
 		
 		TextView activityconfirmtitle = (TextView) findViewById(R.id.activityconfirmtitle);
         activityconfirmtitle.setText(Utils.getActivityTitle(this, event));
@@ -64,12 +76,11 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
 
     }
     
-    protected String getEventDescription() {
+    protected String getSurveyResultsLabel() {
     	StringBuilder stb = new StringBuilder();
-    	stb.append(event.getDescription());
     	if (event.getSurveys() != null) {
     		for (SurveyVo survey : event.getSurveys()) {
-    			stb.append("\n\n");
+    			if (stb.length()>0) stb.append("\n\n");
     			stb.append(survey.getName());
     			stb.append(": ");
     			if (survey.getSurveyItems() != null) {
@@ -91,7 +102,16 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
 			case R.id.eventconfirmbutton2:
 				confirm(2);
 				break;
+			case R.id.showsurveyresultsbutton:
+				showSurveyResults();
+				break;
 		}
+	}
+	
+	protected void showSurveyResults() {
+		Intent i = new Intent(getApplicationContext(), SurveyConfirmActivity.class);
+		i.putExtra("event", event);
+		startActivity(i);
 	}
 	
 	protected void confirm(int state) {

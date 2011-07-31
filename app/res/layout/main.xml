@@ -39,7 +39,15 @@
                   android:layout_width="fill_parent" 
                   android:layout_height="wrap_content"
                   android:gravity="left">
-        <Button android:layout_width="wrap_content" android:layout_margin="3dip" android:id="@+id/newactivitybutton" android:layout_height="wrap_content" android:singleLine="false" android:text="@string/createnewactivity">
+        <Button android:layout_width="wrap_content"
+                android:layout_margin="3dip" 
+                android:padding="3dip"
+                android:id="@+id/newactivitybutton" 
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent" 
+                android:drawableLeft="@drawable/newactivity"
+                android:singleLine="false" 
+                android:text="@string/createnewactivity">
         </Button>
     </LinearLayout>
 
@@ -53,14 +61,7 @@
 		    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
 	                  android:layout_width="match_parent"
 	                  android:text="Aktuelle Aktivitäten"/>
-		    
-			<ListView android:id="@+id/currenteventslist"
-		               android:layout_width="match_parent"
-		               android:layout_height="match_parent"
-		               android:background="@color/doogetha_bg"
-		               android:cacheColorHint="@color/doogetha_bg"
-		               android:layout_weight="1"
-		               android:drawSelectorOnTop="false"/>
+		    <ListView android:id="@+id/currenteventslist" android:layout_height="match_parent" android:drawSelectorOnTop="false" android:background="@color/doogetha_bg" android:layout_width="match_parent" android:cacheColorHint="@color/doogetha_bg" android:layout_weight="1"></ListView>
        </LinearLayout>
 
 	    <LinearLayout android:id="@+id/linearLayout5" 
@@ -102,8 +103,8 @@
     <LinearLayout android:layout_height="wrap_content"
                   android:id="@+id/linearLayout3" 
                   android:layout_width="match_parent">
-        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/currentactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/currentactivities" android:layout_margin="3dip" android:padding="5dip"/>
-        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/myactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/myactivities" android:layout_margin="3dip" android:padding="5dip"/>
-        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_activities" android:id="@+id/publicactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/publicactivities" android:layout_margin="3dip" android:padding="5dip"/>
+        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_currentactivities" android:id="@+id/currentactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/currentactivities" android:layout_margin="3dip" android:padding="5dip"/>
+        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_myactivities" android:id="@+id/myactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/myactivities" android:layout_margin="3dip" android:padding="5dip"/>
+        <Button android:layout_width="wrap_content" android:background="@android:color/transparent" android:drawableTop="@drawable/button_publicactivities" android:id="@+id/publicactivitiesbutton" android:layout_height="match_parent" android:singleLine="false" android:text="@string/publicactivities" android:layout_margin="3dip" android:padding="5dip"/>
     </LinearLayout>
 </LinearLayout>

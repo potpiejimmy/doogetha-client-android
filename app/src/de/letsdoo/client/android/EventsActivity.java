@@ -42,6 +42,9 @@ import de.potpiejimmy.util.DroidLib;
 public class EventsActivity extends Activity implements OnItemClickListener, OnClickListener {
 
 	private final static int NUMBER_OF_SCREENS = 3;
+	private final static int SCREEN_CURRENT_ACTIVITIES = 0;
+	private final static int SCREEN_MY_ACTIVITIES = 1;
+	private final static int SCREEN_PUBLIC_ACTIVITIES = 2;
 	
 	private ArrayAdapter<EventVo> data = null;
 	
@@ -68,9 +71,9 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
         this.myEventsList = (ListView) findViewById(R.id.myeventslist);
         
         newactivitybutton = (Button) findViewById(R.id.newactivitybutton);
-        screenButtons[0] = (Button) findViewById(R.id.currentactivitiesbutton);
-        screenButtons[1] = (Button) findViewById(R.id.myactivitiesbutton);
-        screenButtons[2] = (Button) findViewById(R.id.publicactivitiesbutton);
+        screenButtons[SCREEN_CURRENT_ACTIVITIES] = (Button) findViewById(R.id.currentactivitiesbutton);
+        screenButtons[SCREEN_MY_ACTIVITIES] = (Button) findViewById(R.id.myactivitiesbutton);
+        screenButtons[SCREEN_PUBLIC_ACTIVITIES] = (Button) findViewById(R.id.publicactivitiesbutton);
         
         newactivitybutton.setOnClickListener(this);
         for (Button screenButton : screenButtons) screenButton.setOnClickListener(this);
@@ -184,7 +187,7 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
       MenuInflater inflater = getMenuInflater();
-      inflater.inflate(R.menu.context, menu);
+      inflater.inflate(v == currentEventsList ? R.menu.context_currentactivities : R.menu.context_myactivities, menu);
     }
     
     @Override
@@ -209,13 +212,13 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 				addEvent();
 				break;
 			case R.id.currentactivitiesbutton:
-				showScreen(0, true);
+				showScreen(SCREEN_CURRENT_ACTIVITIES, true);
 				break;
 			case R.id.myactivitiesbutton:
-				showScreen(1, true);
+				showScreen(SCREEN_MY_ACTIVITIES, true);
 				break;
 			case R.id.publicactivitiesbutton:
-				showScreen(2, false);
+				showScreen(SCREEN_PUBLIC_ACTIVITIES, false);
 				break;
 		}
 	}
@@ -260,8 +263,10 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	{
-		//editEvent(data.getItem(position));
-		confirmEvent(data.getItem(position));
+		if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
+			confirmEvent(data.getItem(position));
+		else if (currentScreen == SCREEN_MY_ACTIVITIES)
+		    editEvent(data.getItem(position));
 	}
 	
 	protected void editEvent(EventVo event) {

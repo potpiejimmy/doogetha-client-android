@@ -82,8 +82,13 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
         
         this.myOwn = event.getOwner().getId() == myself.getId();
         
-        for (SurveyVo survey : event.getSurveys())
+        boolean allClosed = true;
+        for (SurveyVo survey : event.getSurveys()) {
         	addSurveyView(survey);
+            if (survey.getState()==0) allClosed = false;
+        }
+        if (allClosed)
+        	findViewById(R.id.surveyconfirmbuttonpanel).setVisibility(View.GONE);
         
         showSurvey(0);
     }
@@ -114,6 +119,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	View surveyconfirmview = getLayoutInflater().inflate(R.layout.surveyconfirmtable, null);
     	
     	((TextView)surveyconfirmview.findViewById(R.id.surveydescription)).setText(survey.getDescription());
+    	((TextView)surveyconfirmview.findViewById(R.id.surveyclosedlabel)).setVisibility(survey.getState() == 1 ? View.VISIBLE : View.GONE);
     	TableLayout table = (TableLayout)surveyconfirmview.findViewById(R.id.surveyconfirmtable);
     	
     	TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.FILL_PARENT);
@@ -132,7 +138,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	for (int i=0; i<event.getUsers().length; i++) {
     		UserVo user = event.getUsers()[i];
     		ContactsUtils.fillUserInfo(this, user);
-    		row.addView(tableTextView(ContactsUtils.userDisplayName(this, user), true, i==0), tableParams);
+    		row.addView(tableTextView(ContactsUtils.userDisplayName(this, user), true, i==0 && survey.getState()==0), tableParams);
         	row.addView(verticalSeparator(), tableParams);
     	}
     	
@@ -148,7 +154,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	    		row = new TableRow(this);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	row.setLayoutParams(tableParams);
-	        	View itemLabel = tableTextView(item.getName(), false, false);
+	        	View itemLabel = tableTextView(item.getName(), false, (survey.getState()==0 && myOwn) || item.getState()==1);
 	    		row.addView(itemLabel, tableParams);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	
@@ -161,11 +167,11 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	    			
 	    			UserVo user = event.getUsers()[i];
 	    			ImageView iv = new ImageView(this);
-	    			setImageForUserStatus(iv, item, user, i==0);
+	    			setImageForUserStatus(iv, item, user, (survey.getState()==0 && i==0) || item.getState()==1);
 	    			row.addView(iv, tableParams);
 	    	    	row.addView(verticalSeparator(), tableParams);
 
-	    	    	if (i==0) {
+	    	    	if (i==0 && survey.getState()==0) {
 	    				currentConfirmViews.add(iv);
 	    				iv.setOnClickListener(this);
 	    			}
@@ -180,12 +186,12 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	flipper.addView(surveyconfirmview);
     }
     
-    protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean myColumn) {
+    protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean highlight) {
     	// find user status:
 		view.setImageResource(R.drawable.survey_neutral);
-		int padding = myColumn ? 20 : (event.getUsers().length <= 5 ? 20 : 5);
+		int padding = highlight ? 20 : (event.getUsers().length <= 5 ? 20 : 5);
 		view.setPadding(padding,padding,padding,padding);
-		if (!myColumn) view.setBackgroundColor(Color.LTGRAY);
+		if (!highlight) view.setBackgroundColor(Color.LTGRAY);
     	if (item.getConfirmations() != null) {
     		for (SurveyItemUserVo confirmation : item.getConfirmations()) {
     			if (confirmation.getUserId() == user.getId()) {
@@ -212,15 +218,15 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	return name.substring(0, MAXLEN-2) + "...";
     }
     
-    protected View tableTextView(String text, boolean vertical, boolean myColumn) {
+    protected View tableTextView(String text, boolean vertical, boolean highlight) {
     	if (vertical) {
     		VerticalLabelView v = new VerticalLabelView(this);
-    		if (!myColumn) v.setBackgroundColor(Color.LTGRAY);
+    		if (!highlight) v.setBackgroundColor(Color.LTGRAY);
     		v.setText(trimParticipantName(text));
     		return v;
     	} else {
 			TextView v = new TextView(this);
-			if (!myColumn && !myOwn) v.setBackgroundColor(Color.LTGRAY);
+			if (!highlight) v.setBackgroundColor(Color.LTGRAY);
 			v.setWidth(120);
 			v.setText(text);
 			v.setGravity(Gravity.CENTER_VERTICAL);
@@ -267,6 +273,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 			public void onClick(DialogInterface dialog, int which) {
 				event.getSurveys()[currentIndex].setState(1);
 				closeItem.setState(1);
+				((ViewFlipper)findViewById(R.id.viewFlipper)).getChildAt(currentIndex).findViewById(R.id.surveyclosedlabel).setVisibility(View.VISIBLE);
 			}
     	});
     }

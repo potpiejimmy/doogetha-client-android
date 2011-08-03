@@ -30,6 +30,10 @@ public class DroidLib {
 	}
 	
 	public static void alert(Context context, String title, String msg, String oktext, String[] items, OnClickListener clicklistener, OnDismissListener dismissListener) {
+		alert(context, title, msg, oktext, null, items, clicklistener, dismissListener);
+	}
+	
+	public static void alert(Context context, String title, String msg, String oktext, String canceltext, String[] items, OnClickListener clicklistener, OnDismissListener dismissListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		if (title != null)
 			builder.setTitle(title);
@@ -37,6 +41,8 @@ public class DroidLib {
 			builder.setMessage(msg);
 		if (oktext != null)
 			builder.setPositiveButton(oktext, clicklistener);
+		if (canceltext != null)
+			builder.setNegativeButton(oktext, null);
 		if (items != null)
 			builder.setItems(items, clicklistener);
 		builder.setCancelable(true);

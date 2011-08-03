@@ -82,15 +82,16 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
         
         this.myOwn = event.getOwner().getId() == myself.getId();
         
-        boolean allClosed = true;
-        for (SurveyVo survey : event.getSurveys()) {
+        int firstOpen = -1;
+        for (int i=0; i<event.getSurveys().length; i++) {
+        	SurveyVo survey = event.getSurveys()[i];
         	addSurveyView(survey);
-            if (survey.getState()==0) allClosed = false;
+            if (firstOpen == -1 && survey.getState()==0) firstOpen = i;
         }
-        if (allClosed)
+        if (firstOpen == -1)
         	findViewById(R.id.surveyconfirmbuttonpanel).setVisibility(View.GONE);
         
-        showSurvey(0);
+        showSurvey(firstOpen == -1 ? 0 : firstOpen);
     }
     
     protected void showSurvey(int index) {
@@ -158,7 +159,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	    		row.addView(itemLabel, tableParams);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	
-	        	if (this.myOwn) {
+	        	if (survey.getState()==0 && myOwn) {
 	        		currentCloseViews.add(itemLabel);
 	        		itemLabel.setOnClickListener(this);
 	        	}
@@ -171,7 +172,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	    			row.addView(iv, tableParams);
 	    	    	row.addView(verticalSeparator(), tableParams);
 
-	    	    	if (i==0 && survey.getState()==0) {
+	    	    	if (survey.getState()==0 && i==0) {
 	    				currentConfirmViews.add(iv);
 	    				iv.setOnClickListener(this);
 	    			}
@@ -271,11 +272,21 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     protected void closeSurvey(final SurveyItemVo closeItem) {
     	DroidLib.alert(this, "Abstimmung jetzt schlie§en mit dem Ergebnis\n\""+closeItem.getName()+"\"?", "Abstimmung schlie§en", new android.content.DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				event.getSurveys()[currentIndex].setState(1);
-				closeItem.setState(1);
-				((ViewFlipper)findViewById(R.id.viewFlipper)).getChildAt(currentIndex).findViewById(R.id.surveyclosedlabel).setVisibility(View.VISIBLE);
+				closeSurveyImpl(closeItem);
 			}
     	});
+    }
+    
+    protected void closeSurveyImpl(final SurveyItemVo closeItem) {
+    	SurveyVo survey = event.getSurveys()[currentIndex];
+    	survey.setState(1); /* survey closed */
+    	for (SurveyItemVo item : survey.getSurveyItems()) {
+    		if (item.getId() == closeItem.getId())
+    			item.setState(1); // close reason
+    		else
+    			item.setState(0); // reset the others if previously closed
+    	}
+		((ViewFlipper)findViewById(R.id.viewFlipper)).getChildAt(currentIndex).findViewById(R.id.surveyclosedlabel).setVisibility(View.VISIBLE);
     }
     
 	public void onClick(View v) {

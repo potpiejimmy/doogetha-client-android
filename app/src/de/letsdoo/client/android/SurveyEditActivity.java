@@ -1,10 +1,14 @@
 package de.letsdoo.client.android;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,15 +17,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.potpiejimmy.util.DroidLib;
 
-public class SurveyEditActivity extends Activity implements OnClickListener {
+public class SurveyEditActivity extends Activity implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+	
+	protected static final int DATE_DIALOG_ID = 0;
+	protected static final int TIME_DIALOG_ID = 1;
 	
 	private SurveyVo survey = null;
 
@@ -56,6 +65,8 @@ public class SurveyEditActivity extends Activity implements OnClickListener {
         	survey = (SurveyVo)getIntent().getExtras().get("survey");
         else {
         	survey = new SurveyVo();
+        	if (getIntent().getExtras() != null && getIntent().getExtras().get("type") != null)
+        		survey.setType(getIntent().getExtras().getByte("type"));
         }
         
         if (survey.getSurveyItems() != null) {
@@ -64,6 +75,20 @@ public class SurveyEditActivity extends Activity implements OnClickListener {
         }
         
         updateUI();
+    }
+    
+    @Override
+    protected Dialog onCreateDialog(int id) {
+    	Calendar cal = Calendar.getInstance();
+    	
+        switch (id) {
+        case DATE_DIALOG_ID:
+            return new DatePickerDialog(this, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            
+        case TIME_DIALOG_ID:
+            return new TimePickerDialog(this, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+        }
+        return null;
     }
     
     protected void addSurveyItem(SurveyItemVo item) {
@@ -89,6 +114,11 @@ public class SurveyEditActivity extends Activity implements OnClickListener {
     
     protected void finishOk()
     {
+    	if (items.size() < 2) {
+    		DroidLib.toast(this, "Bitte fŸgen Sie mindestens zwei Auswahlmšglichkeiten hinzu.");
+    		return;
+    	}
+    	
     	saveValues();
     	
     	Intent returnValue = new Intent();
@@ -155,6 +185,19 @@ public class SurveyEditActivity extends Activity implements OnClickListener {
     	finishOk();
     }
     
+    protected void newSurveyItem() {
+		currentSelection = -1;
+		switch (survey.getType()) {
+			case 0: /* generic survey */
+				editSurveyItemDialog("");
+				break;
+			case 1: /* survey date determination */
+			case 2: /* survey date and time determination */
+				showDialog(DATE_DIALOG_ID);
+				break;
+		}
+    }
+    
 	public void onClick(View view) {
 		
 		if (view.getId()<0) {
@@ -198,9 +241,23 @@ public class SurveyEditActivity extends Activity implements OnClickListener {
 			finishCancel();
 			break;
 		case R.id.addsurveyitem:
-			currentSelection = -1;
-			editSurveyItemDialog("");
+			newSurveyItem();
 			break;
 		}
+	}
+
+	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, year);
+		cal.set(Calendar.MONTH, monthOfYear);
+		cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		editSurveyItem(""+cal.getTimeInMillis());
+	}
+
+	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 	}
 }

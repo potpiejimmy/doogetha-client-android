@@ -270,7 +270,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     }
     
     protected void closeSurvey(final SurveyItemVo closeItem) {
-    	DroidLib.alert(this, "Abstimmung jetzt schlie§en mit dem Ergebnis\n\""+closeItem.getName()+"\"?", "Abstimmung schlie§en", new android.content.DialogInterface.OnClickListener() {
+    	DroidLib.alert(this, "Abstimmung jetzt schlie§en mit dem Ergebnis\n\""+closeItem.getName()+"\"?", "Abstimmung schlie§en", getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				closeSurveyImpl(closeItem);
 			}

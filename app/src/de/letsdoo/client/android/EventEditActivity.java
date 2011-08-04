@@ -3,11 +3,14 @@ package de.letsdoo.client.android;
 import java.util.Calendar;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -145,7 +148,16 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
     	
         switch (id) {
         case DATE_DIALOG_ID:
-            return new DatePickerDialog(this, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            DatePickerDialog dpd = new DatePickerDialog(this, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            dpd.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (android.content.DialogInterface.OnClickListener)null);
+            dpd.setButton(AlertDialog.BUTTON_NEGATIVE, "Datum lšschen", new android.content.DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					event.setEventtime(null);
+					updateUI();
+				}
+            });
+            return dpd;
+            
         case TIME_DIALOG_ID:
             return new TimePickerDialog(this, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
         }

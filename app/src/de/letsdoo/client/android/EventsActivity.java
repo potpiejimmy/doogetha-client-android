@@ -194,14 +194,17 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     public boolean onContextItemSelected(MenuItem item) {
       AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
       switch (item.getItemId()) {
+	      case R.id.showitem:
+		  		confirmEvent(data.getItem(info.position));
+		        return true;
 	      case R.id.edititem:
 		  		editEvent(data.getItem(info.position));
 		        return true;
 	      case R.id.deleteitem:
-	  		new Deleter(data.getItem(info.position)).go("Lšschen...");
-	        return true;
+		  		new Deleter(data.getItem(info.position)).go("Lšschen...");
+		        return true;
 	      default:
-	        return super.onContextItemSelected(item);
+	    	    return super.onContextItemSelected(item);
       }
     }
     

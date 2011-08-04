@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -25,6 +26,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyVo;
+import de.potpiejimmy.util.DroidLib;
 
 public class EventSurveysActivity extends ListActivity implements OnItemClickListener, OnClickListener {
 
@@ -116,8 +118,13 @@ public class EventSurveysActivity extends ListActivity implements OnItemClickLis
     }
     
     protected void addSurvey() {
-    	Intent intent = new Intent(getApplicationContext(), SurveyEditActivity.class);
-    	startActivityForResult(intent, 0);
+    	DroidLib.alert(this, "Art der Abstimmung", new String[] {"Freie Abstimmung", "Terminfindung (Datum)", "Terminfindung (Datum und Uhrzeit)"}, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+		    	Intent intent = new Intent(getApplicationContext(), SurveyEditActivity.class);
+		    	intent.putExtra("type", (byte)which);
+		    	startActivityForResult(intent, 0);
+			}
+    	});
 	}
     
     protected void saveValues()

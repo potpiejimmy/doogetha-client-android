@@ -86,7 +86,7 @@ public class EventConfirmActivity extends Activity implements OnClickListener {
     			if (survey.getSurveyItems() != null) {
 	    			for (SurveyItemVo item : survey.getSurveyItems())
 	    				if (item.getState() == 1) /* closed survey result item */
-	    					stb.append(item.getName());
+	    					stb.append(Utils.formatSurveyItem(survey, item));
     			}
     		}
     	}

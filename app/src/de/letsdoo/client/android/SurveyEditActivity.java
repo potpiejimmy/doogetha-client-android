@@ -2,6 +2,7 @@ package de.letsdoo.client.android;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -23,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.potpiejimmy.util.DroidLib;
@@ -93,12 +95,12 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
     
     protected void addSurveyItem(SurveyItemVo item) {
 		View vi = getLayoutInflater().inflate(R.layout.survey_item_item, null);
-		((TextView)vi.findViewById(R.id.surveyitemname)).setText(item.getName());
+		((TextView)vi.findViewById(R.id.surveyitemname)).setText(Utils.formatSurveyItem(survey, item));
 		surveyItemsList.addView(vi);
 		vi.setOnClickListener(this);
 		items.add(item);
     }
-
+    
     protected void removeSurveyItem(int index) {
 		surveyItemsList.removeViewAt(index);
 		items.remove(index);
@@ -246,18 +248,29 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
 		}
 	}
 
+	private Calendar currentDatePickerTime = null;
+	
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, year);
 		cal.set(Calendar.MONTH, monthOfYear);
 		cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		editSurveyItem(""+cal.getTimeInMillis());
+		
+		if (survey.getType() == 1) /* date selection only */
+			editSurveyItem(""+cal.getTimeInMillis());
+		else if (survey.getType() == 2) {/* date and time selection */
+			currentDatePickerTime = cal; /* memorize date selection until time is selected */
+			showDialog(TIME_DIALOG_ID);
+		}
 	}
 
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+		currentDatePickerTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+		currentDatePickerTime.set(Calendar.MINUTE, minute);
+		editSurveyItem("" + currentDatePickerTime.getTimeInMillis());
 	}
 }

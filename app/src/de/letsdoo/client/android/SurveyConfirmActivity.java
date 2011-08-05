@@ -130,8 +130,9 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	
     	TableRow row = new TableRow(this);
     	row.addView(verticalSeparator(), tableParams);
-    	TextView emptyCorner = new TextView(this);
+    	VerticalLabelView emptyCorner = new VerticalLabelView(this);
 		emptyCorner.setBackgroundColor(Color.LTGRAY);
+		emptyCorner.setText((survey.getState()==0 && myOwn) ? "<- schlie§en" : " ");
     	row.addView(emptyCorner, tableParams);
     	row.addView(verticalSeparator(), tableParams);
     	row.setLayoutParams(tableParams);
@@ -155,7 +156,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	    		row = new TableRow(this);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	row.setLayoutParams(tableParams);
-	        	View itemLabel = tableTextView(item.getName(), false, (survey.getState()==0 && myOwn) || item.getState()==1);
+	        	View itemLabel = tableTextView(Utils.formatSurveyItem(survey, item), false, (survey.getState()==0 && myOwn) || item.getState()==1);
 	    		row.addView(itemLabel, tableParams);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	
@@ -270,9 +271,10 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     }
     
     protected void closeSurvey(final SurveyItemVo closeItem) {
-    	DroidLib.alert(this, "Abstimmung jetzt schlie§en mit dem Ergebnis\n\""+closeItem.getName()+"\"?", "Abstimmung schlie§en", getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
+    	DroidLib.alert(this, "Abstimmung jetzt schlie§en mit dem Ergebnis\n\""+Utils.formatSurveyItem(event.getSurveys()[currentIndex], closeItem)+"\"?", "Abstimmung schlie§en", getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				closeSurveyImpl(closeItem);
+				DroidLib.alert(SurveyConfirmActivity.this, "Die Abstimmung wurde zum Schlie§en vorgemerkt.\n\nBitte speichere die aktuelle Ansicht, um die Abstimmung endgŸltig zu schlie§en.", "OK", null);
 			}
     	});
     }

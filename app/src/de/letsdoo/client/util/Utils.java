@@ -3,11 +3,14 @@ package de.letsdoo.client.util;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
 import android.widget.ImageView;
 import de.letsdoo.client.android.Letsdoo;
 import de.letsdoo.server.vo.EventVo;
+import de.letsdoo.server.vo.SurveyItemVo;
+import de.letsdoo.server.vo.SurveyVo;
 import de.letsdoo.server.vo.UserVo;
 
 /**
@@ -15,8 +18,8 @@ import de.letsdoo.server.vo.UserVo;
  */
 public class Utils {
 	
-	protected static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
-	protected static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy");
+	public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
 	public static Letsdoo getApp(Activity activity) {
 		return (Letsdoo)activity.getApplication();
@@ -67,7 +70,20 @@ public class Utils {
     	return stb.toString();
     }
     
-    public static void setIconForConfirmState(ImageView view, UserVo user) {
+    public static String formatSurveyItem(SurveyVo survey, SurveyItemVo item) {
+    	switch (survey.getType()) {
+    		case 0: /* generic survey */
+    			return item.getName();
+    		case 1: /* date picker survey */
+    			return Utils.DATE_FORMAT.format(new Date(Long.parseLong(item.getName())));
+    		case 2: /* date and time picker survey */
+    			Date d = new Date(Long.parseLong(item.getName()));
+    			return Utils.DATE_FORMAT.format(d) + " " + Utils.TIME_FORMAT.format(d);
+    	}
+    	return null;
+    }
+
+   public static void setIconForConfirmState(ImageView view, UserVo user) {
 		switch (user.getState()) {
 			case 0: /* new / unconfirmed */
 				view.setImageResource(android.R.drawable.btn_radio);

@@ -97,12 +97,16 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 					datetime.setVisibility(View.GONE);
 				}
 				ImageView icon = (ImageView) convertView.findViewById(R.id.eventstateiconview);
-				UserVo myself = null;
-				for (UserVo user : event.getUsers())
-					if (user.getEmail().equalsIgnoreCase(Utils.getApp(EventsActivity.this).getEmail()))
-						myself = user;
-				if (myself != null) Utils.setIconForConfirmState(icon, myself);
-				else icon.setImageDrawable(null);
+				if (hasOpenSurveys(event)) {
+					icon.setImageResource(android.R.drawable.ic_menu_help);
+				} else {
+					UserVo myself = null;
+					for (UserVo user : event.getUsers())
+						if (user.getEmail().equalsIgnoreCase(Utils.getApp(EventsActivity.this).getEmail()))
+							myself = user;
+					if (myself != null) Utils.setIconForConfirmState(icon, myself);
+					else icon.setImageDrawable(null);
+				}
 		        return convertView;
 			}
     	};
@@ -278,15 +282,17 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     	startActivityForResult(intent, 0);
 	}
 	
-	protected void confirmEvent(EventVo event) {
-		
+	protected boolean hasOpenSurveys(EventVo event) {
 		boolean hasOpenSurveys = false;
 		if (event.getSurveys() != null) {
 			for (SurveyVo s : event.getSurveys())
 				if (s.getState() == 0) hasOpenSurveys = true;
 		}
-		
-		if (hasOpenSurveys) {
+		return hasOpenSurveys;
+	}
+	
+	protected void confirmEvent(EventVo event) {
+		if (hasOpenSurveys(event)) {
 			startEventActivityClass(SurveyConfirmActivity.class, event);
 		} else {
 			startEventActivityClass(EventConfirmActivity.class, event);

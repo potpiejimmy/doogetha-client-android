@@ -148,8 +148,8 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
         switch (id) {
         case DATE_DIALOG_ID:
             DatePickerDialog dpd = new DatePickerDialog(this, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-            dpd.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (android.content.DialogInterface.OnClickListener)null);
-            dpd.setButton(AlertDialog.BUTTON_NEGATIVE, "Datum lšschen", new android.content.DialogInterface.OnClickListener() {
+            dpd.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (DialogInterface.OnClickListener)null);
+            dpd.setButton(AlertDialog.BUTTON_NEGATIVE, "Datum lšschen", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					event.setEventtime(null);
 					updateUI();
@@ -158,7 +158,19 @@ public class EventEditActivity extends Activity implements OnClickListener, Date
             return dpd;
             
         case TIME_DIALOG_ID:
-            return new TimePickerDialog(this, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+            TimePickerDialog tpd = new TimePickerDialog(this, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+            tpd.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (DialogInterface.OnClickListener)null);
+            tpd.setButton(AlertDialog.BUTTON_NEGATIVE, "Keine Uhrzeit", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					Calendar cal = Calendar.getInstance();
+					cal.setTimeInMillis(event.getEventtime());
+					cal.set(Calendar.HOUR_OF_DAY, 0);
+					cal.set(Calendar.MINUTE, 0);
+					event.setEventtime(cal.getTimeInMillis());
+					updateUI();
+				}
+            });
+            return tpd;
         }
         return null;
     }

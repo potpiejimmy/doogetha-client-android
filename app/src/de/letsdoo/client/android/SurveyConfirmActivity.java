@@ -3,10 +3,12 @@ package de.letsdoo.client.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +32,7 @@ import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
-public class SurveyConfirmActivity extends Activity implements OnClickListener {
+public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements OnClickListener {
 
 	private EventVo event = null;
 
@@ -41,6 +43,7 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	
 	private List<List<ImageView>> confirmViews = new ArrayList<List<ImageView>>();
 	private List<List<View>> closeViews = new ArrayList<List<View>>();
+	private ViewFlipper viewFlipper = null;
 	
 	private UserVo myself = null;
 	
@@ -67,6 +70,8 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	Button buttoncancel = (Button) findViewById(R.id.editcancel);
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
+    	
+    	this.viewFlipper = (ViewFlipper)findViewById(R.id.viewFlipper);
 		
 		previousbutton = (ImageButton) findViewById(R.id.previousbutton);
 		nextbutton = (ImageButton) findViewById(R.id.nextbutton);
@@ -82,31 +87,45 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
         
         this.myOwn = event.getOwner().getId() == myself.getId();
         
+        recreateAllSurveyViews();
+        
         int firstOpen = -1;
         for (int i=0; i<event.getSurveys().length; i++) {
         	SurveyVo survey = event.getSurveys()[i];
-        	addSurveyView(survey);
             if (firstOpen == -1 && survey.getState()==0) firstOpen = i;
         }
+        
         if (firstOpen == -1)
         	findViewById(R.id.surveyconfirmbuttonpanel).setVisibility(View.GONE);
         
         showSurvey(firstOpen == -1 ? 0 : firstOpen);
     }
     
+    protected void recreateAllSurveyViews() {
+    	this.confirmViews.clear();
+    	this.closeViews.clear();
+    	this.viewFlipper.removeAllViews();
+    	for (SurveyVo survey : event.getSurveys())
+    		addSurveyView(survey);
+    	currentIndex = 0;
+    }
+    
     protected void showSurvey(int index) {
     	((TextView)findViewById(R.id.surveyname)).setText(event.getSurveys()[index].getName() + " (" + (index+1) + "/" + event.getSurveys().length + ")");
-    	ViewFlipper flipper = (ViewFlipper)findViewById(R.id.viewFlipper);
     	
     	if (index > currentIndex)
     		for (int i=0; i<(index-currentIndex); i++)
-    			flipper.showNext();
+    			viewFlipper.showNext();
     	else if (index < currentIndex)
     		for (int i=0; i<(currentIndex-index); i++)
-    			flipper.showPrevious();
+    			viewFlipper.showPrevious();
     	
     	currentIndex = index;
     	updateUI();
+    }
+    
+    protected SurveyVo currentSurvey() {
+    	return event.getSurveys()[currentIndex];
     }
     
     protected void updateUI() {
@@ -115,8 +134,6 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     }
     
     protected void addSurveyView(SurveyVo survey) {
-    	ViewFlipper flipper = (ViewFlipper)findViewById(R.id.viewFlipper);
-    	
     	View surveyconfirmview = getLayoutInflater().inflate(R.layout.surveyconfirmtable, null);
     	
     	((TextView)surveyconfirmview.findViewById(R.id.surveydescription)).setText(survey.getDescription());
@@ -156,13 +173,14 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 	    		row = new TableRow(this);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	row.setLayoutParams(tableParams);
-	        	View itemLabel = tableTextView(Utils.formatSurveyItem(survey, item), false, (survey.getState()==0 && myOwn) || item.getState()==1);
+	        	View itemLabel = tableTextView(Utils.formatSurveyItem(survey, item), false, (survey.getState()==0 && myOwn && item.getId()!=null) || item.getState()==1);
 	    		row.addView(itemLabel, tableParams);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	
 	        	if (survey.getState()==0 && myOwn) {
 	        		currentCloseViews.add(itemLabel);
-	        		itemLabel.setOnClickListener(this);
+	        		if (item.getId()!=null)
+	        			itemLabel.setOnClickListener(this);
 	        	}
 	    		
 	    		for (int i=0; i<event.getUsers().length; i++) {
@@ -184,8 +202,21 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
     	}
 		this.confirmViews.add(currentConfirmViews);
 		this.closeViews.add(currentCloseViews);
+		
+		// add button
+		if (survey.getMode() == 1) {
+			row = new TableRow(this);
+        	row.addView(verticalSeparator(), tableParams);
+			ImageButton addbutton = new ImageButton(this);
+			addbutton.setId(1);
+			addbutton.setTag("add");
+			addbutton.setImageResource(android.R.drawable.ic_input_add);
+			addbutton.setOnClickListener(this);
+			row.addView(addbutton, tableParams);
+			table.addView(row, tableParams);
+		}
     	
-    	flipper.addView(surveyconfirmview);
+		viewFlipper.addView(surveyconfirmview);
     }
     
     protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean highlight) {
@@ -230,7 +261,14 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 			TextView v = new TextView(this);
 			if (!highlight) v.setBackgroundColor(Color.LTGRAY);
 			v.setWidth(120);
-			v.setText(text);
+			if (highlight) {
+				SpannableString hiText = new SpannableString(text);
+				hiText.setSpan(new ForegroundColorSpan(Color.BLUE), 0, hiText.length(), 0);
+				hiText.setSpan(new UnderlineSpan(), 0, hiText.length(), 0);
+				v.setText(hiText);
+			} else {
+				v.setText(text);
+			}
 			v.setGravity(Gravity.CENTER_VERTICAL);
 			v.setPadding(5,5,5,5);
 			v.setTextColor(Color.BLACK);
@@ -324,6 +362,10 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 				finishCancel();
 				break;
 		}
+		if ("add".equals(v.getTag())) {
+			// add button was clicked:
+			invokeSurveyItemDialog(null);
+		}
 	}
 	
 	protected void confirm() {
@@ -380,5 +422,22 @@ public class SurveyConfirmActivity extends Activity implements OnClickListener {
 		{
     		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	@Override
+	protected SurveyVo getSurvey() {
+		return currentSurvey();
+	}
+
+	@Override
+	protected void insertOrUpdateSurveyItem(String item) {
+		SurveyItemVo[] currentItems = currentSurvey().getSurveyItems();
+		SurveyItemVo[] newItems = new SurveyItemVo[currentItems.length+1];
+		System.arraycopy(currentItems, 0, newItems, 0, currentItems.length);
+		newItems[newItems.length-1] = createNewSurveyItem(item);
+		currentSurvey().setSurveyItems(newItems);
+		int oldIndex = currentIndex;
+		recreateAllSurveyViews();
+		showSurvey(oldIndex);
 	}
 }

@@ -1,15 +1,8 @@
 package de.letsdoo.client.android;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,27 +11,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.potpiejimmy.util.DroidLib;
 
-public class SurveyEditActivity extends Activity implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-	
-	protected static final int DATE_DIALOG_ID = 0;
-	protected static final int TIME_DIALOG_ID = 1;
+public class SurveyEditActivity extends AbstractSurveyEditActivity implements OnClickListener {
 	
 	private SurveyVo survey = null;
 
 	private EditText surveyname = null;
 	private EditText surveydescription = null;
 	private ImageButton addsurveyitem = null;
+	private CheckBox surveyEditable = null;
 	
 	private int currentSelection = -1;
 	private Drawable lastBackground = null;
@@ -58,6 +48,7 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
     	this.surveydescription = (EditText) findViewById(R.id.surveydescription);
     	this.addsurveyitem = (ImageButton) findViewById(R.id.addsurveyitem);
     	this.surveyItemsList =  (LinearLayout)findViewById(R.id.surveyitemslist);
+    	this.surveyEditable =  (CheckBox)findViewById(R.id.surveyeditablecheckbox);
     	
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
@@ -79,20 +70,6 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
         updateUI();
     }
     
-    @Override
-    protected Dialog onCreateDialog(int id) {
-    	Calendar cal = Calendar.getInstance();
-    	
-        switch (id) {
-        case DATE_DIALOG_ID:
-            return new DatePickerDialog(this, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-            
-        case TIME_DIALOG_ID:
-            return new TimePickerDialog(this, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
-        }
-        return null;
-    }
-    
     protected void addSurveyItem(SurveyItemVo item) {
 		View vi = getLayoutInflater().inflate(R.layout.survey_item_item, null);
 		((TextView)vi.findViewById(R.id.surveyitemname)).setText(Utils.formatSurveyItem(survey, item));
@@ -110,6 +87,7 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
     {
     	survey.setName(surveyname.getText().toString());
     	survey.setDescription(surveydescription.getText().toString());
+    	survey.setMode(surveyEditable.isChecked() ? (byte)1 : (byte)0);
     	
     	survey.setSurveyItems(items.size()==0 ? null : items.toArray(new SurveyItemVo[items.size()]));
     }
@@ -139,6 +117,7 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
     {
         surveyname.setText(survey.getName());
         surveydescription.setText(survey.getDescription());
+        surveyEditable.setChecked(survey.getMode()==1);
     }
     
     protected String getSurveyItemName(int index) {
@@ -146,8 +125,8 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
     }
     
     protected void setSurveyItemName(int index, String item) {
-    	((TextView)surveyItemsList.getChildAt(index).findViewById(R.id.surveyitemname)).setText(item);
     	items.get(index).setName(item);
+    	((TextView)surveyItemsList.getChildAt(index).findViewById(R.id.surveyitemname)).setText(Utils.formatSurveyItem(survey, items.get(index)));
     }
     
     protected void editSurveyItem(String item) {
@@ -156,27 +135,9 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
     	if (currentSelection >= 0) {
     		setSurveyItemName(currentSelection, item);
     	} else {
-    		SurveyItemVo si = new SurveyItemVo();
-    		si.setName(item);
-    		addSurveyItem(si);
+    		addSurveyItem(createNewSurveyItem(item));
     	}
 
-    }
-    
-    protected void editSurveyItemDialog(String text) {
-		final EditText input = new EditText(this);
-		input.setText(text);
-		new AlertDialog.Builder(this)
-	    .setMessage("Auswahlmšglichkeit eingeben:")
-	    .setView(input)
-	    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int whichButton) {
-	        	editSurveyItem(input.getText().toString().trim());
-	        }
-	    }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-	        public void onClick(DialogInterface dialog, int whichButton) {
-	        }
-	    }).show();
     }
     
     protected void validateAndFinish() {
@@ -189,15 +150,7 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
     
     protected void newSurveyItem() {
 		currentSelection = -1;
-		switch (survey.getType()) {
-			case 0: /* generic survey */
-				editSurveyItemDialog("");
-				break;
-			case 1: /* survey date determination */
-			case 2: /* survey date and time determination */
-				showDialog(DATE_DIALOG_ID);
-				break;
-		}
+		invokeSurveyItemDialog(null);
     }
     
 	public void onClick(View view) {
@@ -218,7 +171,7 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which) {
 						case 0:
-							editSurveyItemDialog(getSurveyItemName(currentSelection));
+							invokeSurveyItemDialog(getSurveyItemName(currentSelection));
 							break;
 						case 1:
 							removeSurveyItem(currentSelection);
@@ -247,30 +200,13 @@ public class SurveyEditActivity extends Activity implements OnClickListener, Dat
 			break;
 		}
 	}
-
-	private Calendar currentDatePickerTime = null;
 	
-	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.YEAR, year);
-		cal.set(Calendar.MONTH, monthOfYear);
-		cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		
-		if (survey.getType() == 1) /* date selection only */
-			editSurveyItem(""+cal.getTimeInMillis());
-		else if (survey.getType() == 2) {/* date and time selection */
-			currentDatePickerTime = cal; /* memorize date selection until time is selected */
-			showDialog(TIME_DIALOG_ID);
-		}
-	}
+    protected SurveyVo getSurvey() {
+    	return survey;
+    }
+    
+    protected void insertOrUpdateSurveyItem(String item) {
+    	editSurveyItem(item);
+    }
 
-	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-		currentDatePickerTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-		currentDatePickerTime.set(Calendar.MINUTE, minute);
-		editSurveyItem("" + currentDatePickerTime.getTimeInMillis());
-	}
 }

@@ -98,7 +98,7 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 				}
 				ImageView icon = (ImageView) convertView.findViewById(R.id.eventstateiconview);
 				if (hasOpenSurveys(event)) {
-					icon.setImageResource(android.R.drawable.ic_menu_help);
+					icon.setImageResource(R.drawable.question_mark);
 				} else {
 					UserVo myself = null;
 					for (UserVo user : event.getUsers())

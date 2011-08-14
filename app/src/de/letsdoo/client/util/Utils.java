@@ -18,7 +18,7 @@ import de.letsdoo.server.vo.UserVo;
  */
 public class Utils {
 	
-	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy");
+	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEEEEE,\ndd MMM yyyy");
 	public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
 	public static Letsdoo getApp(Activity activity) {

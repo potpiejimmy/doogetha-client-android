@@ -1,6 +1,7 @@
 package de.letsdoo.client.android;
 
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
+import de.potpiejimmy.util.DroidLib;
 
 public abstract class AbstractSurveyEditActivity extends Activity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 	protected static final int DATE_DIALOG_ID = 0;
@@ -22,7 +24,7 @@ public abstract class AbstractSurveyEditActivity extends Activity implements Dat
 	
     @Override
     protected Dialog onCreateDialog(int id) {
-    	Calendar cal = currentEditingTime != null ? currentEditingTime : Calendar.getInstance();
+    	Calendar cal = currentEditingTime != null ? currentEditingTime : createDefaultCalendar();
     	
         switch (id) {
         case DATE_DIALOG_ID:
@@ -34,6 +36,14 @@ public abstract class AbstractSurveyEditActivity extends Activity implements Dat
         return null;
     }
     
+    protected Calendar createDefaultCalendar() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.set(Calendar.MINUTE, 0);
+    	cal.set(Calendar.SECOND, 0);
+    	cal.set(Calendar.MILLISECOND, 0);
+    	return cal;
+    }
+    
     protected void editSurveyItemDialog(String text) {
 		final EditText input = new EditText(this);
 		input.setText(text);
@@ -42,7 +52,7 @@ public abstract class AbstractSurveyEditActivity extends Activity implements Dat
 	    .setView(input)
 	    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int whichButton) {
-	        	insertOrUpdateSurveyItem(input.getText().toString().trim());
+	        	finishEditSurveyItem(input.getText().toString().trim());
 	        }
 	    }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int whichButton) {
@@ -50,7 +60,7 @@ public abstract class AbstractSurveyEditActivity extends Activity implements Dat
 	    }).show();
     }
     
-    protected void invokeSurveyItemDialog(String value) {
+    protected void startEditSurveyItem(String value) {
 		switch (getSurvey().getType()) {
 			case 0: /* generic survey */
 				editSurveyItemDialog(value==null ? "" : value);
@@ -80,7 +90,7 @@ public abstract class AbstractSurveyEditActivity extends Activity implements Dat
     
     protected abstract SurveyVo getSurvey();
     
-    protected abstract void insertOrUpdateSurveyItem(String item);
+    protected abstract void finishEditSurveyItem(String item);
 
 	private Calendar currentDatePickerTime = null;
 	
@@ -95,7 +105,7 @@ public abstract class AbstractSurveyEditActivity extends Activity implements Dat
 		cal.set(Calendar.MILLISECOND, 0);
 		
 		if (getSurvey().getType() == 1) /* date selection only */
-			insertOrUpdateSurveyItem(""+cal.getTimeInMillis());
+			finishEditSurveyItem(""+cal.getTimeInMillis());
 		else if (getSurvey().getType() == 2) {/* date and time selection */
 			currentDatePickerTime = cal; /* memorize date selection until time is selected */
 			showDialog(TIME_DIALOG_ID);
@@ -105,6 +115,17 @@ public abstract class AbstractSurveyEditActivity extends Activity implements Dat
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 		currentDatePickerTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
 		currentDatePickerTime.set(Calendar.MINUTE, minute);
-		insertOrUpdateSurveyItem("" + currentDatePickerTime.getTimeInMillis());
+		finishEditSurveyItem("" + currentDatePickerTime.getTimeInMillis());
+	}
+	
+	protected boolean checkUnique(List<SurveyItemVo> items, String item, int currentIndex) {
+		for (int i=0; i<items.size(); i++) {
+			SurveyItemVo si = items.get(i);
+			if (si.getName().equals(item) && i != currentIndex) {
+				DroidLib.toast(this, "Diese Auswahl existiert bereits.");
+				return false;
+			}
+		}
+		return true;
 	}
 }

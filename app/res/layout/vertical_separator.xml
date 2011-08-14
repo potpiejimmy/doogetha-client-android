@@ -6,4 +6,4 @@
 	    android:layout_height="match_parent"
 	    android:text="    "
 	    android:textSize="2sp"
-	    android:background="#FFFFFFFF"/>
+	    android:background="@color/doogetha_titlebar"/>

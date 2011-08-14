@@ -1,6 +1,7 @@
 package de.letsdoo.client.android;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.DialogInterface;
@@ -143,13 +144,13 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	TableRow.LayoutParams tableParams = new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.FILL_PARENT);
     	
     	// add header
-    	table.addView(horizontalSeparator(), tableParams);
+    	//table.addView(horizontalSeparator(), tableParams);
     	
     	TableRow row = new TableRow(this);
-    	row.addView(verticalSeparator(), tableParams);
+    	//row.addView(verticalSeparator(), tableParams);
     	VerticalLabelView emptyCorner = new VerticalLabelView(this);
-		emptyCorner.setBackgroundColor(Color.LTGRAY);
-		emptyCorner.setText((survey.getState()==0 && myOwn) ? "<- schlie§en" : " ");
+		//emptyCorner.setBackgroundColor(Color.LTGRAY);
+		emptyCorner.setText(/*(survey.getState()==0 && myOwn) ? "<- schlie§en" : */" ");
     	row.addView(emptyCorner, tableParams);
     	row.addView(verticalSeparator(), tableParams);
     	row.setLayoutParams(tableParams);
@@ -171,7 +172,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	    	for (SurveyItemVo item : survey.getSurveyItems()) {
 	    		
 	    		row = new TableRow(this);
-	        	row.addView(verticalSeparator(), tableParams);
+	        	//row.addView(verticalSeparator(), tableParams);
 	        	row.setLayoutParams(tableParams);
 	        	View itemLabel = tableTextView(Utils.formatSurveyItem(survey, item), false, (survey.getState()==0 && myOwn && item.getId()!=null) || item.getState()==1);
 	    		row.addView(itemLabel, tableParams);
@@ -204,10 +205,12 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		this.closeViews.add(currentCloseViews);
 		
 		// add button
-		if (survey.getMode() == 1) {
+		if (survey.getMode() == 1 /* editable */ &&
+			survey.getState() == 0 /* open */) {
 			row = new TableRow(this);
-        	row.addView(verticalSeparator(), tableParams);
+        	//row.addView(verticalSeparator(), tableParams);
 			ImageButton addbutton = new ImageButton(this);
+			addbutton.setBackgroundDrawable(null);
 			addbutton.setId(1);
 			addbutton.setTag("add");
 			addbutton.setImageResource(android.R.drawable.ic_input_add);
@@ -326,7 +329,9 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     		else
     			item.setState(0); // reset the others if previously closed
     	}
-		((ViewFlipper)findViewById(R.id.viewFlipper)).getChildAt(currentIndex).findViewById(R.id.surveyclosedlabel).setVisibility(View.VISIBLE);
+    	TextView surveyclosedlabel = (TextView)((ViewFlipper)findViewById(R.id.viewFlipper)).getChildAt(currentIndex).findViewById(R.id.surveyclosedlabel);
+    	surveyclosedlabel.setText("Diese Abstimmung wird geschlossen mit dem Ergebnis: " + Utils.formatSurveyItem(survey, closeItem));
+    	surveyclosedlabel.setVisibility(View.VISIBLE);
     }
     
 	public void onClick(View v) {
@@ -364,7 +369,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		}
 		if ("add".equals(v.getTag())) {
 			// add button was clicked:
-			invokeSurveyItemDialog(null);
+			startEditSurveyItem(null);
 		}
 	}
 	
@@ -430,12 +435,22 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	}
 
 	@Override
-	protected void insertOrUpdateSurveyItem(String item) {
-		SurveyItemVo[] currentItems = currentSurvey().getSurveyItems();
-		SurveyItemVo[] newItems = new SurveyItemVo[currentItems.length+1];
-		System.arraycopy(currentItems, 0, newItems, 0, currentItems.length);
-		newItems[newItems.length-1] = createNewSurveyItem(item);
-		currentSurvey().setSurveyItems(newItems);
+	protected void finishEditSurveyItem(String item) {
+		List<SurveyItemVo> itemList = new ArrayList<SurveyItemVo>(Arrays.asList(currentSurvey().getSurveyItems()));
+    	if (!checkUnique(itemList, item, -1)) return;
+		
+		SurveyItemVo newItem = createNewSurveyItem(item);
+		for (int i=0; i<itemList.size(); i++)
+			if (itemList.get(i).getName().compareTo(newItem.getName()) > 0) {
+				itemList.add(i, newItem);
+				break;
+			} else if (i == itemList.size()-1) {
+				itemList.add(newItem);
+				break;
+			}
+		
+		currentSurvey().setSurveyItems(itemList.toArray(new SurveyItemVo[itemList.size()]));
+		
 		int oldIndex = currentIndex;
 		recreateAllSurveyViews();
 		showSurvey(oldIndex);

@@ -132,6 +132,8 @@ public class SurveyEditActivity extends AbstractSurveyEditActivity implements On
     protected void editSurveyItem(String item) {
     	if (item == null || item.length() == 0) return;
     	
+    	if (!checkUnique(items, item, currentSelection)) return;
+    	
     	if (currentSelection >= 0) {
     		setSurveyItemName(currentSelection, item);
     	} else {
@@ -150,7 +152,7 @@ public class SurveyEditActivity extends AbstractSurveyEditActivity implements On
     
     protected void newSurveyItem() {
 		currentSelection = -1;
-		invokeSurveyItemDialog(null);
+		startEditSurveyItem(null);
     }
     
 	public void onClick(View view) {
@@ -167,11 +169,11 @@ public class SurveyEditActivity extends AbstractSurveyEditActivity implements On
 			lastBackground = view.getBackground();
 			view.setBackgroundColor(Color.WHITE);
 			
-			DroidLib.alert(this, getSurveyItemName(index), null, null, new String[] {"bearbeiten", "lšschen"}, new android.content.DialogInterface.OnClickListener() {
+			DroidLib.alert(this, Utils.formatSurveyItem(survey, items.get(currentSelection)), null, null, new String[] {"bearbeiten", "lšschen"}, new android.content.DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which) {
 						case 0:
-							invokeSurveyItemDialog(getSurveyItemName(currentSelection));
+							startEditSurveyItem(getSurveyItemName(currentSelection));
 							break;
 						case 1:
 							removeSurveyItem(currentSelection);
@@ -205,7 +207,7 @@ public class SurveyEditActivity extends AbstractSurveyEditActivity implements On
     	return survey;
     }
     
-    protected void insertOrUpdateSurveyItem(String item) {
+    protected void finishEditSurveyItem(String item) {
     	editSurveyItem(item);
     }
 

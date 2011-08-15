@@ -158,7 +158,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	for (int i=0; i<event.getUsers().length; i++) {
     		UserVo user = event.getUsers()[i];
     		ContactsUtils.fillUserInfo(this, user);
-    		row.addView(tableTextView(ContactsUtils.userDisplayName(this, user), true, i==0 && survey.getState()==0), tableParams);
+    		row.addView(tableTextView(ContactsUtils.userDisplayName(this, user), true, i==0 && survey.getState()==0, false), tableParams);
         	row.addView(verticalSeparator(), tableParams);
     	}
     	
@@ -174,7 +174,8 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	    		row = new TableRow(this);
 	        	//row.addView(verticalSeparator(), tableParams);
 	        	row.setLayoutParams(tableParams);
-	        	View itemLabel = tableTextView(Utils.formatSurveyItem(survey, item), false, (survey.getState()==0 && myOwn && item.getId()!=null) || item.getState()==1);
+	        	boolean clickable = survey.getState()==0 && myOwn && item.getId()!=null; // open && my own && not newly added
+	        	View itemLabel = tableTextView(Utils.formatSurveyItem(survey, item), false, clickable || item.getState()==1, clickable);
 	    		row.addView(itemLabel, tableParams);
 	        	row.addView(verticalSeparator(), tableParams);
 	        	
@@ -188,7 +189,8 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	    			
 	    			UserVo user = event.getUsers()[i];
 	    			ImageView iv = new ImageView(this);
-	    			setImageForUserStatus(iv, item, user, (survey.getState()==0 && i==0) || item.getState()==1);
+	    			boolean highlight = (survey.getState()==0 && i==0) || item.getState()==1; /* open && my (first) column || closeItem */
+	    			setImageForUserStatus(iv, item, user, highlight, highlight && i==0 || event.getUsers().length <= 5);
 	    			row.addView(iv, tableParams);
 	    	    	row.addView(verticalSeparator(), tableParams);
 
@@ -222,10 +224,10 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		viewFlipper.addView(surveyconfirmview);
     }
     
-    protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean highlight) {
+    protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean highlight, boolean wide) {
     	// find user status:
 		view.setImageResource(R.drawable.survey_neutral);
-		int padding = highlight ? 20 : (event.getUsers().length <= 5 ? 20 : 5);
+		int padding = wide ? 20 : 5;
 		view.setPadding(padding,padding,padding,padding);
 		if (!highlight) view.setBackgroundColor(Color.LTGRAY);
     	if (item.getConfirmations() != null) {
@@ -254,7 +256,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	return name.substring(0, MAXLEN-2) + "...";
     }
     
-    protected View tableTextView(String text, boolean vertical, boolean highlight) {
+    protected View tableTextView(String text, boolean vertical, boolean highlight, boolean clickable) {
     	if (vertical) {
     		VerticalLabelView v = new VerticalLabelView(this);
     		if (!highlight) v.setBackgroundColor(Color.LTGRAY);
@@ -264,7 +266,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 			TextView v = new TextView(this);
 			if (!highlight) v.setBackgroundColor(Color.LTGRAY);
 			v.setWidth(120);
-			if (highlight) {
+			if (clickable) {
 				SpannableString hiText = new SpannableString(text);
 				hiText.setSpan(new ForegroundColorSpan(Color.BLUE), 0, hiText.length(), 0);
 				hiText.setSpan(new UnderlineSpan(), 0, hiText.length(), 0);
@@ -308,7 +310,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 			newArray[newArray.length-1] = itemUser;
 			item.setConfirmations(newArray);
 		}
-		setImageForUserStatus(v, item, myself, true);
+		setImageForUserStatus(v, item, myself, true, true);
     }
     
     protected void closeSurvey(final SurveyItemVo closeItem) {

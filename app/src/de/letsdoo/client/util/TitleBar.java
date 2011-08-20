@@ -20,7 +20,7 @@ public class TitleBar extends TextView {
 
 	protected void init() {
 		setPadding(3,3,3,3);
-		setBackgroundResource(R.color.doogetha_titlebar);
+		setBackgroundResource(R.drawable.gradient_title);
 		setTextColor(Color.WHITE);
 	}
 }

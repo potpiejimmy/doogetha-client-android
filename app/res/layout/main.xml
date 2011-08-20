@@ -38,6 +38,7 @@
     <LinearLayout android:id="@+id/linearLayout2"
                   android:layout_width="fill_parent" 
                   android:layout_height="wrap_content"
+                  android:background="@color/doogetha_bgsel"
                   android:gravity="left">
         <Button android:layout_width="wrap_content"
                 android:layout_margin="3dip" 

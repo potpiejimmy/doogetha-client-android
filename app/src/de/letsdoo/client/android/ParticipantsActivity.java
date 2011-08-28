@@ -156,7 +156,11 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
     protected void checkAddUser(String email) {
     	if (email == null) return;
     	email = email.trim();
-    	if (email.length()==0) return;
+    	
+    	if (!Utils.checkValidMailAddress(email)) {
+    		DroidLib.toast(this, "Ungültige E-Mail-Adresse: " + email);
+    		return;
+    	}
     	
     	boolean found = false;
     	for (int i=0; i<data.getCount(); i++)
@@ -263,7 +267,11 @@ public class ParticipantsActivity extends ListActivity implements OnItemClickLis
 
 		@Override
 		public void doneFail(Throwable throwable) {
-			DroidLib.alert(ParticipantsActivity.this, email, "Sorry, diese Adresse ist Doogetha unbekannt. Derzeit können noch keine Teilnehmer hinzugefügt werden, die nicht registriert sind.", getString(R.string.ok), null, null);
+			DroidLib.alert(ParticipantsActivity.this, email, "Unter dieser Adressse ist noch kein Benutzer registriert. Wollen Sie die Adresse dennoch hinzufügen und eine Einladung an diese Adresse verschicken?", getString(R.string.ok), getString(R.string.cancel), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					addUser(email);
+				}
+			});
 		}
 
 		@Override

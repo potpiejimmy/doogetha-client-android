@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/gradient_item"
+    android:background="@drawable/event_rowselector"
     >
     <ImageView android:layout_height="fill_parent"
     		   android:id="@+id/eventstateiconview"

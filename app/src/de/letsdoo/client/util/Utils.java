@@ -108,4 +108,12 @@ public class Utils {
         if (!myOwn) ContactsUtils.fillUserInfo(activity, event.getOwner());
         return myOwn ? "Meine AktivitŠt" : "AktivitŠt von " + ContactsUtils.userDisplayName(activity, event.getOwner());
     }
+    
+    public static boolean checkValidMailAddress(String email) {
+    	if (email == null) return false;
+    	String[] parts = email.split("@");
+    	return (parts.length==2 &&
+    			parts[0].trim().length()>0 &&
+    			parts[1].trim().length()>0);
+    }
 }

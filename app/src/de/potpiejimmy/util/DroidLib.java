@@ -22,11 +22,15 @@ public class DroidLib {
 	}
 	
 	public static void alert(Context context, String msg, String oktext, OnClickListener oklistener) {
-		alert(context, null, msg, oktext, null, oklistener);
+		alert(context, null, msg, oktext, null, null, oklistener, null);
 	}
 	
 	public static void alert(Context context, String msg, String oktext, String canceltext, OnClickListener oklistener) {
 		alert(context, null, msg, oktext, canceltext, null, oklistener, null);
+	}
+	
+	public static void alert(Context context, String title, String msg, String oktext, String canceltext, OnClickListener oklistener) {
+		alert(context, title, msg, oktext, canceltext, null, oklistener, null);
 	}
 	
 	public static void alert(Context context, String title, String msg, String oktext, String[] items, OnClickListener clicklistener) {

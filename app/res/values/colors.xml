@@ -3,4 +3,5 @@
     <color name="doogetha_bg">#fff</color>
     <color name="doogetha_bgsel">#beb</color>
     <color name="doogetha_titlebar">#060</color>
+    <color name="doogetha_hilite">#ffa500</color>
 </resources>

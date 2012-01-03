@@ -300,16 +300,17 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		if (itemUser == null) {
 			itemUser = new SurveyItemUserVo();
 			itemUser.setUserId(myself.getId());
+
+			if (item.getConfirmations() == null) {
+				item.setConfirmations(new SurveyItemUserVo[] {itemUser});
+			} else {
+				SurveyItemUserVo[] newArray = new SurveyItemUserVo[item.getConfirmations().length+1];
+				System.arraycopy(item.getConfirmations(), 0, newArray, 0, item.getConfirmations().length);
+				newArray[newArray.length-1] = itemUser;
+				item.setConfirmations(newArray);
+			}
 		}
 		itemUser.setState((itemUser.getState()+1) % 3);
-		if (item.getConfirmations() == null) {
-			item.setConfirmations(new SurveyItemUserVo[] {itemUser});
-		} else {
-			SurveyItemUserVo[] newArray = new SurveyItemUserVo[item.getConfirmations().length+1];
-			System.arraycopy(item.getConfirmations(), 0, newArray, 0, item.getConfirmations().length);
-			newArray[newArray.length-1] = itemUser;
-			item.setConfirmations(newArray);
-		}
 		setImageForUserStatus(v, item, myself, true, true);
     }
     

@@ -8,8 +8,8 @@
     <ImageView android:layout_height="fill_parent"
     		   android:id="@+id/eventstateiconview"
     		   android:src="@android:drawable/btn_star" 
-    		   android:layout_width="24dp"
-    		   android:paddingLeft="3dp">
+    		   android:layout_width="20dp"
+    		   android:paddingLeft="6dp">
     </ImageView>
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="vertical"
@@ -21,7 +21,7 @@
 		    android:id="@+id/eventitemdatetime"
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
-		    android:paddingLeft="5dip"
+		    android:paddingLeft="6dip"
 		    android:textSize="10sp"
 		    android:textColor="#000"
 		    android:text="eventitemdatetime">
@@ -30,7 +30,7 @@
 			android:id="@+id/eventitemname"
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
-		    android:paddingLeft="5dip"
+		    android:paddingLeft="6dip"
 		    android:paddingBottom="10dip"
 		    android:textSize="18sp"
 		    android:textColor="#000"

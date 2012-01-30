@@ -8,6 +8,7 @@ import java.util.Date;
 import android.app.Activity;
 import android.widget.ImageView;
 import de.letsdoo.client.android.Letsdoo;
+import de.letsdoo.client.android.R;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
@@ -86,13 +87,13 @@ public class Utils {
    public static void setIconForConfirmState(ImageView view, UserVo user) {
 		switch (user.getState()) {
 			case 0: /* new / unconfirmed */
-				view.setImageResource(android.R.drawable.btn_radio);
+				view.setImageResource(R.drawable.dot_gray);
 				break;
 			case 1: /* confirmed */
-				view.setImageResource(android.R.drawable.presence_online);
+				view.setImageResource(R.drawable.dot_green);
 				break;
 			case 2: /* denied */
-				view.setImageResource(android.R.drawable.presence_busy);
+				view.setImageResource(R.drawable.dot_red);
 				break;
 			default:
 				view.setImageDrawable(null);

@@ -152,14 +152,14 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		//emptyCorner.setBackgroundColor(Color.LTGRAY);
 		emptyCorner.setText(/*(survey.getState()==0 && myOwn) ? "<- schlie§en" : */" ");
     	row.addView(emptyCorner, tableParams);
-    	row.addView(verticalSeparator(), tableParams);
+    	//row.addView(verticalSeparator(), tableParams);
     	row.setLayoutParams(tableParams);
     	
     	for (int i=0; i<event.getUsers().length; i++) {
     		UserVo user = event.getUsers()[i];
     		ContactsUtils.fillUserInfo(this, user);
     		row.addView(tableTextView(ContactsUtils.userDisplayName(this, user), true, i==0 && survey.getState()==0, false), tableParams);
-        	row.addView(verticalSeparator(), tableParams);
+        	//row.addView(verticalSeparator(), tableParams);
     	}
     	
     	table.addView(row, tableParams);
@@ -177,7 +177,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	        	boolean clickable = survey.getState()==0 && myOwn && item.getId()!=null; // open && my own && not newly added
 	        	View itemLabel = tableTextView(Utils.formatSurveyItem(survey, item), false, clickable || item.getState()==1, clickable);
 	    		row.addView(itemLabel, tableParams);
-	        	row.addView(verticalSeparator(), tableParams);
+	        	//row.addView(verticalSeparator(), tableParams);
 	        	
 	        	if (survey.getState()==0 && myOwn) {
 	        		currentCloseViews.add(itemLabel);
@@ -192,7 +192,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	    			boolean highlight = (survey.getState()==0 && i==0) || item.getState()==1; /* open && my (first) column || closeItem */
 	    			setImageForUserStatus(iv, item, user, highlight, highlight && i==0 || event.getUsers().length <= 5);
 	    			row.addView(iv, tableParams);
-	    	    	row.addView(verticalSeparator(), tableParams);
+	    	    	//row.addView(verticalSeparator(), tableParams);
 
 	    	    	if (survey.getState()==0 && i==0) {
 	    				currentConfirmViews.add(iv);

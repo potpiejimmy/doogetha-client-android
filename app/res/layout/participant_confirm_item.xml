@@ -7,7 +7,7 @@
     <ImageView android:layout_height="fill_parent"
     		   android:id="@+id/participantconfirmiconview"
     		   android:src="@android:drawable/btn_star" 
-    		   android:layout_width="24dp"
+    		   android:layout_width="18dp"
     		   android:paddingLeft="3dp">
     </ImageView>
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

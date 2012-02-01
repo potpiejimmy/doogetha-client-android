@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
@@ -15,30 +16,35 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private Button loginbutton = null;
 	private Button registerbutton = null;
-	private Button unregisterbutton = null;
+	private Button continuebutton = null;
 	private EditText email = null;
 	private TextView registerresulttext = null;
+	private ViewFlipper viewflipper = null;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.login);
+        this.setContentView(R.layout.welcome);
         
     	registerbutton = (Button) findViewById(R.id.registerbutton);
-    	unregisterbutton = (Button) findViewById(R.id.unregisterbutton);
+    	continuebutton = (Button) findViewById(R.id.continuebutton);
     	loginbutton = (Button) findViewById(R.id.loginbutton);
 		email = (EditText) findViewById(R.id.email);
-		registerresulttext = (TextView) findViewById(R.id.registerresulttext);
+		registerresulttext = (TextView) findViewById(R.id.registerPinLabel);
+		viewflipper = (ViewFlipper) findViewById(R.id.viewFlipper);
     	
     	registerbutton.setOnClickListener(this);
     	loginbutton.setOnClickListener(this);
-    	unregisterbutton.setOnClickListener(this);
+    	continuebutton.setOnClickListener(this);
     	
-    	if (getLoginToken() != null)
+    	viewflipper.setInAnimation(getApplicationContext(), android.R.anim.slide_in_left);
+    	viewflipper.setOutAnimation(getApplicationContext(), android.R.anim.slide_out_right);
+    	
+    	if (getLoginToken() != null) {
+    		viewflipper.showNext();
     		registerSuccess(getLoginToken());  // display login token and PIN again when reopening
-    	else
-    		switchUIRegistered(false);
+    	}
     }
     
 	public void onClick(View view) {
@@ -50,8 +56,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 			case R.id.loginbutton:
 				login();
 				break;
-			case R.id.unregisterbutton:
-				switchUIRegistered(false);
+			case R.id.continuebutton:
+				viewflipper.showNext();
 				break;
 		}
 	}
@@ -84,22 +90,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 	{
 		String pin = logintoken.substring(logintoken.indexOf(":")+1);
     	//String authtoken = Base64.encodeToString("thorsten@potpiejimmy.de:asdfasdf".getBytes(), Base64.NO_WRAP);
-    	registerresulttext.setText(
-    			"A request for creating your login credentials has been sent out successfully.\n"+
-    			"\nYour Request PIN is " + pin + "\n\n"+
-    			"Please check your email and click the confirm link in the mail to verify your account. "+
-    			"After you have confirmed your registration, you may log in using the button below.");
+    	registerresulttext.setText("PIN: " + pin);
     	setLoginToken(logintoken);
-    	switchUIRegistered(true);
-	}
-	
-	protected void switchUIRegistered(boolean registered) 
-	{
-		loginbutton.setEnabled(registered);
-		unregisterbutton.setEnabled(registered);
-		registerbutton.setEnabled(!registered);
-		email.setEnabled(!registered);
-		if (!registered) registerresulttext.setText(" ");
+    	viewflipper.showNext();
 	}
 	
 	protected void fetchCredentialsSuccess(String authkey)

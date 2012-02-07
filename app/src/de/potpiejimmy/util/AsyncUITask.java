@@ -17,7 +17,13 @@ public abstract class AsyncUITask<T> implements Runnable
 	
 	public void go(String msg)
 	{
-    	dialog = ProgressDialog.show(context, "", msg, true, true);
+		go(msg, true);
+	}
+	
+	public void go(String msg, boolean showDialog)
+	{
+		if (showDialog)
+			dialog = ProgressDialog.show(context, "", msg, true, true);
     	new Thread(this).start();
 	}
 	
@@ -51,7 +57,7 @@ public abstract class AsyncUITask<T> implements Runnable
 			else
 				doneOk(result);
 			try {
-				dialog.cancel();
+				if (dialog!=null) dialog.cancel();
 			} catch (Exception ex) {
 				// ignore
 			}

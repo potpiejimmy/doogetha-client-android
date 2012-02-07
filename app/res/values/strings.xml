@@ -23,4 +23,9 @@
     <string name="currentactivities">Aktuelle\nAktivitäten</string>
     <string name="myactivities">Meine\nAktivitäten</string>
     <string name="publicactivities">Community</string>
+    <!-- PullRefreshableListView -->
+    <string name="pull_to_refresh">Zum Aktualisieren ziehen</string>
+    <string name="release_to_refresh">Jetzt loslassen</string>
+    <string name="refreshing">Bitte warten...</string>
+    <!--  -->
 </resources>

@@ -12,24 +12,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.android.rest.EventsAccessor;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
@@ -38,8 +37,10 @@ import de.letsdoo.server.vo.SurveyVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
+import de.potpiejimmy.util.PullRefreshableListView;
+import de.potpiejimmy.util.PullRefreshableListView.OnRefreshListener;
 
-public class EventsActivity extends Activity implements OnItemClickListener, OnClickListener {
+public class EventsActivity extends Activity implements OnItemClickListener, OnClickListener, OnRefreshListener {
 
 	private final static int NUMBER_OF_SCREENS = 3;
 	private final static int SCREEN_CURRENT_ACTIVITIES = 0;
@@ -55,8 +56,8 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 	
 	private boolean versionChecked = false;
 	
-	private ListView currentEventsList = null;
-	private ListView myEventsList = null;
+	private PullRefreshableListView currentEventsList = null;
+	private PullRefreshableListView myEventsList = null;
 	
 	private int currentScreen = 0;
 	
@@ -67,8 +68,8 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
         this.setContentView(R.layout.main);
         ((TextView)findViewById(R.id.versionlabel)).setText("Version " + Utils.getApp(this).getVersionName());
 
-        this.currentEventsList = (ListView) findViewById(R.id.currenteventslist);
-        this.myEventsList = (ListView) findViewById(R.id.myeventslist);
+        this.currentEventsList = (PullRefreshableListView) findViewById(R.id.currenteventslist);
+        this.myEventsList = (PullRefreshableListView) findViewById(R.id.myeventslist);
         
         newactivitybutton = (Button) findViewById(R.id.newactivitybutton);
         screenButtons[SCREEN_CURRENT_ACTIVITIES] = (Button) findViewById(R.id.currentactivitiesbutton);
@@ -130,7 +131,7 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     protected void showScreen(int index, boolean refresh) {
     	if (refresh) {
 	    	if (currentScreen == index) {
-	    		refresh();
+	    		refresh = false;
 	    		return;
 	    	} else {
 	    		data.clear();
@@ -155,10 +156,11 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     	if (refresh) refresh();
     }
     
-    protected void setupListView(ListView listView) {
+    protected void setupListView(PullRefreshableListView listView) {
     	listView.setAdapter(data);
     	listView.setTextFilterEnabled(true);
     	listView.setOnItemClickListener(this);
+    	listView.setOnRefreshListener(this);
     	registerForContextMenu(listView);
     }
     
@@ -199,13 +201,13 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
       AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
       switch (item.getItemId()) {
 	      case R.id.showitem:
-		  		confirmEvent(data.getItem(info.position));
+		  		confirmEvent(data.getItem(info.position-1));
 		        return true;
 	      case R.id.edititem:
-		  		editEvent(data.getItem(info.position));
+		  		editEvent(data.getItem(info.position-1));
 		        return true;
 	      case R.id.deleteitem:
-		  		new Deleter(data.getItem(info.position)).go("Lšschen...");
+		  		new Deleter(data.getItem(info.position-1)).go("Lšschen...");
 		        return true;
 	      default:
 	    	    return super.onContextItemSelected(item);
@@ -232,7 +234,12 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 	
     protected void refresh()
     {
-    	dataLoader.go(getString(R.string.loading));
+    	refresh(true);
+    }
+    
+    protected void refresh(boolean showDialog)
+    {
+    	dataLoader.go(getString(R.string.loading), showDialog);
     	updateUI();
     }
     
@@ -270,12 +277,19 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	{
-		if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
-			confirmEvent(data.getItem(position));
-		else if (currentScreen == SCREEN_MY_ACTIVITIES)
-		    editEvent(data.getItem(position));
+//		if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
+			confirmEvent(data.getItem(position-1));
+//		else if (currentScreen == SCREEN_MY_ACTIVITIES)
+//		    editEvent(data.getItem(position-1));
 	}
 	
+    /**
+     * Called by PullRefreshableListView if pulled
+     */
+	public void onRefresh() {
+		refresh(false);
+	}	
+
 	protected void editEvent(EventVo event) {
     	Intent intent = new Intent(getApplicationContext(), EventEditActivity.class);
     	intent.putExtra("event", event);
@@ -340,6 +354,16 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     	}
     	return e;
     }
+    
+    protected void loadingDone()
+    {
+		if (!versionChecked) checkVersion();
+		
+		if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
+			this.currentEventsList.onRefreshComplete();
+		else if (currentScreen == SCREEN_MY_ACTIVITIES)
+			this.myEventsList.onRefreshComplete();
+    }
 	
 	protected class DataLoader extends AsyncUITask<EventsVo>
 	{
@@ -369,14 +393,14 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 			Arrays.sort(knownAddresses);
 			Utils.getApp(EventsActivity.this).setKnownAddresses(knownAddresses);
 			
-			if (!versionChecked) checkVersion();
+			loadingDone();
 		}
 
 		public void doneFail(Throwable throwable)
 		{
     		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
 			
-			if (!versionChecked) checkVersion();
+			loadingDone();
 		}
 	}
 	
@@ -470,5 +494,5 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 		{
     		// just ignore
 		}
-	}	
+	}
 }

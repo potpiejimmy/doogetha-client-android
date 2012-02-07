@@ -62,7 +62,20 @@
 		    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
 	                  android:layout_width="match_parent"
 	                  android:text="Aktuelle Aktivitäten"/>
-		    <ListView android:id="@+id/currenteventslist" android:layout_height="match_parent" android:drawSelectorOnTop="false" android:background="@color/doogetha_bg" android:layout_width="match_parent" android:cacheColorHint="@color/doogetha_bg" android:layout_weight="1"></ListView>
+		    
+	    		<LinearLayout android:id="@+id/linearLayout4a" 
+	                          android:layout_height="match_parent"
+	                  	      android:layout_width="match_parent"
+	                          android:orientation="vertical"
+	                          android:layout_weight="1">
+	    		    <de.potpiejimmy.util.PullRefreshableListView android:id="@+id/currenteventslist"
+					              android:layout_height="match_parent" 
+					              android:drawSelectorOnTop="false" 
+					              android:background="@color/doogetha_bg" 
+					              android:layout_width="match_parent" 
+					              android:cacheColorHint="@color/doogetha_bg"/>
+		        </LinearLayout>
+		        
        </LinearLayout>
 
 	    <LinearLayout android:id="@+id/linearLayout5" 
@@ -74,14 +87,19 @@
 	                  android:layout_width="match_parent"
 	                  android:text="Meine Aktivitäten"/>
 		    
-			<ListView android:id="@+id/myeventslist"
-		               android:layout_width="match_parent"
-		               android:layout_height="match_parent"
-		               android:background="@color/doogetha_bg"
-		               android:cacheColorHint="@color/doogetha_bg"
-		               android:layout_weight="1"
-		               android:drawSelectorOnTop="false"/>
-       </LinearLayout>
+	    		<LinearLayout android:id="@+id/linearLayout5a" 
+	                          android:layout_height="match_parent"
+	                  	      android:layout_width="match_parent"
+	                          android:orientation="vertical"
+	                          android:layout_weight="1">
+		    			<de.potpiejimmy.util.PullRefreshableListView android:id="@+id/myeventslist"
+					               android:layout_width="match_parent"
+					               android:layout_height="match_parent"
+					               android:background="@color/doogetha_bg"
+					               android:cacheColorHint="@color/doogetha_bg"
+					               android:drawSelectorOnTop="false"/>
+		        </LinearLayout>
+		</LinearLayout>
 
 	    <LinearLayout android:id="@+id/linearLayout5" 
 	                  android:layout_height="match_parent"

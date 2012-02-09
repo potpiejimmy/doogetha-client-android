@@ -10,8 +10,8 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
@@ -30,8 +30,6 @@ public class PullRefreshableListView extends ListView {
 
 	private static final float PULL_WEIGHT = 1.7f;
 	private static final int BOUNCE_ANIM_DURATION = 700;
-	private static final int BOUNCE_ANIM_DELAY = 100;
-	private static final float BOUNCE_TENSION = 0.0f;
 	private static final int ROTATE_ARROW_ANIM_DURATION = 250;
 
 	private static enum RefreshState {
@@ -54,7 +52,6 @@ public class PullRefreshableListView extends ListView {
 	private float previousY;
 	private int headerPadding;
 	private boolean scrollbarEnabled;
-	private boolean bounceBackHeader;
 	private boolean lockScrollWhileRefreshing;
 	private boolean hasResetHeader;
 
@@ -264,7 +261,7 @@ public class PullRefreshableListView extends ListView {
 		bounceAnimation.setFillEnabled(true);
 		bounceAnimation.setFillAfter(false);
 		bounceAnimation.setFillBefore(true);
-		bounceAnimation.setInterpolator(new OvershootInterpolator(BOUNCE_TENSION));
+		bounceAnimation.setInterpolator(new DecelerateInterpolator());
 		bounceAnimation.setAnimationListener(new HeaderAnimationListener());
 
 		startAnimation(bounceAnimation);
@@ -277,11 +274,7 @@ public class PullRefreshableListView extends ListView {
 			return;
 		}
 
-		if (getAnimation() != null && !getAnimation().hasEnded()) {
-			bounceBackHeader = true;
-		} else {
-			bounceBackHeader();
-		}
+		bounceBackHeader();
 	}
 
 	private void setUiRefreshing() {
@@ -308,13 +301,6 @@ public class PullRefreshableListView extends ListView {
 
 		case REFRESHING:
 			setUiRefreshing();
-
-			if (onRefreshListener == null) {
-				setState(RefreshState.PULL_TO_REFRESH);
-			} else {
-				onRefreshListener.onRefresh();
-			}
-
 			break;
 		}
 	}
@@ -362,16 +348,14 @@ public class PullRefreshableListView extends ListView {
 				setVerticalScrollBarEnabled(true);
 			}
 
-			if (bounceBackHeader) {
-				bounceBackHeader = false;
-
-				postDelayed(new Runnable() {
-					public void run() {
-						bounceBackHeader();
-					}
-				}, BOUNCE_ANIM_DELAY);
-			} else if (stateAtAnimationStart != RefreshState.REFRESHING) {
+			if (stateAtAnimationStart != RefreshState.REFRESHING) {
 				setState(RefreshState.PULL_TO_REFRESH);
+			} else {
+				if (onRefreshListener == null) {
+					setState(RefreshState.PULL_TO_REFRESH);
+				} else {
+					onRefreshListener.onRefresh();
+				}
 			}
 		}
 

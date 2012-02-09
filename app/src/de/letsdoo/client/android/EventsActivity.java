@@ -277,6 +277,7 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id)
 	{
+		if (position == 0) return; // click on header - do nothing
 //		if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
 			confirmEvent(data.getItem(position-1));
 //		else if (currentScreen == SCREEN_MY_ACTIVITIES)

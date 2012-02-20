@@ -5,16 +5,24 @@ import java.util.ArrayList;
 import com.jayway.android.robotium.solo.Solo;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.KeyEvent;
 import android.widget.Button;
 import de.letsdoo.client.android.EventsActivity;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.client.android.R;
+import de.potpiejimmy.util.PullRefreshableListView;
 
 public class MainViewTest extends
 		ActivityInstrumentationTestCase2<EventsActivity> {
 
 	private Solo solo; 
 	private EventsActivity mActivity;
+	 String createButton;
+	 String abbrechenButton;        
+	 String speichernButton;
+	 String meineAktivitaeten;
+	 String aktuelleAktivitaeten;
+	 PullRefreshableListView eventlist;
 
 	public MainViewTest() {
 		super("de.letsdoo.client.android", EventsActivity.class);
@@ -25,29 +33,41 @@ public class MainViewTest extends
 		super.setUp();
         solo = new Solo(getInstrumentation(), getActivity()); 
         mActivity = getActivity();
+		createButton = mActivity.getString(R.string.createnewactivity);
+	    abbrechenButton = mActivity.getString(R.string.cancel);        
+		speichernButton = mActivity.getString(R.string.save);
+		meineAktivitaeten = mActivity.getString(R.string.myactivities);
+		aktuelleAktivitaeten = mActivity.getString(R.string.currentactivities);
+		eventlist = (PullRefreshableListView)mActivity.findViewById(R.id.currenteventslist);
 	}
 
 	 public void testAnlegenAbbrechen()
 	 {
-		 String createButton = mActivity.getString(R.string.createnewactivity);
-		 String abbrechenButton = mActivity.getString(R.string.cancel);
+		 assertFalse(solo.searchText("TestAktivität"));
 		 solo.clickOnButton(createButton);
 		 solo.enterText(0, "TestAktivität");
 		 solo.enterText(1, "Blablablabla und mit recht viel Text vielleicht auch mit\nZeilenumbruch und Umlauten äüö");
 		 solo.clickOnButton(abbrechenButton);
-		 solo.sleep(3000);
+		 assertFalse(solo.searchText("TestAktivität"));
 	 }
 	 
 	 public void testAnlegenSpeichernLoeschen()
 	 {
-		 String createButton = mActivity.getString(R.string.createnewactivity);
-		 String speichernButton = mActivity.getString(R.string.save);
+		 assertFalse(solo.searchText("TestAktivität"));
 		 solo.clickOnButton(createButton);
 		 solo.enterText(0, "TestAktivität");
 		 solo.enterText(1, "Blablablabla und mit recht viel Text vielleicht auch mit\nZeilenumbruch und Umlauten äüö");
 		 solo.clickOnButton(speichernButton);
-		 solo.sleep(3000);
-		 //solo.clickOnButton(index)
+		 solo.clickOnText("TestAktivität");
+		 solo.sleep(500);
+		 //solo.sendKey(KeyEvent.KEYCODE_BACK);
+		 solo.goBackToActivity("EventsActivity");
+		 //solo.goBack();
+		 solo.clickOnButton(meineAktivitaeten);
+		 solo.clickLongOnText("TestAktivität");
+		 solo.clickOnText("Eintrag löschen");
+		 solo.clickOnButton(aktuelleAktivitaeten);
+		 assertFalse(solo.searchText("TestAktivität"));
 	 }
 	 	
 	   @Override    

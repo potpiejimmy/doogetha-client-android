@@ -8,7 +8,7 @@ import de.letsdoo.client.android.EventsActivity;
 import de.letsdoo.client.android.R;
 import de.potpiejimmy.util.PullRefreshableListView;
 
-public class MainViewTest extends
+public class UIStringsTest extends
 		ActivityInstrumentationTestCase2<EventsActivity> {
 
 	private Solo solo; 
@@ -18,9 +18,10 @@ public class MainViewTest extends
 	 String speichernButton;
 	 String meineAktivitaeten;
 	 String aktuelleAktivitaeten;
+	 String community;
 	 PullRefreshableListView eventlist;
 
-	public MainViewTest() {
+	public UIStringsTest() {
 		super("de.letsdoo.client.android", EventsActivity.class);
 	}
 
@@ -34,38 +35,34 @@ public class MainViewTest extends
 		speichernButton = mActivity.getString(R.string.save);
 		meineAktivitaeten = mActivity.getString(R.string.myactivities);
 		aktuelleAktivitaeten = mActivity.getString(R.string.currentactivities);
+		community = mActivity.getString(R.string.publicactivities);
 		eventlist = (PullRefreshableListView)mActivity.findViewById(R.id.currenteventslist);
 	}
 
-	 public void testAnlegenAbbrechen()
+	 public void testMainViewStrings()
 	 {
-		 assertFalse(solo.searchText("TestAktivität"));
-		 solo.clickOnButton(createButton);
-		 solo.enterText(0, "TestAktivität");
-		 solo.enterText(1, "Blablablabla und mit recht viel Text vielleicht auch mit\nZeilenumbruch und Umlauten äüö");
-		 solo.clickOnButton(abbrechenButton);
-		 assertFalse(solo.searchText("TestAktivität"));
-	 }
-	 
-	 public void testAnlegenSpeichernLoeschen()
-	 {
-		 assertFalse(solo.searchText("TestAktivität"));
-		 solo.clickOnButton(createButton);
-		 solo.enterText(0, "TestAktivität");
-		 solo.enterText(1, "Blablablabla und mit recht viel Text vielleicht auch mit\nZeilenumbruch und Umlauten äüö");
-		 solo.clickOnButton(speichernButton);
-		 solo.clickOnText("TestAktivität");
-		 solo.sleep(500);
-		 //solo.sendKey(KeyEvent.KEYCODE_BACK);
-		 solo.goBackToActivity("EventsActivity");
-		 //solo.goBack();
+		 assertTrue(solo.searchText("Doogetha"));
+		 assertTrue(solo.searchText("Version 0.6.2"));
+		 assertTrue(solo.searchText("Neue\nAktivität..."));
+		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
+		 assertTrue(solo.searchText("Meine Aktivitäten"));
+		 assertTrue(solo.searchText("Community"));
 		 solo.clickOnButton(meineAktivitaeten);
-		 solo.clickLongOnText("TestAktivität");
-		 solo.clickOnText("Eintrag löschen");
-		 solo.clickOnButton(aktuelleAktivitaeten);
-		 assertFalse(solo.searchText("TestAktivität"));
+		 assertTrue(solo.searchText("Doogetha"));
+		 assertTrue(solo.searchText("Version 0.6.2"));
+		 assertTrue(solo.searchText("Neue\nAktivität..."));
+		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
+		 assertTrue(solo.searchText("Meine Aktivitäten"));
+		 assertTrue(solo.searchText("Community"));
+		 solo.clickOnButton(community);
+		 assertTrue(solo.searchText("Doogetha"));
+		 assertTrue(solo.searchText("Version 0.6.2"));
+		 assertTrue(solo.searchText("Neue\nAktivität..."));
+		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
+		 assertTrue(solo.searchText("Meine Aktivitäten"));
+		 assertTrue(solo.searchText("Community"));		 
 	 }
-	 	
+	 	 	
 	   @Override    
 	public void tearDown() throws Exception 
 	{         

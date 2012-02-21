@@ -1,17 +1,12 @@
 package de.letsdoo.client.android.test;
 
+import android.test.ActivityInstrumentationTestCase2;
+
 import com.jayway.android.robotium.solo.Solo;
 
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.UiThreadTest;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import de.letsdoo.client.android.LoginActivity;
-import de.letsdoo.client.android.R;
-import de.letsdoo.client.util.Utils;
 
-public class LoginActivityTest extends
+public class RegisterTest extends
 		ActivityInstrumentationTestCase2<LoginActivity> {
 
 	private Solo solo; 
@@ -20,7 +15,7 @@ public class LoginActivityTest extends
 //	private Button loginbutton;
 //	private EditText email;
 
-	public LoginActivityTest() {
+	public RegisterTest() {
 		super("de.letsdoo.client.android", LoginActivity.class);
 	}
 
@@ -34,18 +29,18 @@ public class LoginActivityTest extends
 //		email = (EditText) mActivity.findViewById(R.id.email);
 	}
 
-	 public void testRegister()
-	 {
-		 solo.clickOnButton("Fortfahren");
-	     solo.enterText(0, "wolfram.liese@t-online.de");
-		 solo.clickOnButton("Registrieren");
-		 solo.clickOnButton("Login");
-	 }
+//	 public void testRegister()
+//	 {
+//		 solo.clickOnButton("Fortfahren");
+//	     solo.enterText(0, "wolfram.liese@t-online.de");
+//		 solo.clickOnButton("Registrieren");
+//		 solo.clickOnButton("Login");
+//	 }
 	 	
-	public void _testUIStatesWithToken()
-	{
-		Utils.getApp(mActivity).register("dummy:123");
-	}
+//	public void _testUIStatesWithToken()
+//	{
+//		Utils.getApp(mActivity).register("dummy:123");
+//	}
 	   @Override    
 	public void tearDown() throws Exception 
 	{         

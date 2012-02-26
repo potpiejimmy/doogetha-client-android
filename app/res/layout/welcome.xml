@@ -108,7 +108,10 @@
                         android:layout_weight="1"
                         android:contentDescription="email address"
                         android:hint="@string/emailaddress"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress" >
+
+                        <requestFocus />
+                    </EditText>
                 </LinearLayout>
 
                 <LinearLayout
@@ -176,6 +179,18 @@
                         android:text="@string/login" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right" >
+
+                    <Button
+                        android:id="@+id/cancelregistrationbutton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cancelregistration" />
+                </LinearLayout>
             </LinearLayout>
 
         </ViewFlipper>

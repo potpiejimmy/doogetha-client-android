@@ -1,6 +1,8 @@
 package de.letsdoo.client.android;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,11 +14,12 @@ import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
-public class LoginActivity extends Activity implements OnClickListener {
+public class WelcomeActivity extends Activity implements OnClickListener {
 
 	private Button loginbutton = null;
 	private Button registerbutton = null;
 	private Button continuebutton = null;
+	private Button cancelbutton = null;
 	private EditText email = null;
 	private TextView registerresulttext = null;
 	private ViewFlipper viewflipper = null;
@@ -27,9 +30,16 @@ public class LoginActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.welcome);
         
+        if (Utils.getApp(this).isRegistered()) {
+        	// already registered? proceed to main view
+        	startMainView();
+        	return;
+        }
+        
     	registerbutton = (Button) findViewById(R.id.registerbutton);
     	continuebutton = (Button) findViewById(R.id.continuebutton);
     	loginbutton = (Button) findViewById(R.id.loginbutton);
+    	cancelbutton = (Button) findViewById(R.id.cancelregistrationbutton);
 		email = (EditText) findViewById(R.id.email);
 		registerresulttext = (TextView) findViewById(R.id.registerPinLabel);
 		viewflipper = (ViewFlipper) findViewById(R.id.viewFlipper);
@@ -37,6 +47,7 @@ public class LoginActivity extends Activity implements OnClickListener {
     	registerbutton.setOnClickListener(this);
     	loginbutton.setOnClickListener(this);
     	continuebutton.setOnClickListener(this);
+    	cancelbutton.setOnClickListener(this);
     	
     	viewflipper.setInAnimation(getApplicationContext(), android.R.anim.slide_in_left);
     	viewflipper.setOutAnimation(getApplicationContext(), android.R.anim.slide_out_right);
@@ -45,6 +56,10 @@ public class LoginActivity extends Activity implements OnClickListener {
     		viewflipper.showNext();
     		registerSuccess(getLoginToken());  // display login token and PIN again when reopening
     	}
+    }
+    
+    protected void startMainView() {
+    	startActivity(new Intent(getApplicationContext(), EventsActivity.class));
     }
     
 	public void onClick(View view) {
@@ -59,6 +74,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 			case R.id.continuebutton:
 				viewflipper.showNext();
 				break;
+			case R.id.cancelregistrationbutton:
+				DroidLib.alert(this, "Willst du die Registrierung wirklich abbrechen und von vorne beginnen?", getString(R.string.yes), getString(R.string.no), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						cancelRegistration();
+					}
+				});
 		}
 	}
 
@@ -66,12 +87,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 	{
 		String mailstring = email.getText().toString();
 		Utils.getApp(this).setEmail(mailstring);
-		new RegisterTask(mailstring).go("Sending registration request...");
+		new RegisterTask(mailstring).go("Registrierungsanfrage wird gesendet...");
 	}
 	
 	protected void login()
 	{
-		new FetchCredentialsTask(getLoginToken()).go("Logging in...");
+		new FetchCredentialsTask(getLoginToken()).go("Anmelden...");
+	}
+	
+	protected void cancelRegistration()
+	{
+		removeLoginToken();
+		viewflipper.showPrevious();
+		viewflipper.showPrevious();
 	}
 	
 	protected String getLoginToken() {
@@ -103,8 +131,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		password = Utils.xorHex(password, logintoken.substring(0, logintoken.indexOf(":")));
 		removeLoginToken();
     	Utils.getApp(this).register(id + ":" + password);
-    	setResult(RESULT_OK);
-    	finish();
+    	startMainView();
 	}
 	
 	protected class RegisterTask extends AsyncUITask<String>
@@ -112,13 +139,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		private String email = null;
 		
 		public RegisterTask(String email) {
-			super(LoginActivity.this);
+			super(WelcomeActivity.this);
 			this.email = email;
 		}
 
 		@Override
 		public String doTask() throws Throwable {
-			return Utils.getApp(LoginActivity.this).getRegisterAccessor().insertItemWithResult(email);
+			return Utils.getApp(WelcomeActivity.this).getRegisterAccessor().insertItemWithResult(email);
 		}
 
 		@Override
@@ -128,7 +155,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void doneFail(Throwable throwable) {
-			DroidLib.alert(LoginActivity.this, "Sorry, could not send registration request.");
+			DroidLib.alert(WelcomeActivity.this, "Die Registrierungsanfrage konnte nicht gesendet werden.");
 		}
 	}
 	
@@ -137,13 +164,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		private String logintoken = null;
 		
 		public FetchCredentialsTask(String logintoken) {
-			super(LoginActivity.this);
+			super(WelcomeActivity.this);
 			this.logintoken = logintoken;
 		}
 
 		@Override
 		public String doTask() throws Throwable {
-			return Utils.getApp(LoginActivity.this).getRegisterAccessor().getItem(logintoken.substring(0, logintoken.indexOf(":")));
+			return Utils.getApp(WelcomeActivity.this).getRegisterAccessor().getItem(logintoken.substring(0, logintoken.indexOf(":")));
 		}
 
 		@Override
@@ -154,7 +181,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void doneFail(Throwable throwable) {
-			DroidLib.alert(LoginActivity.this, "Sorry, registration failed. Please make sure you have confirmed your registration request by clicking the confirmation link in your registration email.");
+			DroidLib.alert(WelcomeActivity.this, "Die Registrierung war nicht erfolgreich. Bitte prüfe, ob du die E-Mail-Bestätigung korrekt durchgeführt hast.");
 		}
 	}
 }

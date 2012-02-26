@@ -1,6 +1,7 @@
 package de.letsdoo.client.android;
 
 import java.net.ConnectException;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,8 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 	private final static int NUMBER_OF_SCREENS = 3;
 	private final static int SCREEN_CURRENT_ACTIVITIES = 0;
 	private final static int SCREEN_MY_ACTIVITIES = 1;
-	private final static int SCREEN_PUBLIC_ACTIVITIES = 2;
+	//private final static int SCREEN_PUBLIC_ACTIVITIES = 2;
+	private final static int SCREEN_SETTINGS = 2;
 	
 	private ArrayAdapter<EventVo> data = null;
 	
@@ -74,7 +76,8 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
         newactivitybutton = (Button) findViewById(R.id.newactivitybutton);
         screenButtons[SCREEN_CURRENT_ACTIVITIES] = (Button) findViewById(R.id.currentactivitiesbutton);
         screenButtons[SCREEN_MY_ACTIVITIES] = (Button) findViewById(R.id.myactivitiesbutton);
-        screenButtons[SCREEN_PUBLIC_ACTIVITIES] = (Button) findViewById(R.id.publicactivitiesbutton);
+//        screenButtons[SCREEN_PUBLIC_ACTIVITIES] = (Button) findViewById(R.id.publicactivitiesbutton);
+        screenButtons[SCREEN_SETTINGS] = (Button) findViewById(R.id.settingsbutton);
         
         newactivitybutton.setOnClickListener(this);
         for (Button screenButton : screenButtons) screenButton.setOnClickListener(this);
@@ -120,13 +123,8 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     	showScreen(0, false);
     	updateUI();
     	
-    	if (!Utils.getApp(this).isRegistered()) {
-    		register();
-        	checkVersion();
-    	} else {
-			startSession();
-    	}
-    }
+		startSession();
+   }
     
     protected void showScreen(int index, boolean refresh) {
     	if (refresh) {
@@ -226,8 +224,12 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 			case R.id.myactivitiesbutton:
 				showScreen(SCREEN_MY_ACTIVITIES, true);
 				break;
-			case R.id.publicactivitiesbutton:
-				showScreen(SCREEN_PUBLIC_ACTIVITIES, false);
+//			case R.id.publicactivitiesbutton:
+//				showScreen(SCREEN_PUBLIC_ACTIVITIES, false);
+//				break;
+			case R.id.settingsbutton:
+//				showScreen(SCREEN_SETTINGS, false);
+				startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
 				break;
 		}
 	}
@@ -252,13 +254,13 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     
     protected void register()
     {
-    	Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+    	Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
     	startActivityForResult(intent, 0);
     }
     
     protected void startSession()
     {
-    	new SessionLoginTask(Utils.getApp(this).getAuthtoken()).go("Starting session...");
+    	new SessionLoginTask(Utils.getApp(this).getAuthtoken()).go("Sitzung wird gestartet...");
     }
     
     protected void sessionCreateSuccess(String sessionkey)
@@ -288,7 +290,7 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
      * Called by PullRefreshableListView if pulled
      */
 	public void onRefresh() {
-		refresh(false);
+		refresh(true);
 	}	
 
 	protected void editEvent(EventVo event) {
@@ -329,7 +331,7 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     protected void checkVersion()
     {
     	versionChecked = true;
-    	new VersionCheckTask().go("Checking version...");
+    	new VersionCheckTask().go("Prüfe Version...");
     }
     
     protected void newerVersionExists()
@@ -430,10 +432,11 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 		
 		public void doneFail(Throwable throwable) 
 		{
-			if (throwable instanceof ConnectException) {
-				DroidLib.alert(EventsActivity.this, "Server nicht erreichbar.");
+			if (throwable instanceof ConnectException ||
+				throwable instanceof SocketException) {
+				DroidLib.alert(EventsActivity.this, "Server nicht erreichbar. Bitte prüfe deine Internetverbindung.");
 			} else {
-				DroidLib.alert(EventsActivity.this, "Sorry, session login failed using your current credentials.");
+				DroidLib.alert(EventsActivity.this, "Die Anmeldung ist fehlgeschlagen: "+throwable);
 				if (!versionChecked) checkVersion();
 			}
 		}

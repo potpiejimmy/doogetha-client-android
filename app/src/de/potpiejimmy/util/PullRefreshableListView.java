@@ -52,7 +52,7 @@ public class PullRefreshableListView extends ListView {
 	private float previousY;
 	private int headerPadding;
 	private boolean scrollbarEnabled;
-	private boolean lockScrollWhileRefreshing;
+	private boolean lockScrollWhileRefreshing = true;
 	private boolean hasResetHeader;
 
 	private RefreshState state;
@@ -107,7 +107,7 @@ public class PullRefreshableListView extends ListView {
 	}
 
 	/**
-	 * Default is false. When lockScrollWhileRefreshing is set to true, the list
+	 * Default is true. When lockScrollWhileRefreshing is set to true, the list
 	 * cannot scroll when in 'refreshing' mode. It's 'locked' on refreshing.
 	 * 
 	 * @param lockScrollWhileRefreshing

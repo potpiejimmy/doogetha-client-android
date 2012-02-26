@@ -4,19 +4,19 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
 
-import de.letsdoo.client.android.LoginActivity;
+import de.letsdoo.client.android.WelcomeActivity;
 
 public class RegisterTest extends
-		ActivityInstrumentationTestCase2<LoginActivity> {
+		ActivityInstrumentationTestCase2<WelcomeActivity> {
 
 	private Solo solo; 
-	private LoginActivity mActivity;
+	private WelcomeActivity mActivity;
 //	private Button registerbutton;
 //	private Button loginbutton;
 //	private EditText email;
 
 	public RegisterTest() {
-		super("de.letsdoo.client.android", LoginActivity.class);
+		super("de.letsdoo.client.android", WelcomeActivity.class);
 	}
 
 	@Override

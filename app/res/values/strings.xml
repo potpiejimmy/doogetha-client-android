@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
     <string name="welcome_title">Willkommen bei Doogetha</string>
     <string name="welcome_intro">Doogetha erlaubt es dir, beliebige Aktivitäten mit Freunden, Bekannten und unbekannten Personen zu planen.\n\nBitte drücke auf Fortfahren, um Doogetha auf diesem Gerät einzurichten.</string>
     <string name="welcome_continue">Fortfahren</string>
     <string name="register_intro">Damit du Doogetha verwenden kannst, musst du dich einmalig am Doogetha-Server registrieren. Dazu benötigst du nur eine E-Mail-Adresse - mehr nicht.\n\nBitte beachte aber, dass die E-Mail-Adresse gleichzeitig auch deine Nutzerkennung sein wird und stelle sicher, dass keine unbefugten Personen Zugriff auf dieses Mailkonto haben.</string>
     <string name="emailaddress">E-Mail-Adresse</string>
     <string name="register_confirm1">Vielen Dank. Der Doogetha-Server hat soeben eine E-Mail an deine Adresse versendet.\n\nUm deine Identität zu bestätigen, klicke bitte auf den Bestätigungslink in der E-Mail und gib auf der Bestätigungsseite den folgenden dreistelligen PIN ein:</string>
-    <string name="register_confirm2">Drücke danach den Login-Button, um dich einzuloggen.</string>
-    <string name="login">Login</string>
+    <string name="register_confirm2">Drücke danach den Anmelden-Button, um dich einzuloggen.</string>
+    <string name="login">Anmelden</string>
+    <string name="settings">\nEinstellungen</string>
+    <string name="cancelregistration">Abbrechen</string>
     <string name="app_name">Doogetha</string>
     <string name="loading">Daten laden...</string>
     <string name="pleaseregister">Your login credentials are currently unknown. Please register using your email address.</string>
     <string name="register">Registrieren</string>
-    <string name="unregister">Unregister</string>
+    <string name="unregister">Abmelden</string>
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>

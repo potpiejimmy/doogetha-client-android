@@ -2,13 +2,15 @@ package de.potpiejimmy.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Handler;
 
-public abstract class AsyncUITask<T> implements Runnable
+public abstract class AsyncUITask<T> implements Runnable,OnCancelListener
 {
 	private final Handler HANDLER = new Handler();
 	private Context context = null;
 	private ProgressDialog dialog = null;
+	private boolean cancelled = false;
 
 	public AsyncUITask(Context context)
 	{
@@ -22,11 +24,19 @@ public abstract class AsyncUITask<T> implements Runnable
 	
 	public void go(String msg, boolean showDialog)
 	{
-		if (showDialog)
+		cancelled = false;
+		if (showDialog) {
 			dialog = ProgressDialog.show(context, "", msg, true, true);
+			dialog.setOnCancelListener(this);
+		}
     	new Thread(this).start();
 	}
 	
+	public void onCancel(android.content.DialogInterface dialog)
+	{
+		cancelled = true;
+	}
+	  
 	public void run()
 	{
 		try {
@@ -52,6 +62,7 @@ public abstract class AsyncUITask<T> implements Runnable
 			this.throwable = throwable;
 		}
 		public void run() {
+			if (cancelled) return; // do nothing if cancelled
 			if (throwable != null)
 				doneFail(throwable);
 			else

@@ -57,8 +57,9 @@ public class MainViewTest extends
 		 solo.clickOnText("TestAktivität");
 		 solo.sleep(500);
 		 //solo.sendKey(KeyEvent.KEYCODE_BACK);
-		 solo.goBackToActivity("EventsActivity");
-		 //solo.goBack();
+//		 solo.goBackToActivity("EventsActivity");
+		 solo.goBack();
+		 solo.sleep(500);
 		 solo.clickOnButton(meineAktivitaeten);
 		 solo.clickLongOnText("TestAktivität");
 		 solo.clickOnText("Eintrag löschen");

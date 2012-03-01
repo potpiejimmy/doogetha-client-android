@@ -42,21 +42,21 @@ public class UIStringsTest extends
 	 public void testMainViewStrings()
 	 {
 		 assertTrue(solo.searchText("Doogetha"));
-		 assertTrue(solo.searchText("Version 0.6.2"));
+		 assertTrue(solo.searchText("Version 0.6.5"));
 		 assertTrue(solo.searchText("Neue\nAktivität..."));
 		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
 		 assertTrue(solo.searchText("Meine Aktivitäten"));
 		 assertTrue(solo.searchText("Community"));
 		 solo.clickOnButton(meineAktivitaeten);
 		 assertTrue(solo.searchText("Doogetha"));
-		 assertTrue(solo.searchText("Version 0.6.2"));
+		 assertTrue(solo.searchText("Version 0.6.5"));
 		 assertTrue(solo.searchText("Neue\nAktivität..."));
 		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
 		 assertTrue(solo.searchText("Meine Aktivitäten"));
 		 assertTrue(solo.searchText("Community"));
 		 solo.clickOnButton(community);
 		 assertTrue(solo.searchText("Doogetha"));
-		 assertTrue(solo.searchText("Version 0.6.2"));
+		 assertTrue(solo.searchText("Version 0.6.5"));
 		 assertTrue(solo.searchText("Neue\nAktivität..."));
 		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
 		 assertTrue(solo.searchText("Meine Aktivitäten"));

@@ -8,7 +8,7 @@ import de.letsdoo.client.android.EventsActivity;
 import de.letsdoo.client.android.R;
 import de.potpiejimmy.util.PullRefreshableListView;
 
-public class MainViewTest extends
+public class UseCasesMainViewTest extends
 		ActivityInstrumentationTestCase2<EventsActivity> {
 
 	private Solo solo; 
@@ -18,9 +18,10 @@ public class MainViewTest extends
 	 String speichernButton;
 	 String meineAktivitaeten;
 	 String aktuelleAktivitaeten;
+	 String eintragLoeschen;
 	 PullRefreshableListView eventlist;
 
-	public MainViewTest() {
+	public UseCasesMainViewTest() {
 		super("de.letsdoo.client.android", EventsActivity.class);
 	}
 
@@ -34,6 +35,7 @@ public class MainViewTest extends
 		speichernButton = mActivity.getString(R.string.save);
 		meineAktivitaeten = mActivity.getString(R.string.myactivities);
 		aktuelleAktivitaeten = mActivity.getString(R.string.currentactivities);
+		eintragLoeschen = mActivity.getString(R.string.deleteitem);
 		eventlist = (PullRefreshableListView)mActivity.findViewById(R.id.currenteventslist);
 	}
 
@@ -62,8 +64,21 @@ public class MainViewTest extends
 		 solo.sleep(500);
 		 solo.clickOnButton(meineAktivitaeten);
 		 solo.clickLongOnText("TestAktivität");
-		 solo.clickOnText("Eintrag löschen");
+		 solo.clickOnText(eintragLoeschen);
 		 solo.clickOnButton(aktuelleAktivitaeten);
+		 assertFalse(solo.searchText("TestAktivität"));
+	 }
+	 
+	 public void testRestart()
+	 {
+		 assertFalse(solo.searchText("TestAktivität"));
+		 solo.clickOnButton(createButton);
+		 solo.enterText(0, "TestAktivität");
+		 solo.enterText(1, "Blablablabla und mit recht viel Text vielleicht auch mit\nZeilenumbruch und Umlauten äüö");
+		 solo.clickOnButton(speichernButton);
+		 solo.clickOnText("TestAktivität");
+		 solo.finishOpenedActivities();
+		 //this.
 		 assertFalse(solo.searchText("TestAktivität"));
 	 }
 	 	

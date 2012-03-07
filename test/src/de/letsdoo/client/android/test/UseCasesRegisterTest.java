@@ -9,7 +9,7 @@ import de.letsdoo.client.android.EventsActivity;
 import de.letsdoo.client.android.WelcomeActivity;
 import de.letsdoo.client.android.R;
 
-public class RegisterTest extends
+public class UseCasesRegisterTest extends
 		ActivityInstrumentationTestCase2<WelcomeActivity> {
 
 	private Solo solo; 
@@ -22,7 +22,7 @@ public class RegisterTest extends
 //	private Button loginbutton;
 //	private EditText email;
 
-	public RegisterTest() {
+	public UseCasesRegisterTest() {
 		super("de.letsdoo.client.android", WelcomeActivity.class);
 	}
 

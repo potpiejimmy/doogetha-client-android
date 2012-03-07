@@ -18,7 +18,7 @@ public class UIStringsTest extends
 	 String speichernButton;
 	 String meineAktivitaeten;
 	 String aktuelleAktivitaeten;
-	 String community;
+	 String einstellungen;
 	 PullRefreshableListView eventlist;
 
 	public UIStringsTest() {
@@ -35,34 +35,41 @@ public class UIStringsTest extends
 		speichernButton = mActivity.getString(R.string.save);
 		meineAktivitaeten = mActivity.getString(R.string.myactivities);
 		aktuelleAktivitaeten = mActivity.getString(R.string.currentactivities);
-		community = mActivity.getString(R.string.publicactivities);
+		einstellungen = mActivity.getString(R.string.settings);
 		eventlist = (PullRefreshableListView)mActivity.findViewById(R.id.currenteventslist);
 	}
 
 	 public void testMainViewStrings()
 	 {
-		 assertTrue(solo.searchText("Doogetha"));
-		 assertTrue(solo.searchText("Version 0.6.5"));
-		 assertTrue(solo.searchText("Neue\nAktivität..."));
-		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
-		 assertTrue(solo.searchText("Meine Aktivitäten"));
-		 assertTrue(solo.searchText("Community"));
+		 assertTrue(solo.searchText("Doogetha", true));
+		 assertTrue(solo.searchText("Version 0.6.5", true));
+		 assertTrue(solo.searchText("Neue\nAktivität...", true));
+		 assertTrue(solo.searchText("Aktuelle Aktivitäten", true));
+		 assertTrue(solo.searchText("Aktuelle\nAktivitäten", true));
+		 assertTrue(solo.searchText("Meine\nAktivitäten", true));
+		 assertTrue(solo.searchText("Einstellungen", true));
 		 solo.clickOnButton(meineAktivitaeten);
-		 assertTrue(solo.searchText("Doogetha"));
-		 assertTrue(solo.searchText("Version 0.6.5"));
-		 assertTrue(solo.searchText("Neue\nAktivität..."));
-		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
-		 assertTrue(solo.searchText("Meine Aktivitäten"));
-		 assertTrue(solo.searchText("Community"));
-		 solo.clickOnButton(community);
-		 assertTrue(solo.searchText("Doogetha"));
-		 assertTrue(solo.searchText("Version 0.6.5"));
-		 assertTrue(solo.searchText("Neue\nAktivität..."));
-		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
-		 assertTrue(solo.searchText("Meine Aktivitäten"));
-		 assertTrue(solo.searchText("Community"));		 
+		 assertTrue(solo.searchText("Doogetha", true));
+		 assertTrue(solo.searchText("Version 0.6.5", true));
+		 assertTrue(solo.searchText("Neue\nAktivität...", true));
+		 assertTrue(solo.searchText("Meine Aktivitäten", true));
+		 assertTrue(solo.searchText("Aktuelle\nAktivitäten", true));
+		 assertTrue(solo.searchText("Meine\nAktivitäten", true));
+		 assertTrue(solo.searchText("Einstellungen", true));
+		 solo.clickOnButton(einstellungen);
+//		 assertTrue(solo.searchText("Doogetha"));
+//		 assertTrue(solo.searchText("Version 0.6.5"));
+//		 assertTrue(solo.searchText("Neue\nAktivität..."));
+//		 assertTrue(solo.searchText("Aktuelle Aktivitäten"));
+//		 assertTrue(solo.searchText("Meine Aktivitäten"));
+//		 assertTrue(solo.searchText("Community"));		 
 	 }
 	 	 	
+	 public void testFindHardCodedStrings()
+	 {
+	 }
+	 
+	 
 	   @Override    
 	public void tearDown() throws Exception 
 	{         

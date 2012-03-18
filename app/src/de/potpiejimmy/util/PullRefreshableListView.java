@@ -54,6 +54,7 @@ public class PullRefreshableListView extends ListView {
 	private boolean scrollbarEnabled;
 	private boolean lockScrollWhileRefreshing = true;
 	private boolean hasResetHeader;
+	private boolean animating = false;
 
 	private RefreshState state;
 	private LinearLayout headerContainer;
@@ -182,6 +183,8 @@ public class PullRefreshableListView extends ListView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		if (animating) return true;
+		
 		if (lockScrollWhileRefreshing && state == RefreshState.REFRESHING) {
 			return true;
 		}
@@ -324,6 +327,7 @@ public class PullRefreshableListView extends ListView {
 		private RefreshState stateAtAnimationStart;
 
 		public void onAnimationStart(Animation animation) {
+			animating = true;
 			stateAtAnimationStart = state;
 
 			android.view.ViewGroup.LayoutParams lp = getLayoutParams();
@@ -337,6 +341,7 @@ public class PullRefreshableListView extends ListView {
 		}
 
 		public void onAnimationEnd(Animation animation) {
+			animating = false;
 			setHeaderPadding(stateAtAnimationStart == RefreshState.REFRESHING ? 0
 					: -header.getHeight());
 

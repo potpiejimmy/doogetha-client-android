@@ -15,7 +15,6 @@ import android.util.Base64;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -168,24 +167,24 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     	if (!loggedIn) data.clear();
     }
     
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options, menu);
-        return true;
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-        case R.id.unregister:
-            unregister();
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.options, menu);
+//        return true;
+//    }
+//    
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle item selection
+//        switch (item.getItemId()) {
+//        case R.id.unregister:
+//            unregister();
+//            return true;
+//        default:
+//            return super.onOptionsItemSelected(item);
+//        }
+//    }
     
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -229,7 +228,7 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
 //				break;
 			case R.id.settingsbutton:
 //				showScreen(SCREEN_SETTINGS, false);
-				startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+				startActivityForResult(new Intent(getApplicationContext(), SettingsActivity.class), 0);
 				break;
 		}
 	}
@@ -274,6 +273,9 @@ public class EventsActivity extends Activity implements OnItemClickListener, OnC
     	{
     		if (!Utils.getApp(this).hasSession()) startSession();
     		else refresh();
+    	} else if (resultCode == RESULT_FIRST_USER) {
+    		// set when unregistered in settings view - quit:
+    		finish();
     	}
     }
     

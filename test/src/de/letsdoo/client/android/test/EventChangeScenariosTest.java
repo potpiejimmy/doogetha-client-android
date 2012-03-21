@@ -35,6 +35,7 @@ public class EventChangeScenariosTest extends
 	   @Override    
 	public void tearDown() throws Exception 
 	{         
+	    solo.waitForDialogToClose(5000);
 	    solo.finishOpenedActivities();   
 	}
 	   

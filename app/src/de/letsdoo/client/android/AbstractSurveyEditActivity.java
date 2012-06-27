@@ -3,7 +3,6 @@ package de.letsdoo.client.android;
 import java.util.Calendar;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -12,11 +11,12 @@ import android.content.DialogInterface;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import de.letsdoo.client.util.SlideActivity;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.potpiejimmy.util.DroidLib;
 
-public abstract class AbstractSurveyEditActivity extends Activity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public abstract class AbstractSurveyEditActivity extends SlideActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;
 	

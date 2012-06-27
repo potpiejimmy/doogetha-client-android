@@ -1,6 +1,5 @@
 package de.letsdoo.client.android;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.letsdoo.client.android.rest.EventsAccessor;
 import de.letsdoo.client.util.ContactsUtils;
+import de.letsdoo.client.util.SlideActivity;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemVo;
@@ -20,7 +20,7 @@ import de.letsdoo.server.vo.SurveyVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 
-public class EventConfirmActivity extends Activity implements OnClickListener {
+public class EventConfirmActivity extends SlideActivity implements OnClickListener {
 
 	private EventVo event = null;
 

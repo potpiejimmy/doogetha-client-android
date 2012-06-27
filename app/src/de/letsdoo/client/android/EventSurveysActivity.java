@@ -4,31 +4,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
+import de.letsdoo.client.util.SlideListActivity;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.potpiejimmy.util.DroidLib;
 
-public class EventSurveysActivity extends ListActivity implements OnItemClickListener, OnClickListener {
+public class EventSurveysActivity extends SlideListActivity implements OnItemClickListener, OnClickListener {
 
     private ArrayAdapter<SurveyVo> data = null;
 	

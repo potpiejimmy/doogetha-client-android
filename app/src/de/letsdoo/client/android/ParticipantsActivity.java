@@ -6,7 +6,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,30 +14,31 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import de.letsdoo.client.util.ContactsUtils;
+import de.letsdoo.client.util.SlideListActivity;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
-public class ParticipantsActivity extends ListActivity implements OnItemClickListener, OnClickListener {
+public class ParticipantsActivity extends SlideListActivity implements OnItemClickListener, OnClickListener {
 
     public static final int PICK_CONTACT    = 1;
 

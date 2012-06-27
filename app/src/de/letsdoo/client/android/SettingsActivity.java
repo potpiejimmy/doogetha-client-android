@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import de.letsdoo.client.util.SlidePreferenceActivity;
 import de.letsdoo.client.util.Utils;
 import de.potpiejimmy.util.DroidLib;
-//import android.preference.SwitchPreference;
 
-public class SettingsActivity extends PreferenceActivity implements OnPreferenceClickListener, DialogInterface.OnClickListener {
+public class SettingsActivity extends SlidePreferenceActivity implements OnPreferenceClickListener, DialogInterface.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

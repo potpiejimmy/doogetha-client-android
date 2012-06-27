@@ -2,7 +2,6 @@ package de.letsdoo.client.android;
 
 import java.util.Calendar;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -20,13 +19,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import de.letsdoo.client.android.rest.EventsAccessor;
+import de.letsdoo.client.util.SlideActivity;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
-public class EventEditActivity extends Activity implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class EventEditActivity extends SlideActivity implements OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 	
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;

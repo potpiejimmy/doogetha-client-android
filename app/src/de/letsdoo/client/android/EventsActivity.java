@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import de.letsdoo.client.android.rest.EventsAccessor;
+import de.letsdoo.client.util.SlideActivity;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.EventsVo;
@@ -40,7 +41,7 @@ import de.potpiejimmy.util.DroidLib;
 import de.potpiejimmy.util.PullRefreshableListView;
 import de.potpiejimmy.util.PullRefreshableListView.OnRefreshListener;
 
-public class EventsActivity extends Activity implements OnItemClickListener, OnClickListener, OnRefreshListener {
+public class EventsActivity extends SlideActivity implements OnItemClickListener, OnClickListener, OnRefreshListener {
 
 	private final static int NUMBER_OF_SCREENS = 3;
 	private final static int SCREEN_CURRENT_ACTIVITIES = 0;

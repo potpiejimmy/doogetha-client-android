@@ -3,5 +3,7 @@
 
     <string name="hello">Hello World!</string>
     <string name="app_name">LetsdooTestTest</string>
-
+    <string name="Testaktivitaet">TestAktivität</string>
+    <string name="TestaktBeschr">Blablablabla und mit recht viel Text vielleicht auch mit\nZeilenumbruch und Umlauten äüö</string>
+    
 </resources>

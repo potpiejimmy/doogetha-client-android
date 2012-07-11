@@ -42,7 +42,7 @@ public class UIStringsTest extends
 	 public void testMainViewStrings()
 	 {
 		 assertTrue(solo.searchText("Doogetha", true));
-		 assertTrue(solo.searchText("Version 0.6.6", true));
+		 assertTrue(solo.searchText("Version", true));
 		 assertTrue(solo.searchText("Neue\nAktivität...", true));
 		 assertTrue(solo.searchText("Aktuelle Aktivitäten", true));
 		 assertTrue(solo.searchText("Aktuelle\nAktivitäten", true));
@@ -50,7 +50,7 @@ public class UIStringsTest extends
 		 assertTrue(solo.searchText("Einstellungen", true));
 		 solo.clickOnButton(meineAktivitaeten);
 		 assertTrue(solo.searchText("Doogetha", true));
-		 assertTrue(solo.searchText("Version 0.6.6", true));
+		 assertTrue(solo.searchText("Version", true));
 		 assertTrue(solo.searchText("Neue\nAktivität...", true));
 		 assertTrue(solo.searchText("Meine Aktivitäten", true));
 		 assertTrue(solo.searchText("Aktuelle\nAktivitäten", true));

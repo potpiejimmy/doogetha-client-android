@@ -204,11 +204,11 @@ public class PullRefreshableListView extends ListView {
 				case RELEASE_TO_REFRESH:
 					setState(RefreshState.REFRESHING);
 					bounceBackHeader();
-
 					break;
-
 				case PULL_TO_REFRESH:
 					resetHeader();
+					break;
+				case REFRESHING:
 					break;
 				}
 			}

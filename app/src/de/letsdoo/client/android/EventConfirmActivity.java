@@ -25,7 +25,6 @@ import de.potpiejimmy.util.AsyncUITask;
 public class EventConfirmActivity extends SlideActivity implements OnClickListener {
 
 	private EventVo event = null;
-	private List<View> surveyViews = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,6 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 		if (event.getSurveys() != null && event.getSurveys().length > 0) {
 			
 			LinearLayout surveysList = (LinearLayout)findViewById(R.id.surveyslist);
-	    	this.surveyViews = new ArrayList<View>(event.getSurveys().length);
 	    	for (SurveyVo survey : event.getSurveys()) {
 			        View surveyView = getLayoutInflater().inflate(R.layout.surveyresult_item, null);
 			        surveyView.setTag(survey);
@@ -66,7 +64,6 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 						displayResult.setText("Jetzt abstimmen ->");
 					}
 					surveysList.addView(surveyView);
-					surveyViews.add(surveyView);
 					surveyView.setClickable(true);
 					surveyView.setOnClickListener(this);
 			}
@@ -101,18 +98,6 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 		}
 
     }
-    
-    protected String getSurveyResultsLabel() {
-    	StringBuilder stb = new StringBuilder();
-    	if (event.getSurveys() != null) {
-    		for (SurveyVo survey : event.getSurveys()) {
-    			if (stb.length()>0) stb.append("\n\n");
-    			stb.append(survey.getName());
-    			stb.append(": ");
-    		}
-    	}
-    	return stb.toString();
-    }
 
 	public void onClick(View v) {
 		switch (v.getId())
@@ -127,14 +112,15 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 				// otherwise, a survey item was clicked:
 				if (v.getTag() instanceof SurveyVo) {
 					v.setBackgroundResource(android.R.drawable.list_selector_background);
-					showSurveyResults();
+					showSurveyResults((SurveyVo)v.getTag());
 				}
 		}
 	}
 	
-	protected void showSurveyResults() {
+	protected void showSurveyResults(SurveyVo survey) {
 		Intent i = new Intent(getApplicationContext(), SurveyConfirmActivity.class);
 		i.putExtra("event", event);
+		i.putExtra("survey", survey);
 		startActivity(i);
 	}
 	

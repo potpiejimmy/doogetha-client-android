@@ -50,7 +50,7 @@
                   android:orientation="vertical">
 	    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
 	                 android:layout_width="match_parent"
-	                 android:text="Abstimmungsergebnisse"/>
+	                 android:text="Abstimmungen"/>
 
 	    <LinearLayout
 	        android:id="@+id/surveyslist"

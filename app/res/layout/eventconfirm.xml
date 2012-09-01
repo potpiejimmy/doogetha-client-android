@@ -39,7 +39,7 @@
               android:textColor="#000">
     </TextView>
 
-    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1" android:layout_marginTop="5dip" android:layout_marginBottom="5dip">
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/confirmbuttonpanel" android:layout_marginTop="5dip" android:layout_marginBottom="5dip">
         <Button android:id="@+id/eventconfirmbutton1" android:text=" Ich nehme teil" android:textSize="11sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="left|center_vertical" android:drawableLeft="@drawable/dot_green"></Button>
         <Button android:id="@+id/eventconfirmbutton2" android:text=" Ich nehme nicht teil" android:textSize="11sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="left|center_vertical" android:drawableLeft="@drawable/dot_red"></Button>
     </LinearLayout>
@@ -51,21 +51,14 @@
 	    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
 	                 android:layout_width="match_parent"
 	                 android:text="Abstimmungsergebnisse"/>
-	    <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout5" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
-	        <TextView android:text="keine" 
-	                  android:id="@+id/eventconfirmsurveyresultslabel" 
-					  android:textColor="#000"
-	                  android:layout_gravity="center_vertical" 
-	                  android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="3dip" android:layout_marginRight="64dip" android:layout_marginTop="3dip" android:layout_marginBottom="3dip"></TextView>
-	        <ImageButton android:src="@android:drawable/ic_menu_more"
-	                     android:id="@+id/showsurveyresultsbutton"
-	                     android:text="Button" 
-	                     android:layout_gravity="top" 
-	                     android:layout_width="wrap_content" 
-	                     android:layout_height="wrap_content"
-	                     android:layout_alignParentRight="true">
-	        </ImageButton>
-	    </RelativeLayout>
+
+	    <LinearLayout
+	        android:id="@+id/surveyslist"
+	        android:orientation="vertical"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+	    </LinearLayout>
+
     </LinearLayout>
 
     <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"

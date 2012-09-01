@@ -34,7 +34,6 @@ import de.letsdoo.client.util.SlideActivity;
 import de.letsdoo.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.EventsVo;
-import de.letsdoo.server.vo.SurveyVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
@@ -101,7 +100,7 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 					datetime.setVisibility(View.GONE);
 				}
 				ImageView icon = (ImageView) convertView.findViewById(R.id.eventstateiconview);
-				if (hasOpenSurveys(event)) {
+				if (Utils.hasOpenSurveys(event)) {
 					icon.setImageResource(R.drawable.question_mark);
 				} else {
 					UserVo myself = null;
@@ -302,21 +301,12 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     	startActivityForResult(intent, 0);
 	}
 	
-	protected boolean hasOpenSurveys(EventVo event) {
-		boolean hasOpenSurveys = false;
-		if (event.getSurveys() != null) {
-			for (SurveyVo s : event.getSurveys())
-				if (s.getState() == 0) hasOpenSurveys = true;
-		}
-		return hasOpenSurveys;
-	}
-	
 	protected void confirmEvent(EventVo event) {
-		if (hasOpenSurveys(event)) {
-			startEventActivityClass(SurveyConfirmActivity.class, event);
-		} else {
+//		if (hasOpenSurveys(event)) {
+//			startEventActivityClass(SurveyConfirmActivity.class, event);
+//		} else {
 			startEventActivityClass(EventConfirmActivity.class, event);
-		}
+//		}
 	}
 	
 	protected void startEventActivityClass(Class<? extends Activity> clazz, EventVo event) {

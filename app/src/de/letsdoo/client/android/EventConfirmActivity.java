@@ -1,11 +1,13 @@
 package de.letsdoo.client.android;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import de.potpiejimmy.util.AsyncUITask;
 public class EventConfirmActivity extends SlideActivity implements OnClickListener {
 
 	private EventVo event = null;
+	private List<View> surveyViews = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,21 +44,44 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 		TextView eventconfirmdescription = (TextView) findViewById(R.id.eventconfirmdescription);
 		eventconfirmdescription.setText(event.getDescription());
 		
-		/* survey results */
+		/* surveys */
 		if (event.getSurveys() != null && event.getSurveys().length > 0) {
-			TextView surveyResultsLabel = (TextView) findViewById(R.id.eventconfirmsurveyresultslabel);
-			surveyResultsLabel.setText(getSurveyResultsLabel());
+			
+			LinearLayout surveysList = (LinearLayout)findViewById(R.id.surveyslist);
+	    	this.surveyViews = new ArrayList<View>(event.getSurveys().length);
+	    	for (SurveyVo survey : event.getSurveys()) {
+			        View surveyView = getLayoutInflater().inflate(R.layout.surveyresult_item, null);
+			        surveyView.setTag(survey);
+					TextView displayName = (TextView) surveyView.findViewById(R.id.surveyname);
+					displayName.setText(survey.getName());
+					TextView displayResult = (TextView) surveyView.findViewById(R.id.surveyresult);
+					if (survey.getState() == 1) /* closed */ {
+						if (survey.getSurveyItems() != null) {
+							for (SurveyItemVo item : survey.getSurveyItems())
+								if (item.getState() == 1) /* closed survey result item */
+									displayResult.setText(Utils.formatSurveyItem(survey, item));
+						}
+					} else {
+						// still open:
+						displayResult.setText("Jetzt abstimmen ->");
+					}
+					surveysList.addView(surveyView);
+					surveyViews.add(surveyView);
+					surveyView.setClickable(true);
+					surveyView.setOnClickListener(this);
+			}
 		} else {
 			findViewById(R.id.eventconfirmsurveyresults).setVisibility(View.GONE);
 		}
 
+		View confirmbuttonpanel = findViewById(R.id.confirmbuttonpanel);
 		Button confirmbutton1 = (Button) findViewById(R.id.eventconfirmbutton1);
 		Button confirmbutton2 = (Button) findViewById(R.id.eventconfirmbutton2);
-		ImageButton surveyresultsbutton = (ImageButton) findViewById(R.id.showsurveyresultsbutton);
+		if (Utils.hasOpenSurveys(event))
+			confirmbuttonpanel.setVisibility(View.GONE);
 		
 		confirmbutton1.setOnClickListener(this);
 		confirmbutton2.setOnClickListener(this);
-		surveyresultsbutton.setOnClickListener(this);
 		
 		TextView activityconfirmtitle = (TextView) findViewById(R.id.activityconfirmtitle);
         activityconfirmtitle.setText(Utils.getActivityTitle(this, event));
@@ -83,11 +109,6 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
     			if (stb.length()>0) stb.append("\n\n");
     			stb.append(survey.getName());
     			stb.append(": ");
-    			if (survey.getSurveyItems() != null) {
-	    			for (SurveyItemVo item : survey.getSurveyItems())
-	    				if (item.getState() == 1) /* closed survey result item */
-	    					stb.append(Utils.formatSurveyItem(survey, item));
-    			}
     		}
     	}
     	return stb.toString();
@@ -102,9 +123,12 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			case R.id.eventconfirmbutton2:
 				confirm(2);
 				break;
-			case R.id.showsurveyresultsbutton:
-				showSurveyResults();
-				break;
+			default:
+				// otherwise, a survey item was clicked:
+				if (v.getTag() instanceof SurveyVo) {
+					v.setBackgroundResource(android.R.drawable.list_selector_background);
+					showSurveyResults();
+				}
 		}
 	}
 	

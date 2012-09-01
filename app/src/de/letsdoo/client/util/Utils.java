@@ -100,6 +100,15 @@ public class Utils {
 		}
     }
     
+	public static boolean hasOpenSurveys(EventVo event) {
+		boolean hasOpenSurveys = false;
+		if (event.getSurveys() != null) {
+			for (SurveyVo s : event.getSurveys())
+				if (s.getState() == 0) hasOpenSurveys = true;
+		}
+		return hasOpenSurveys;
+	}
+	
     public static boolean isMyself(Activity activity, UserVo user) {
     	return Utils.getApp(activity).getEmail().equalsIgnoreCase(user.getEmail());
     }

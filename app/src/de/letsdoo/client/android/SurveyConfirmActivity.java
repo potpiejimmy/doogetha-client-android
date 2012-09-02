@@ -62,7 +62,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
         	if (Utils.getApp(this).getEmail().equalsIgnoreCase(user.getEmail()))
         		myself = user;
         
-        this.myOwn = event.getOwner().getId() == myself.getId();
+        this.myOwn = event.getOwner().getId().equals(myself.getId());
         
 		((TextView)findViewById(R.id.surveyname)).setText(survey.getName());
         recreateSurveyView();
@@ -173,7 +173,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		if (!highlight) view.setBackgroundColor(Color.LTGRAY);
     	if (item.getConfirmations() != null) {
     		for (SurveyItemUserVo confirmation : item.getConfirmations()) {
-    			if (confirmation.getUserId() == user.getId()) {
+    			if (user.getId().equals(confirmation.getUserId())) {
     				switch (confirmation.getState()) {
     				case 0:
     		    		view.setImageResource(R.drawable.survey_neutral);
@@ -235,7 +235,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		SurveyItemUserVo itemUser = null;
 		if (item.getConfirmations() != null) {
 			for (SurveyItemUserVo user : item.getConfirmations())
-				if (user.getUserId() == myself.getId())
+				if (user.getUserId().equals(myself.getId()))
 					itemUser = user;
 		}
 		if (itemUser == null) {
@@ -267,7 +267,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     protected void closeSurveyImpl(final SurveyItemVo closeItem) {
     	survey.setState(1); /* survey closed */
     	for (SurveyItemVo item : survey.getSurveyItems()) {
-    		if (item.getId() == closeItem.getId())
+    		if (item.getId().equals(closeItem.getId()))
     			item.setState(1); // close reason
     		else
     			item.setState(0); // reset the others if previously closed

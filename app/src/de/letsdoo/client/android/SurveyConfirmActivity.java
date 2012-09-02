@@ -36,15 +36,10 @@ import de.potpiejimmy.util.DroidLib;
 public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements OnClickListener {
 
 	private EventVo event = null;
-
-	private int currentIndex = 0;
+	private SurveyVo survey = null;
 	
-	private ImageButton nextbutton = null;
-	private ImageButton previousbutton = null;
-	
-	private List<List<ImageView>> confirmViews = new ArrayList<List<ImageView>>();
-	private List<List<View>> closeViews = new ArrayList<List<View>>();
-	private ViewFlipper viewFlipper = null;
+	private List<ImageView> confirmViews = new ArrayList<ImageView>();
+	private List<View> closeViews = new ArrayList<View>();
 	
 	private UserVo myself = null;
 	
@@ -56,6 +51,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
         this.setContentView(R.layout.surveyconfirm);
     	
     	this.event = (EventVo)getIntent().getExtras().get("event");
+		this.survey = (SurveyVo)getIntent().getExtras().get("survey");
     	
 		TextView eventdatetime = (TextView) findViewById(R.id.eventconfirmdatetime);
 		if (event.getEventtime() != null)
@@ -71,13 +67,6 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	Button buttoncancel = (Button) findViewById(R.id.editcancel);
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
-    	
-    	this.viewFlipper = (ViewFlipper)findViewById(R.id.viewFlipper);
-		
-		previousbutton = (ImageButton) findViewById(R.id.previousbutton);
-		nextbutton = (ImageButton) findViewById(R.id.nextbutton);
-		previousbutton.setOnClickListener(this);
-		nextbutton.setOnClickListener(this);
 
 		TextView activityconfirmtitle = (TextView) findViewById(R.id.activityconfirmtitle);
         activityconfirmtitle.setText(Utils.getActivityTitle(this, event));
@@ -88,50 +77,16 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
         
         this.myOwn = event.getOwner().getId() == myself.getId();
         
-        recreateAllSurveyViews();
+        recreateSurveyView();
         
-        int firstOpen = -1;
-        for (int i=0; i<event.getSurveys().length; i++) {
-        	SurveyVo survey = event.getSurveys()[i];
-            if (firstOpen == -1 && survey.getState()==0) firstOpen = i;
-        }
-        
-        if (firstOpen == -1)
+        if (survey.getState() == 1) /* closed */
         	findViewById(R.id.surveyconfirmbuttonpanel).setVisibility(View.GONE);
-        
-        showSurvey(firstOpen == -1 ? 0 : firstOpen);
     }
     
-    protected void recreateAllSurveyViews() {
+    protected void recreateSurveyView() {
     	this.confirmViews.clear();
     	this.closeViews.clear();
-    	this.viewFlipper.removeAllViews();
-    	for (SurveyVo survey : event.getSurveys())
-    		addSurveyView(survey);
-    	currentIndex = 0;
-    }
-    
-    protected void showSurvey(int index) {
-    	((TextView)findViewById(R.id.surveyname)).setText(event.getSurveys()[index].getName() + " (" + (index+1) + "/" + event.getSurveys().length + ")");
-    	
-    	if (index > currentIndex)
-    		for (int i=0; i<(index-currentIndex); i++)
-    			viewFlipper.showNext();
-    	else if (index < currentIndex)
-    		for (int i=0; i<(currentIndex-index); i++)
-    			viewFlipper.showPrevious();
-    	
-    	currentIndex = index;
-    	updateUI();
-    }
-    
-    protected SurveyVo currentSurvey() {
-    	return event.getSurveys()[currentIndex];
-    }
-    
-    protected void updateUI() {
-    	nextbutton.setEnabled(event.getSurveys().length > currentIndex+1);
-    	previousbutton.setEnabled(currentIndex > 0);
+    	addSurveyView(survey);
     }
     
     protected void addSurveyView(SurveyVo survey) {
@@ -150,7 +105,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	//row.addView(verticalSeparator(), tableParams);
     	VerticalLabelView emptyCorner = new VerticalLabelView(this);
 		//emptyCorner.setBackgroundColor(Color.LTGRAY);
-		emptyCorner.setText(/*(survey.getState()==0 && myOwn) ? "<- schlie§en" : */" ");
+		emptyCorner.setText(/*(survey.getState()==0 && myOwn) ? "<- schlieï¿½en" : */" ");
     	row.addView(emptyCorner, tableParams);
     	//row.addView(verticalSeparator(), tableParams);
     	row.setLayoutParams(tableParams);
@@ -166,8 +121,6 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	table.addView(horizontalSeparator(), tableParams);
     	
     	// add survey items:
-    	List<ImageView> currentConfirmViews = new ArrayList<ImageView>();
-    	List<View> currentCloseViews = new ArrayList<View>();
     	if (survey.getSurveyItems() != null) {
 	    	for (SurveyItemVo item : survey.getSurveyItems()) {
 	    		
@@ -180,7 +133,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	        	//row.addView(verticalSeparator(), tableParams);
 	        	
 	        	if (survey.getState()==0 && myOwn) {
-	        		currentCloseViews.add(itemLabel);
+	        		closeViews.add(itemLabel);
 	        		if (item.getId()!=null)
 	        			itemLabel.setOnClickListener(this);
 	        	}
@@ -195,7 +148,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	    	    	//row.addView(verticalSeparator(), tableParams);
 
 	    	    	if (survey.getState()==0 && i==0) {
-	    				currentConfirmViews.add(iv);
+	    				confirmViews.add(iv);
 	    				iv.setOnClickListener(this);
 	    			}
 	    		}
@@ -203,8 +156,6 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	        	table.addView(horizontalSeparator(), tableParams);
 	    	}
     	}
-		this.confirmViews.add(currentConfirmViews);
-		this.closeViews.add(currentCloseViews);
 		
 		// add button
 		if (survey.getMode() == 1 /* editable */ &&
@@ -221,7 +172,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 			table.addView(row, tableParams);
 		}
     	
-		viewFlipper.addView(surveyconfirmview);
+		//viewFlipper.addView(surveyconfirmview);
     }
     
     protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean highlight, boolean wide) {
@@ -315,16 +266,15 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     }
     
     protected void closeSurvey(final SurveyItemVo closeItem) {
-    	DroidLib.alert(this, "Abstimmung jetzt schlie§en mit dem Ergebnis\n\""+Utils.formatSurveyItem(event.getSurveys()[currentIndex], closeItem)+"\"?", "Abstimmung schlie§en", getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
+    	DroidLib.alert(this, "Abstimmung jetzt schlieï¿½en mit dem Ergebnis\n\""+Utils.formatSurveyItem(survey, closeItem)+"\"?", "Abstimmung schlieï¿½en", getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				closeSurveyImpl(closeItem);
-				DroidLib.alert(SurveyConfirmActivity.this, "Die Abstimmung wurde zum Schlie§en vorgemerkt.\n\nBitte speichere die aktuelle Ansicht, um die Abstimmung endgŸltig zu schlie§en.", "OK", null);
+				DroidLib.alert(SurveyConfirmActivity.this, "Die Abstimmung wurde zum Schlieï¿½en vorgemerkt.\n\nBitte speichere die aktuelle Ansicht, um die Abstimmung endgï¿½ltig zu schlieï¿½en.", "OK", null);
 			}
     	});
     }
     
     protected void closeSurveyImpl(final SurveyItemVo closeItem) {
-    	SurveyVo survey = event.getSurveys()[currentIndex];
     	survey.setState(1); /* survey closed */
     	for (SurveyItemVo item : survey.getSurveyItems()) {
     		if (item.getId() == closeItem.getId())
@@ -332,37 +282,29 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     		else
     			item.setState(0); // reset the others if previously closed
     	}
-    	TextView surveyclosedlabel = (TextView)((ViewFlipper)findViewById(R.id.viewFlipper)).getChildAt(currentIndex).findViewById(R.id.surveyclosedlabel);
+    	TextView surveyclosedlabel = (TextView)findViewById(R.id.surveyclosedlabel);
     	surveyclosedlabel.setText("Diese Abstimmung wird geschlossen mit dem Ergebnis: " + Utils.formatSurveyItem(survey, closeItem));
     	surveyclosedlabel.setVisibility(View.VISIBLE);
     }
     
 	public void onClick(View v) {
 		if (v.getId() < 0) {
-			List<ImageView> currentConfirmViews = this.confirmViews.get(currentIndex);
-			for (int i=0; i<currentConfirmViews.size(); i++) {
-				if (currentConfirmViews.get(i) == v) {
-					toggleConfirmation(event.getSurveys()[currentIndex].getSurveyItems()[i], (ImageView)v);
+			for (int i=0; i<confirmViews.size(); i++) {
+				if (confirmViews.get(i) == v) {
+					toggleConfirmation(survey.getSurveyItems()[i], (ImageView)v);
 				}
 			}
 			
 			if (this.myOwn) {
-				List<View> currentCloseViews = this.closeViews.get(currentIndex);
-				for (int i=0; i<currentCloseViews.size(); i++) {
-					if (currentCloseViews.get(i) == v) {
-						closeSurvey(event.getSurveys()[currentIndex].getSurveyItems()[i]);
+				for (int i=0; i<closeViews.size(); i++) {
+					if (closeViews.get(i) == v) {
+						closeSurvey(survey.getSurveyItems()[i]);
 					}
 				}
 			}
 		}
 		switch (v.getId())
 		{
-			case R.id.nextbutton:
-				showSurvey(currentIndex+1);
-				break;
-			case R.id.previousbutton:
-				showSurvey(currentIndex-1);
-				break;
 			case R.id.editok:
 				confirm();
 				break;
@@ -401,12 +343,10 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		public String doTask() throws Throwable
 		{
 			SurveysAccessor sa = Utils.getApp(SurveyConfirmActivity.this).getSurveysAccessor();
-			for (SurveyVo survey : event.getSurveys())
-				sa.updateItem(survey.getId(), survey);
+			sa.updateItem(survey.getId(), survey);
 			
 			if (SurveyConfirmActivity.this.myOwn) {
 				// if this is my own event, also close the surveys if they're marked as closed
-				for (SurveyVo survey : event.getSurveys()) {
 					if (survey.getState() == 1)  /* closed */ {
 						for (SurveyItemVo item : survey.getSurveyItems()) {
 							if (item.getState() == 1) { /* survey result */
@@ -415,7 +355,6 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 							}
 						}
 					}
-				}
 			}
     		return "Gespeichert";
 		}
@@ -434,12 +373,12 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 
 	@Override
 	protected SurveyVo getSurvey() {
-		return currentSurvey();
+		return survey;
 	}
 
 	@Override
 	protected void finishEditSurveyItem(String item) {
-		List<SurveyItemVo> itemList = new ArrayList<SurveyItemVo>(Arrays.asList(currentSurvey().getSurveyItems()));
+		List<SurveyItemVo> itemList = new ArrayList<SurveyItemVo>(Arrays.asList(survey.getSurveyItems()));
     	if (!checkUnique(itemList, item, -1)) return;
 		
 		SurveyItemVo newItem = createNewSurveyItem(item);
@@ -452,10 +391,8 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 				break;
 			}
 		
-		currentSurvey().setSurveyItems(itemList.toArray(new SurveyItemVo[itemList.size()]));
+		survey.setSurveyItems(itemList.toArray(new SurveyItemVo[itemList.size()]));
 		
-		int oldIndex = currentIndex;
-		recreateAllSurveyViews();
-		showSurvey(oldIndex);
+		recreateSurveyView();
 	}
 }

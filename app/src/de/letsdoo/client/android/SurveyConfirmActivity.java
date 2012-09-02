@@ -16,11 +16,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 import de.letsdoo.client.android.rest.SurveysAccessor;
 import de.letsdoo.client.util.ContactsUtils;
 import de.letsdoo.client.util.Utils;
@@ -53,30 +53,18 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	this.event = (EventVo)getIntent().getExtras().get("event");
 		this.survey = (SurveyVo)getIntent().getExtras().get("survey");
     	
-		TextView eventdatetime = (TextView) findViewById(R.id.eventconfirmdatetime);
-		if (event.getEventtime() != null)
-			eventdatetime.setText(Utils.formatDateTime(event.getEventtime()));
-		else
-			eventdatetime.setVisibility(View.GONE);
-		TextView eventconfirmtitle = (TextView) findViewById(R.id.eventconfirmtitle);
-		eventconfirmtitle.setText(event.getName());
-		TextView eventconfirmdescription = (TextView) findViewById(R.id.eventconfirmdescription);
-		eventconfirmdescription.setText(event.getDescription());
-
 		Button buttonok = (Button) findViewById(R.id.editok);
     	Button buttoncancel = (Button) findViewById(R.id.editcancel);
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
 
-		TextView activityconfirmtitle = (TextView) findViewById(R.id.activityconfirmtitle);
-        activityconfirmtitle.setText(Utils.getActivityTitle(this, event));
-    	
         for (UserVo user : event.getUsers())
         	if (Utils.getApp(this).getEmail().equalsIgnoreCase(user.getEmail()))
         		myself = user;
         
         this.myOwn = event.getOwner().getId() == myself.getId();
         
+		((TextView)findViewById(R.id.surveyname)).setText(survey.getName());
         recreateSurveyView();
         
         if (survey.getState() == 1) /* closed */
@@ -172,7 +160,9 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 			table.addView(row, tableParams);
 		}
     	
-		//viewFlipper.addView(surveyconfirmview);
+		LinearLayout tableViewContainer = (LinearLayout)findViewById(R.id.confirmtableview);
+		tableViewContainer.removeAllViews();
+		tableViewContainer.addView(surveyconfirmview);
     }
     
     protected void setImageForUserStatus(ImageView view, SurveyItemVo item, UserVo user, boolean highlight, boolean wide) {

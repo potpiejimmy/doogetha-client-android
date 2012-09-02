@@ -1,8 +1,5 @@
 package de.letsdoo.client.android;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -47,7 +44,9 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 		if (event.getSurveys() != null && event.getSurveys().length > 0) {
 			
 			LinearLayout surveysList = (LinearLayout)findViewById(R.id.surveyslist);
-	    	for (SurveyVo survey : event.getSurveys()) {
+	    	for (int i=0; i<event.getSurveys().length; i++) {
+	    			if (i>0) surveysList.addView(horizontalSeparator());
+	    			SurveyVo survey = event.getSurveys()[i];
 			        View surveyView = getLayoutInflater().inflate(R.layout.surveyresult_item, null);
 			        surveyView.setTag(survey);
 					TextView displayName = (TextView) surveyView.findViewById(R.id.surveyname);
@@ -99,6 +98,10 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 
     }
 
+    protected View horizontalSeparator() {
+    	return getLayoutInflater().inflate(R.layout.horizontal_separator_thin, null).findViewById(R.id.horizontal_separator_thin);
+    }
+    
 	public void onClick(View v) {
 		switch (v.getId())
 		{

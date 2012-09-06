@@ -13,6 +13,7 @@ import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -106,7 +107,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	}
     	
     	table.addView(row, tableParams);
-    	table.addView(horizontalSeparator(), tableParams);
+    	addHorizontalSeparator(table);
     	
     	// add survey items:
     	if (survey.getSurveyItems() != null) {
@@ -141,7 +142,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	    			}
 	    		}
 	        	table.addView(row, tableParams);
-	        	table.addView(horizontalSeparator(), tableParams);
+	        	addHorizontalSeparator(table);
 	    	}
     	}
 		
@@ -223,12 +224,10 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	}
     }
 
-    protected View verticalSeparator() {
-    	return getLayoutInflater().inflate(R.layout.vertical_separator, null).findViewById(R.id.vertical_separator);
-    }
-    
-    protected View horizontalSeparator() {
-    	return getLayoutInflater().inflate(R.layout.horizontal_separator, null).findViewById(R.id.horizontal_separator);
+    protected void addHorizontalSeparator(ViewGroup view) {
+		View ruler = new View(getApplicationContext());
+		ruler.setBackgroundResource(R.color.doogetha_titlebar);
+		view.addView(ruler, new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, 3));
     }
     
     protected void toggleConfirmation(SurveyItemVo item, ImageView v) {
@@ -256,10 +255,10 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     }
     
     protected void closeSurvey(final SurveyItemVo closeItem) {
-    	DroidLib.alert(this, "Abstimmung jetzt schlie�en mit dem Ergebnis\n\""+Utils.formatSurveyItem(survey, closeItem)+"\"?", "Abstimmung schlie�en", getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
+    	DroidLib.alert(this, "Abstimmung jetzt schliessen mit dem Ergebnis\n\""+Utils.formatSurveyItem(survey, closeItem)+"\"?", "Abstimmung schliessen", getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				closeSurveyImpl(closeItem);
-				DroidLib.alert(SurveyConfirmActivity.this, "Die Abstimmung wurde zum Schlie�en vorgemerkt.\n\nBitte speichere die aktuelle Ansicht, um die Abstimmung endg�ltig zu schlie�en.", "OK", null);
+				DroidLib.alert(SurveyConfirmActivity.this, "Die Abstimmung wurde zum Schliessen vorgemerkt.\n\nBitte speichere die aktuelle Ansicht, um die Abstimmung endgueltig zu schliessen.", "OK", null);
 			}
     	});
     }

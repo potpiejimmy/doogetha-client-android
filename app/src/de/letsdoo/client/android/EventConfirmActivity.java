@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,7 +46,10 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			
 			LinearLayout surveysList = (LinearLayout)findViewById(R.id.surveyslist);
 	    	for (int i=0; i<event.getSurveys().length; i++) {
-	    			if (i>0) surveysList.addView(horizontalSeparator());
+	    			if (i>0) {
+	    				// add horizontal ruler:
+	    				addHorizontalSeparator(surveysList);
+	    			}
 	    			SurveyVo survey = event.getSurveys()[i];
 			        View surveyView = getLayoutInflater().inflate(R.layout.surveyresult_item, null);
 			        surveyView.setTag(survey);
@@ -58,9 +62,11 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 								if (item.getState() == 1) /* closed survey result item */
 									displayResult.setText(Utils.formatSurveyItem(survey, item));
 						}
+						((ImageView)surveyView.findViewById(R.id.surveyimg)).setImageResource(R.drawable.showdetails_gray);
 					} else {
 						// still open:
-						displayResult.setText("Jetzt abstimmen ->");
+						displayResult.setText("Jetzt abstimmen");
+						((ImageView)surveyView.findViewById(R.id.surveyimg)).setImageResource(R.drawable.showdetails);
 					}
 					surveysList.addView(surveyView);
 					surveyView.setClickable(true);
@@ -98,8 +104,10 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 
     }
 
-    protected View horizontalSeparator() {
-    	return getLayoutInflater().inflate(R.layout.horizontal_separator_thin, null).findViewById(R.id.horizontal_separator_thin);
+    protected void addHorizontalSeparator(ViewGroup view) {
+		View ruler = new View(getApplicationContext());
+		ruler.setBackgroundColor(0xFF000000);
+		view.addView(ruler, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, 1));
     }
     
 	public void onClick(View v) {
@@ -124,9 +132,18 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 		Intent i = new Intent(getApplicationContext(), SurveyConfirmActivity.class);
 		i.putExtra("event", event);
 		i.putExtra("survey", survey);
-		startActivity(i);
+		startActivityForResult(i, 0);
 	}
 	
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (resultCode == RESULT_OK)
+    	{
+    		// when returning with RESULT_OK from SurveyConfirmView,
+    		// leave this view so everything is refreshed:
+    		finishOk();
+    	}
+    }
+    
 	protected void confirm(int state) {
 		new Confirmer(state).go("Speichern...");
 	}

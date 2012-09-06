@@ -11,7 +11,7 @@
 	    android:layout_weight="1"
 	    android:layout_gravity="center_vertical"
 	    android:padding="10dp"
-	    android:textSize="14sp"
+	    android:textSize="16sp"
 	    android:textColor="#000"
 	    android:text="Zeitpunkt:">
     </TextView>
@@ -22,9 +22,18 @@
 	    android:layout_weight="1"
 	    android:layout_gravity="center_vertical"
 	    android:padding="10dp"
-	    android:textSize="11sp"
+	    android:textSize="12sp"
 	    android:textColor="#000"
 	    android:gravity="right"
 	    android:text="Morgen um Viertel nach acht">
     </TextView>
+
+	<ImageView
+	    android:id="@+id/surveyimg"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0"
+	    android:layout_gravity="center_vertical"
+	    android:src="@drawable/showdetails" />
+
 </LinearLayout>

@@ -1,4 +1,4 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +30,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.letsdoo.client.util.ContactsUtils;
-import de.letsdoo.client.util.SlideListActivity;
-import de.letsdoo.client.util.Utils;
+import com.doogetha.client.util.ContactsUtils;
+import com.doogetha.client.util.SlideListActivity;
+import com.doogetha.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;

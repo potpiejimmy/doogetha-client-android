@@ -1,4 +1,4 @@
-package de.letsdoo.client.util;
+package com.doogetha.client.util;
 
 import android.content.Context;
 import android.graphics.Canvas;

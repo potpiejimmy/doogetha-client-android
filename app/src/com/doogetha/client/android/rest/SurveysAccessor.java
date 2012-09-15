@@ -1,4 +1,4 @@
-package de.letsdoo.client.android.rest;
+package com.doogetha.client.android.rest;
 
 import de.letsdoo.server.vo.SurveyVo;
 import de.letsdoo.server.vo.SurveysVo;

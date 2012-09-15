@@ -1,4 +1,4 @@
-package de.letsdoo.client.util;
+package com.doogetha.client.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -7,8 +7,8 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.widget.ImageView;
-import de.letsdoo.client.android.Letsdoo;
-import de.letsdoo.client.android.R;
+import com.doogetha.client.android.Letsdoo;
+import com.doogetha.client.android.R;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;

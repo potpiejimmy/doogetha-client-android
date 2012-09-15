@@ -1,16 +1,16 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
-import de.letsdoo.client.android.rest.EventsAccessor;
-import de.letsdoo.client.android.rest.LoginAccessor;
-import de.letsdoo.client.android.rest.RegisterAccessor;
-import de.letsdoo.client.android.rest.SurveysAccessor;
-import de.letsdoo.client.android.rest.UsersAccessor;
-import de.letsdoo.client.android.rest.VersionAccessor;
+import com.doogetha.client.android.rest.EventsAccessor;
+import com.doogetha.client.android.rest.LoginAccessor;
+import com.doogetha.client.android.rest.RegisterAccessor;
+import com.doogetha.client.android.rest.SurveysAccessor;
+import com.doogetha.client.android.rest.UsersAccessor;
+import com.doogetha.client.android.rest.VersionAccessor;
 
 public class Letsdoo extends Application {
 	

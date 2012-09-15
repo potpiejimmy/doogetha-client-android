@@ -1,12 +1,12 @@
-package de.letsdoo.client.android.test;
+package com.doogetha.client.android.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
 
-import de.letsdoo.client.android.EventsActivity;
-import de.letsdoo.client.android.R.*;
-import de.letsdoo.client.android.test.R;
+import com.doogetha.client.android.EventsActivity;
+import com.doogetha.client.android.R.*;
+import com.doogetha.client.android.test.R;
 import de.potpiejimmy.util.PullRefreshableListView;
 
 public class UseCasesMainViewTest extends

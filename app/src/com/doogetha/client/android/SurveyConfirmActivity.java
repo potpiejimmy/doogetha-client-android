@@ -1,4 +1,4 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,10 +22,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.letsdoo.client.android.rest.SurveysAccessor;
-import de.letsdoo.client.util.ContactsUtils;
-import de.letsdoo.client.util.Utils;
-import de.letsdoo.client.util.VerticalLabelView;
+import com.doogetha.client.android.rest.SurveysAccessor;
+import com.doogetha.client.util.ContactsUtils;
+import com.doogetha.client.util.Utils;
+import com.doogetha.client.util.VerticalLabelView;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemUserVo;
 import de.letsdoo.server.vo.SurveyItemVo;

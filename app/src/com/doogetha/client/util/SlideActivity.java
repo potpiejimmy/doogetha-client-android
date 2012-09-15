@@ -1,8 +1,8 @@
-package de.letsdoo.client.util;
+package com.doogetha.client.util;
 
 import android.app.Activity;
 import android.content.Intent;
-import de.letsdoo.client.android.R;
+import com.doogetha.client.android.R;
 
 public class SlideActivity extends Activity {
 

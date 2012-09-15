@@ -21,7 +21,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import de.letsdoo.client.android.R;
+import com.doogetha.client.android.R;
 
 /**
  * List view extension with pull-to-refresh support

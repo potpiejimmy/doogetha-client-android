@@ -1,4 +1,4 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import de.letsdoo.client.util.Utils;
+import com.doogetha.client.util.Utils;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.potpiejimmy.util.DroidLib;

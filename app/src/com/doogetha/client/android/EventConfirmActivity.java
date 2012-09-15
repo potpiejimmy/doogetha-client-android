@@ -1,4 +1,4 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.letsdoo.client.android.rest.EventsAccessor;
-import de.letsdoo.client.util.ContactsUtils;
-import de.letsdoo.client.util.SlideActivity;
-import de.letsdoo.client.util.Utils;
+import com.doogetha.client.android.rest.EventsAccessor;
+import com.doogetha.client.util.ContactsUtils;
+import com.doogetha.client.util.SlideActivity;
+import com.doogetha.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;

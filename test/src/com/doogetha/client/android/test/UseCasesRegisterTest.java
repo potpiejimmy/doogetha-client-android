@@ -1,13 +1,10 @@
-package de.letsdoo.client.android.test;
+package com.doogetha.client.android.test;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.view.KeyEvent;
 
+import com.doogetha.client.android.R;
+import com.doogetha.client.android.WelcomeActivity;
 import com.jayway.android.robotium.solo.Solo;
-
-import de.letsdoo.client.android.EventsActivity;
-import de.letsdoo.client.android.WelcomeActivity;
-import de.letsdoo.client.android.R;
 
 public class UseCasesRegisterTest extends
 		ActivityInstrumentationTestCase2<WelcomeActivity> {

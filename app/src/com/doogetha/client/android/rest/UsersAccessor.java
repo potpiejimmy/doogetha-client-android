@@ -1,4 +1,4 @@
-package de.letsdoo.client.android.rest;
+package com.doogetha.client.android.rest;
 
 import de.letsdoo.server.vo.UserVo;
 import de.letsdoo.server.vo.UsersVo;

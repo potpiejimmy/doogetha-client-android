@@ -1,4 +1,4 @@
-package de.letsdoo.client.util;
+package com.doogetha.client.util;
 
 import java.util.ArrayList;
 import java.util.List;

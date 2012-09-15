@@ -1,6 +1,6 @@
-package de.letsdoo.client.util;
+package com.doogetha.client.util;
 
-import de.letsdoo.client.android.R;
+import com.doogetha.client.android.R;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;

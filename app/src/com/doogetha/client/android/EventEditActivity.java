@@ -1,4 +1,4 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import java.util.Calendar;
 
@@ -18,9 +18,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import de.letsdoo.client.android.rest.EventsAccessor;
-import de.letsdoo.client.util.SlideActivity;
-import de.letsdoo.client.util.Utils;
+import com.doogetha.client.android.rest.EventsAccessor;
+import com.doogetha.client.util.SlideActivity;
+import com.doogetha.client.util.Utils;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;

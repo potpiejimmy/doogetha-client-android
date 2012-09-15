@@ -1,4 +1,4 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import de.letsdoo.client.util.SlideListActivity;
+import com.doogetha.client.util.SlideListActivity;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.potpiejimmy.util.DroidLib;

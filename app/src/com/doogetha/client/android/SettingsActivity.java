@@ -1,4 +1,4 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,8 +7,8 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import de.letsdoo.client.util.SlidePreferenceActivity;
-import de.letsdoo.client.util.Utils;
+import com.doogetha.client.util.SlidePreferenceActivity;
+import com.doogetha.client.util.Utils;
 import de.potpiejimmy.util.DroidLib;
 
 public class SettingsActivity extends SlidePreferenceActivity implements OnPreferenceClickListener, DialogInterface.OnClickListener {

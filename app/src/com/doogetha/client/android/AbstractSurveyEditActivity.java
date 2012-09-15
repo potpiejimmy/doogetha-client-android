@@ -1,4 +1,4 @@
-package de.letsdoo.client.android;
+package com.doogetha.client.android;
 
 import java.util.Calendar;
 import java.util.List;
@@ -11,7 +11,7 @@ import android.content.DialogInterface;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import de.letsdoo.client.util.SlideActivity;
+import com.doogetha.client.util.SlideActivity;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
 import de.potpiejimmy.util.DroidLib;

@@ -1,11 +1,9 @@
-package de.letsdoo.client.android.test;
+package com.doogetha.client.android.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.doogetha.client.android.EventsActivity;
 import com.jayway.android.robotium.solo.Solo;
-
-import de.letsdoo.client.android.EventsActivity;
-import de.letsdoo.client.android.R;
 
 public class EventChangeScenariosTest extends
 		ActivityInstrumentationTestCase2<EventsActivity> {

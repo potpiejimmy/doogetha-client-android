@@ -59,7 +59,7 @@
 	                  android:layout_width="match_parent"
 	                  android:orientation="vertical">
 
-		    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+		    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
 	                  android:layout_width="match_parent"
 	                  android:text="Aktuelle Aktivitäten"/>
 		    
@@ -83,7 +83,7 @@
 	                  android:layout_width="match_parent"
 	                  android:orientation="vertical">
 
-		    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+		    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
 	                  android:layout_width="match_parent"
 	                  android:text="Meine Aktivitäten"/>
 		    
@@ -106,7 +106,7 @@
 	                  android:layout_width="match_parent"
 	                  android:orientation="vertical">
 
-		    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+		    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
 	                  android:layout_width="match_parent"
 	                  android:text="Community"/>
 		    

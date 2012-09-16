@@ -29,7 +29,7 @@
                   android:textColor="@color/doogetha_bg"></TextView>
     </LinearLayout>
 
-    <de.letsdoo.client.util.TitleBar android:id="@+id/activitytitle"
+    <com.doogetha.client.util.TitleBar android:id="@+id/activitytitle"
                  android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:text="Aktivität"/>
@@ -61,7 +61,7 @@
 	          android:inputType="textMultiLine">
 	</EditText>
 	
-    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:text="Zeitpunkt"/>
     <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout5" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
@@ -81,7 +81,7 @@
         </ImageButton>
     </RelativeLayout>
 	
-    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:text="Teilnehmer"/>
     <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout2" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
@@ -101,7 +101,7 @@
         </ImageButton>
     </RelativeLayout>
 	
-    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:text="Abstimmungen"/>
     <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout7" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">

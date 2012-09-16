@@ -7,6 +7,8 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.widget.Toast;
+
 import com.doogetha.client.util.SlidePreferenceActivity;
 import com.doogetha.client.util.Utils;
 import de.potpiejimmy.util.DroidLib;
@@ -43,6 +45,13 @@ public class SettingsActivity extends SlidePreferenceActivity implements OnPrefe
     }
 
 	public boolean onPreferenceClick(Preference preference) {
+		// XXX just a test:
+		try {
+			Utils.getApp(this).getDevicesAccessor().deleteItem("alsdkjfasdgauenvianevinauwlieu324qungoiuqzh4go3q438");
+    	} catch (Exception ex) {
+    		Toast.makeText(getApplicationContext(), ex.toString(), Toast.LENGTH_SHORT).show();
+    	}
+		
 		DroidLib.alert(this, "Wirklich abmelden und Registrierung erneut durchführen?", "Ja", "Nein", this);
 		return true;
 	}

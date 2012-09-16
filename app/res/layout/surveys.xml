@@ -6,7 +6,7 @@
     android:background="@color/doogetha_bg"
     >
 
-    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:text="Abstimmungen bearbeiten"/>
 	

@@ -29,9 +29,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+
 import com.doogetha.client.android.rest.EventsAccessor;
 import com.doogetha.client.util.SlideActivity;
 import com.doogetha.client.util.Utils;
+
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.EventsVo;
 import de.letsdoo.server.vo.UserVo;
@@ -353,12 +355,25 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     
     protected void loadingDone()
     {
-		if (!versionChecked) checkVersion();
+    	checkGcmRegistration();
 		
 		if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
 			this.currentEventsList.onRefreshComplete();
 		else if (currentScreen == SCREEN_MY_ACTIVITIES)
 			this.myEventsList.onRefreshComplete();
+    }
+    
+    protected void checkGcmRegistration()
+    {
+    	if (!Utils.getApp(this).isGcmServerSynced())
+    		new DeviceRegisterTask().go("Registriere Messaging...");
+    	else
+    		doneGcmCheck();
+    }
+    
+    protected void doneGcmCheck()
+    {
+		if (!versionChecked) checkVersion();
     }
 	
 	protected class DataLoader extends AsyncUITask<EventsVo>
@@ -490,6 +505,30 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		public void doneFail(Throwable throwable) 
 		{
     		// just ignore
+		}
+	}
+	
+	protected class DeviceRegisterTask extends AsyncUITask<String>
+	{
+		public DeviceRegisterTask() 
+		{
+			super(EventsActivity.this);
+		}
+		
+		public String doTask() throws Throwable
+		{
+			Utils.getApp(EventsActivity.this).gcmServerSync();
+			return null;
+		}
+		
+		public void doneOk(String result)
+		{
+    		Toast.makeText(getApplicationContext(), "Device registered.", Toast.LENGTH_SHORT).show();
+		}
+		
+		public void doneFail(Throwable throwable) 
+		{
+    		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
 		}
 	}
 }

@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.doogetha.client.android"
-      android:versionCode="50"
-      android:versionName="0.6.12">
-
-    <uses-permission
-      android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
-      
+      android:versionCode="51"
+      android:versionName="0.7.0">
+    
     <uses-sdk android:minSdkVersion="8" 
     		  android:targetSdkVersion="14"/>
 
+    <!-- custom permission so only this application can receive GCM messages -->
+    <permission android:name="com.doogetha.client.android.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.doogetha.client.android.permission.C2D_MESSAGE" />
+     
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" /> <!-- to receive notifications thru GCM -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- GCM: needs Google account -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- GCM: Keeps the processor from sleeping when a message is received. -->
+    
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:name="Letsdoo">
+        
+        <receiver android:name="com.google.android.gcm.GCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+   	            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.doogetha.client.android" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GCMIntentService" />
+
         <activity android:name=".WelcomeActivity"
                   android:label="@string/app_name"
                   android:theme="@android:style/Theme.NoTitleBar"
@@ -22,10 +39,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 			<intent-filter>
-	          <action android:name="android.intent.action.VIEW" />
-	          <category android:name="android.intent.category.DEFAULT" />
-	          <category android:name="android.intent.category.BROWSABLE" />
-	          <data android:scheme="http" android:host="www.potpiejimmy.de" android:path="/doogetha/" />
+	            <action android:name="android.intent.action.VIEW" />
+	            <category android:name="android.intent.category.DEFAULT" />
+	            <category android:name="android.intent.category.BROWSABLE" />
+	            <data android:scheme="http" android:host="www.potpiejimmy.de" android:path="/doogetha/" />
 	        </intent-filter>
         </activity>
         <activity android:name="EventsActivity"

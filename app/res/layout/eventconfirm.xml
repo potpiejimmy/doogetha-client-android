@@ -10,7 +10,7 @@
     <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
     <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         
-    <de.letsdoo.client.util.TitleBar android:id="@+id/activityconfirmtitle"
+    <com.doogetha.client.util.TitleBar android:id="@+id/activityconfirmtitle"
                  android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:text="Aktivität"/>
@@ -48,7 +48,7 @@
                   android:layout_width="match_parent" 
                   android:id="@+id/eventconfirmsurveyresults" 
                   android:orientation="vertical">
-	    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+	    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
 	                 android:layout_width="match_parent"
 	                 android:text="Abstimmungen"/>
 
@@ -61,7 +61,7 @@
 
     </LinearLayout>
 
-    <de.letsdoo.client.util.TitleBar android:layout_height="wrap_content"
+    <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
                  android:layout_width="match_parent"
                  android:text="Teilnehmer"/>
 		    

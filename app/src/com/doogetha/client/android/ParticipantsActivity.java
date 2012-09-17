@@ -67,7 +67,7 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
     	this.event = (EventVo)getIntent().getExtras().get("event");
     	
     	for (UserVo user : event.getUsers())
-    		ContactsUtils.fillUserInfo(this, user);
+    		ContactsUtils.fillUserInfo(this.getContentResolver(), user);
     	
     	this.data = new ArrayAdapter<UserVo>(this, R.layout.participant_item, new ArrayList<UserVo>(Arrays.asList(event.getUsers()))) {
     		@Override
@@ -79,7 +79,7 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
     	        }
     			UserVo user = getItem(position);
     			TextView displayName = (TextView) convertView.findViewById(R.id.participantname);
-    			displayName.setText(ContactsUtils.userDisplayName(ParticipantsActivity.this, user));
+    			displayName.setText(ContactsUtils.userDisplayName(Utils.getApp(ParticipantsActivity.this), user));
     			TextView email = (TextView) convertView.findViewById(R.id.participantemail);
     			email.setText(user.getEmail());
     	        return convertView;
@@ -178,7 +178,7 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
         UserVo newUser = new UserVo();
         newUser.setEmail(email);
         newUser.setState(0); /* unconfirmed/new */
-        ContactsUtils.fillUserInfo(this, newUser);
+        ContactsUtils.fillUserInfo(this.getContentResolver(), newUser);
         this.data.add(newUser);
     }
     

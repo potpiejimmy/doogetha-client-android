@@ -90,11 +90,11 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
     	
     	LinearLayout list = (LinearLayout)findViewById(R.id.participantsconfirmlist);
     	for (UserVo user : event.getUsers()) {
-			ContactsUtils.fillUserInfo(this, user);
+			ContactsUtils.fillUserInfo(this.getContentResolver(), user);
 				
 			View vi = getLayoutInflater().inflate(R.layout.participant_confirm_item, null);
 			TextView name = (TextView) vi.findViewById(R.id.participantname);
-			name.setText(ContactsUtils.userDisplayName(this, user));
+			name.setText(ContactsUtils.userDisplayName(Utils.getApp(this), user));
 			TextView email = (TextView) vi.findViewById(R.id.participantemail);
 			email.setText(user.getEmail());
 			ImageView icon = (ImageView) vi.findViewById(R.id.participantconfirmiconview);

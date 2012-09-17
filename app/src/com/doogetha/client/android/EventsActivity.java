@@ -523,12 +523,13 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		
 		public void doneOk(String result)
 		{
-    		Toast.makeText(getApplicationContext(), "Device registered.", Toast.LENGTH_SHORT).show();
+			doneGcmCheck();
 		}
 		
 		public void doneFail(Throwable throwable) 
 		{
     		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+			doneGcmCheck();
 		}
 	}
 }

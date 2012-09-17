@@ -115,8 +115,8 @@ public class Utils {
     
     public static String getActivityTitle(Activity activity, EventVo event) {
         boolean myOwn = Utils.isMyself(activity, event.getOwner());
-        if (!myOwn) ContactsUtils.fillUserInfo(activity, event.getOwner());
-        return myOwn ? "Meine Aktivität" : "Aktivität von " + ContactsUtils.userDisplayName(activity, event.getOwner());
+        if (!myOwn) ContactsUtils.fillUserInfo(activity.getContentResolver(), event.getOwner());
+        return myOwn ? "Meine Aktivität" : "Aktivität von " + ContactsUtils.userDisplayName(Utils.getApp(activity), event.getOwner());
     }
     
     public static boolean checkValidMailAddress(String email) {

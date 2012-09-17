@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 
+import com.doogetha.client.util.ContactsUtils;
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
+
+import de.letsdoo.server.vo.UserVo;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
@@ -39,13 +42,18 @@ public class GCMIntentService extends GCMBaseIntentService {
 		NotificationManager notificationManager =
 			    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-		Notification notification = new Notification(R.drawable.notification_icon, "Mitteilung empfangen.", System.currentTimeMillis());
+		UserVo user = new UserVo();
+		user.setEmail(intent.getExtras().getString("user"));
+		ContactsUtils.fillUserInfo(getContentResolver(), user);
+		String userName = ContactsUtils.userDisplayName((Letsdoo)getApplication(), user);
+		boolean nimmtTeil = "1".equals(intent.getExtras().getString("state"));
+		Notification notification = new Notification(R.drawable.notification_icon, userName + " hat bestaetigt.", System.currentTimeMillis());
 		notification.defaults |= Notification.DEFAULT_SOUND;
 		notification.defaults |= Notification.DEFAULT_VIBRATE;
 		notification.defaults |= Notification.DEFAULT_LIGHTS;
 		notification.flags    |= Notification.FLAG_AUTO_CANCEL;
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventsActivity.class), 0);
-		notification.setLatestEventInfo(this, "1 Nachricht", "Dies ist der Inhalt der Nachricht", contentIntent);
+		notification.setLatestEventInfo(this, userName + " nimmt " + (nimmtTeil ? "teil." : "nicht teil."), "Der Benutzer hat die Teilnahme an \"" + intent.getExtras().getString("eventName") + "\" " + (nimmtTeil ? "bestaetigt." : "abgesagt."), contentIntent);
 		notificationManager.notify(1, notification);
 	}
 

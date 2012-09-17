@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+
+import com.doogetha.client.android.Letsdoo;
+
 import de.letsdoo.server.vo.UserVo;
 
 public class ContactsUtils {
@@ -36,8 +40,8 @@ public class ContactsUtils {
 	 * the appropriate fields in the User object.
 	 * @param user a user object to be filled - email must be provided
 	 */
-	public static void fillUserInfo(Activity activity, UserVo user) {
-    	Cursor c = activity.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.DATA + "=?", new String[] {user.getEmail()}, null);
+	public static void fillUserInfo(ContentResolver contentResolver, UserVo user) {
+    	Cursor c = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.DATA + "=?", new String[] {user.getEmail()}, null);
     	if (c.moveToFirst()) {
     		user.setLastname(c.getString(c.getColumnIndex(ContactsContract.Data.DISPLAY_NAME)));
     	}
@@ -47,8 +51,8 @@ public class ContactsUtils {
 	/**
 	 * Chooses the appropriate display name for the given user object
 	 */
-	public static String userDisplayName(Activity activity, UserVo user) {
-		if (user.getEmail().equalsIgnoreCase(Utils.getApp(activity).getEmail()))
+	public static String userDisplayName(Letsdoo app, UserVo user) {
+		if (user.getEmail().equalsIgnoreCase(app.getEmail()))
 			return "Ich" ; // XXX
 
 		StringBuilder stb = new StringBuilder();

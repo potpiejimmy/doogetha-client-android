@@ -39,10 +39,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 		NotificationManager notificationManager =
 			    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-		  Notification notification = new Notification(R.drawable.icon, "Mitteilung empfangen.", System.currentTimeMillis());
-		  PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventsActivity.class), 0);
-		 notification.setLatestEventInfo(this, "1 Nachricht", "Dies ist der Inhalt der Nachricht", contentIntent);
-		  notificationManager.notify(1, notification);
+		Notification notification = new Notification(R.drawable.notification_icon, "Mitteilung empfangen.", System.currentTimeMillis());
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		notification.defaults |= Notification.DEFAULT_VIBRATE;
+		notification.defaults |= Notification.DEFAULT_LIGHTS;
+		notification.flags    |= Notification.FLAG_AUTO_CANCEL;
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventsActivity.class), 0);
+		notification.setLatestEventInfo(this, "1 Nachricht", "Dies ist der Inhalt der Nachricht", contentIntent);
+		notificationManager.notify(1, notification);
 	}
 
 	@Override

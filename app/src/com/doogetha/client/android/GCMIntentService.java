@@ -49,7 +49,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		boolean nimmtTeil = "1".equals(intent.getExtras().getString("state"));
 		Notification notification = new Notification(R.drawable.notification_icon, userName + " hat bestaetigt.", System.currentTimeMillis());
 		notification.defaults |= Notification.DEFAULT_SOUND;
-		notification.defaults |= Notification.DEFAULT_VIBRATE;
+		//notification.defaults |= Notification.DEFAULT_VIBRATE;  // requires VIBRATE permission
 		notification.defaults |= Notification.DEFAULT_LIGHTS;
 		notification.flags    |= Notification.FLAG_AUTO_CANCEL;
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventsActivity.class), 0);

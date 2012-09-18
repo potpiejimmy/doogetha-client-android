@@ -206,7 +206,7 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		  		editEvent(data.getItem(info.position-1));
 		        return true;
 	      case R.id.deleteitem:
-		  		new Deleter(data.getItem(info.position-1)).go("Löschen...");
+		  		new Deleter(data.getItem(info.position-1)).go(getString(R.string.process_delete));
 		        return true;
 	      default:
 	    	    return super.onContextItemSelected(item);
@@ -295,7 +295,11 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
      */
 	public void onRefresh() {
 		refresh(true);
-	}	
+	}
+	
+	public void onNewIntent(Intent intent) {
+		// XXX implement intent handling
+	}
 
 	protected void editEvent(EventVo event) {
     	Intent intent = new Intent(getApplicationContext(), EventEditActivity.class);
@@ -326,12 +330,12 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     protected void checkVersion()
     {
     	versionChecked = true;
-    	new VersionCheckTask().go("Prüfe Version...");
+    	new VersionCheckTask().go(getString(R.string.process_checkversion));
     }
     
     protected void newerVersionExists()
     {
-    	DroidLib.alert(this, "Eine neue Version von Doogetha steht zur Verfügung!", "Jetzt herunterladen", new android.content.DialogInterface.OnClickListener() {
+    	DroidLib.alert(this, getString(R.string.newversionavailable), "Jetzt herunterladen", new android.content.DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int i) {
 				DroidLib.invokeBrowser(EventsActivity.this, Letsdoo.DOWNLOADURL);
 			}
@@ -442,7 +446,7 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		{
 			if (throwable instanceof ConnectException ||
 				throwable instanceof SocketException) {
-				DroidLib.alert(EventsActivity.this, "Server nicht erreichbar. Bitte prüfe deine Internetverbindung.");
+				DroidLib.alert(EventsActivity.this, getString(R.string.servernotavailable));
 			} else {
 				DroidLib.alert(EventsActivity.this, "Die Anmeldung ist fehlgeschlagen: "+throwable);
 				if (!versionChecked) checkVersion();
@@ -463,7 +467,7 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		public String doTask() throws Throwable
 		{
     		Utils.getApp(EventsActivity.this).getEventsAccessor().deleteItem(event.getId());
-    		return "Gelöscht";
+    		return getString(R.string.deleted);
 		}
 		
 		public void doneOk(String result)

@@ -13,7 +13,7 @@
     <string name="settings">\nEinstellungen</string>
     <string name="cancelregistration">Abbrechen</string>
     <string name="app_name">Doogetha</string>
-    <string name="loading">Daten laden...</string>
+    <string name="loading">Daten laden&#8230;</string>
     <string name="pleaseregister">Your login credentials are currently unknown. Please register using your email address.</string>
     <string name="register">Registrieren</string>
     <string name="unregister">Abmelden</string>
@@ -23,13 +23,21 @@
     <string name="deleteitem">Eintrag löschen</string>
     <string name="edititem">Eintrag bearbeiten</string>
     <string name="showitem">Eintrag anzeigen</string>
-    <string name="createnewactivity">Neue\nAktivität...</string>
+    <string name="createnewactivity">Neue\nAktivität&#8230;</string>
     <string name="currentactivities">Aktuelle\nAktivitäten</string>
     <string name="myactivities">Meine\nAktivitäten</string>
     <string name="publicactivities">Community</string>
+    <string name="process_delete">Löschen&#8230;</string>
+    <string name="process_checkversion">Prüfe Version&#8230;</string>
+    <string name="newversionavailable">Eine neue Version von Doogetha steht zur Verfügung!</string>
+    <string name="servernotavailable">Server nicht erreichbar. Bitte prüfe deine Internetverbindung.</string>
+    <string name="deleted">Gelöscht</string>
+    <string name="eventconfirm_bartext">{0} hat bestätigt</string>
+    <string name="eventconfirm_text_accepted">{0} nimmt teil.</string>
+    <string name="eventconfirm_text_declined">{0} hat abgesagt.</string>
     <!-- PullRefreshableListView -->
     <string name="pull_to_refresh">Zum Aktualisieren ziehen</string>
     <string name="release_to_refresh">Jetzt loslassen</string>
-    <string name="refreshing">Bitte warten...</string>
+    <string name="refreshing">Bitte warten&#8230;</string>
     <!--  -->
 </resources>

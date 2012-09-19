@@ -27,6 +27,7 @@ public abstract class AsyncUITask<T> implements Runnable,OnCancelListener
 		cancelled = false;
 		if (showDialog) {
 			dialog = ProgressDialog.show(context, "", msg, true, true);
+			dialog.setCanceledOnTouchOutside(false);
 			dialog.setOnCancelListener(this);
 		}
     	new Thread(this).start();

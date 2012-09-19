@@ -64,6 +64,8 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 	
 	private int currentScreen = 0;
 	
+	protected int pendingEventToOpen = 0;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
         this.setContentView(R.layout.main);
         ((TextView)findViewById(R.id.versionlabel)).setText("Version " + Utils.getApp(this).getVersionName());
 
+    	checkPendingEvent(getIntent());
+    	
         this.currentEventsList = (PullRefreshableListView) findViewById(R.id.currenteventslist);
         this.myEventsList = (PullRefreshableListView) findViewById(R.id.myeventslist);
         
@@ -297,8 +301,32 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		refresh(true);
 	}
 	
+	protected void checkPendingEvent(Intent intent) {
+		if (intent == null || intent.getExtras() == null) {
+			this.pendingEventToOpen = 0;
+			return;
+		}
+		this.pendingEventToOpen = intent.getExtras().getInt("eventId", 0);
+	}
+	
 	public void onNewIntent(Intent intent) {
-		// XXX implement intent handling
+    	checkPendingEvent(intent);
+    	showScreen(0, false); // flip to screen 0
+    	refresh(); // force reload
+	}
+	
+	protected void openPendingEvent() {
+		EventVo event = findEventInCurrentList(this.pendingEventToOpen);
+		this.pendingEventToOpen = 0;
+		if (event != null) confirmEvent(event);
+	}
+	
+	protected EventVo findEventInCurrentList(int eventId) {
+		EventVo found = null;
+		for (int i=0; i<data.getCount(); i++)
+			if (data.getItem(i).getId() == eventId)
+				found = data.getItem(i);
+		return found;
 	}
 
 	protected void editEvent(EventVo event) {
@@ -359,12 +387,17 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     
     protected void loadingDone()
     {
-    	checkGcmRegistration();
-		
-		if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
-			this.currentEventsList.onRefreshComplete();
-		else if (currentScreen == SCREEN_MY_ACTIVITIES)
-			this.myEventsList.onRefreshComplete();
+    	if (this.pendingEventToOpen > 0) {
+    		// is there a pending event that should be opened?
+    		openPendingEvent();
+    	} else {
+	    	checkGcmRegistration();
+			
+			if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
+				this.currentEventsList.onRefreshComplete();
+			else if (currentScreen == SCREEN_MY_ACTIVITIES)
+				this.myEventsList.onRefreshComplete();
+    	}
     }
     
     protected void checkGcmRegistration()

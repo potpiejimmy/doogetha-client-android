@@ -41,34 +41,46 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onMessage(Context context, Intent intent) {
-		NotificationManager notificationManager =
-			    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
 		UserVo user = new UserVo();
 		user.setEmail(intent.getExtras().getString("user"));
 		ContactsUtils.fillUserInfo(getContentResolver(), user);
 		String userName = ContactsUtils.userDisplayName((Letsdoo)getApplication(), user);
-		boolean accepted = "1".equals(intent.getExtras().getString("state"));
 		String eventName = intent.getExtras().getString("eventName");
+		int eventId = intent.getExtras().getInt("eventId", 0);
+		String type = intent.getExtras().getString("type");
 		
-		String barText = getString(R.string.eventconfirm_bartext);
-		String titleText = eventName;
-		String text = getString(accepted ? R.string.eventconfirm_text_accepted : R.string.eventconfirm_text_declined);
-		barText = MessageFormat.format(barText, userName);
-		text = MessageFormat.format(text, userName);
-		
-		Notification notification = new Notification(R.drawable.notification_icon, barText, System.currentTimeMillis());
-		notification.defaults |= Notification.DEFAULT_SOUND;
-		//notification.defaults |= Notification.DEFAULT_VIBRATE;  // requires VIBRATE permission
-		notification.defaults |= Notification.DEFAULT_LIGHTS;
-		notification.flags    |= Notification.FLAG_AUTO_CANCEL;
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, EventsActivity.class), 0);
-		notification.setLatestEventInfo(this, titleText, text, contentIntent);
-		notificationManager.notify(1, notification);
-	}
-
+		if ("eventconfirm".equals(type))
+			onMessageEventConfirm(intent, userName, eventName, eventId);
+	}		
+	
 	@Override
 	protected void onError(Context context, String errorId) {
 	}
 
+	protected void onMessageEventConfirm(Intent intent, String userName, String eventName, int eventId) {
+		String ticker = getString(R.string.eventconfirm_bartext);
+		String title = eventName;
+		boolean accepted = "1".equals(intent.getExtras().getString("state"));
+		String text = getString(accepted ? R.string.eventconfirm_text_accepted : R.string.eventconfirm_text_declined);
+		ticker = MessageFormat.format(ticker, userName);
+		text = MessageFormat.format(text, userName);
+		sendNotification(eventId, ticker, title, text);
+	}
+
+	protected void sendNotification(int eventId, String ticker, String title, String text) {
+		NotificationManager notificationManager =
+			    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+		Notification notification = new Notification(R.drawable.notification_icon, ticker, System.currentTimeMillis());
+		notification.defaults |= Notification.DEFAULT_SOUND;
+		//notification.defaults |= Notification.DEFAULT_VIBRATE;  // requires VIBRATE permission
+		notification.defaults |= Notification.DEFAULT_LIGHTS;
+		notification.flags    |= Notification.FLAG_AUTO_CANCEL;
+		Intent notificationIntent =  new Intent(this, EventsActivity.class);
+		notificationIntent.putExtra("eventId", eventId);
+		int notificationId = (int)System.currentTimeMillis();
+		PendingIntent contentIntent = PendingIntent.getActivity(this, notificationId, notificationIntent, 0);
+		notification.setLatestEventInfo(this, title, text, contentIntent);
+		notificationManager.notify(notificationId, notification);
+	}
 }

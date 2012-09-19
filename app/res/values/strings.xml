@@ -26,6 +26,8 @@
     <string name="createnewactivity">Neue\nAktivität&#8230;</string>
     <string name="currentactivities">Aktuelle\nAktivitäten</string>
     <string name="myactivities">Meine\nAktivitäten</string>
+    <string name="myactivity">Meine Aktivität</string>
+    <string name="activityof">Aktivität von</string>
     <string name="publicactivities">Community</string>
     <string name="process_delete">Löschen&#8230;</string>
     <string name="process_checkversion">Prüfe Version&#8230;</string>

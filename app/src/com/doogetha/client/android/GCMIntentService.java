@@ -46,7 +46,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 		ContactsUtils.fillUserInfo(getContentResolver(), user);
 		String userName = ContactsUtils.userDisplayName((Letsdoo)getApplication(), user);
 		String eventName = intent.getExtras().getString("eventName");
-		int eventId = intent.getExtras().getInt("eventId", 0);
+		int eventId = 0;
+		try {eventId = Integer.parseInt(intent.getExtras().getString("eventId"));}
+		catch (NumberFormatException nfe) {}
 		String type = intent.getExtras().getString("type");
 		
 		if ("eventconfirm".equals(type))

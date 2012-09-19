@@ -49,10 +49,21 @@ public class GCMIntentService extends GCMBaseIntentService {
 		int eventId = 0;
 		try {eventId = Integer.parseInt(intent.getExtras().getString("eventId"));}
 		catch (NumberFormatException nfe) {}
+		String surveyName = intent.getExtras().getString("surveyName");
 		String type = intent.getExtras().getString("type");
 		
-		if ("eventconfirm".equals(type))
+		if ("eventinvitation".equals(type))
+			onMessageEventInvitation(intent, userName, eventName, eventId);
+		else if ("eventupdate".equals(type))
+			onMessageEventUpdate(intent, userName, eventName, eventId);
+		else if ("eventconfirm".equals(type))
 			onMessageEventConfirm(intent, userName, eventName, eventId);
+		else if ("surveyadded".equals(type))
+			onMessageSurveyAdded(intent, userName, eventName, eventId);
+		else if ("surveyconfirm".equals(type))
+			onMessageSurveyConfirmed(intent, userName, eventName, eventId, surveyName);
+		else if ("surveyclosed".equals(type))
+			onMessageSurveyClosed(intent, userName, eventName, eventId, surveyName);
 	}		
 	
 	@Override
@@ -60,12 +71,50 @@ public class GCMIntentService extends GCMBaseIntentService {
 	}
 
 	protected void onMessageEventConfirm(Intent intent, String userName, String eventName, int eventId) {
-		String ticker = getString(R.string.eventconfirm_bartext);
+		String ticker = getString(R.string.notify_eventconfirm_tickertext);
 		String title = eventName;
 		boolean accepted = "1".equals(intent.getExtras().getString("state"));
-		String text = getString(accepted ? R.string.eventconfirm_text_accepted : R.string.eventconfirm_text_declined);
+		String text = getString(accepted ? R.string.notify_eventconfirm_text_accepted : R.string.notify_eventconfirm_text_declined);
 		ticker = MessageFormat.format(ticker, userName);
 		text = MessageFormat.format(text, userName);
+		sendNotification(eventId, ticker, title, text);
+	}
+
+	protected void onMessageEventInvitation(Intent intent, String userName, String eventName, int eventId) {
+		String ticker = getString(R.string.notify_eventinvitation_tickertext);
+		String title = eventName;
+		String text = getString(R.string.notify_eventinvitation_text);
+		text = MessageFormat.format(text, userName);
+		sendNotification(eventId, ticker, title, text);
+	}
+
+	protected void onMessageEventUpdate(Intent intent, String userName, String eventName, int eventId) {
+		String ticker = getString(R.string.notify_eventupdate_tickertext);
+		String title = eventName;
+		String text = getString(R.string.notify_eventupdate_text);
+		sendNotification(eventId, ticker, title, text);
+	}
+
+	protected void onMessageSurveyAdded(Intent intent, String userName, String eventName, int eventId) {
+		String ticker = getString(R.string.notify_surveyadded_tickertext);
+		String title = eventName;
+		String text = getString(R.string.notify_surveyadded_text);
+		sendNotification(eventId, ticker, title, text);
+	}
+
+	protected void onMessageSurveyConfirmed(Intent intent, String userName, String eventName, int eventId, String surveyName) {
+		String ticker = getString(R.string.notify_surveyconfirm_tickertext);
+		String title = eventName + ": " + surveyName;
+		String text = getString(R.string.notify_surveyconfirm_text);
+		ticker = MessageFormat.format(ticker, userName);
+		text = MessageFormat.format(text, userName);
+		sendNotification(eventId, ticker, title, text);
+	}
+
+	protected void onMessageSurveyClosed(Intent intent, String userName, String eventName, int eventId, String surveyName) {
+		String ticker = getString(R.string.notify_surveyclosed_tickertext);
+		String title = eventName + ": " + surveyName;
+		String text = getString(R.string.notify_surveyclosed_text);
 		sendNotification(eventId, ticker, title, text);
 	}
 

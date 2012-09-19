@@ -34,9 +34,19 @@
     <string name="newversionavailable">Eine neue Version von Doogetha steht zur Verfügung!</string>
     <string name="servernotavailable">Server nicht erreichbar. Bitte prüfe deine Internetverbindung.</string>
     <string name="deleted">Gelöscht</string>
-    <string name="eventconfirm_bartext">{0} hat bestätigt</string>
-    <string name="eventconfirm_text_accepted">{0} nimmt teil.</string>
-    <string name="eventconfirm_text_declined">{0} hat abgesagt.</string>
+    <string name="notify_eventinvitation_tickertext">Neue Einladung erhalten</string>
+    <string name="notify_eventinvitation_text">{0} hat dich eingeladen.</string>
+    <string name="notify_eventupdate_tickertext">Aktivität wurde geändert</string>
+    <string name="notify_eventupdate_text">Die Aktivität wurde geändert.</string>
+    <string name="notify_eventconfirm_tickertext">{0} hat bestätigt</string>
+    <string name="notify_eventconfirm_text_accepted">{0} nimmt teil.</string>
+    <string name="notify_eventconfirm_text_declined">{0} hat abgesagt.</string>
+    <string name="notify_surveyadded_tickertext">Neue Abstimmung</string>
+    <string name="notify_surveyadded_text">Es gibt eine neue Abstimmung.</string>
+    <string name="notify_surveyconfirm_tickertext">{0} hat abgestimmt</string>
+    <string name="notify_surveyconfirm_text">{0} hat abgestimmt.</string>
+    <string name="notify_surveyclosed_tickertext">Abstimmung geschlossen</string>
+    <string name="notify_surveyclosed_text">Die Abstimmung wurde geschlossen.</string>
     <!-- PullRefreshableListView -->
     <string name="pull_to_refresh">Zum Aktualisieren ziehen</string>
     <string name="release_to_refresh">Jetzt loslassen</string>

@@ -46,36 +46,36 @@
 	            <data android:scheme="http" android:host="www.doogetha.com" android:pathPattern="/beta/" />
 	        </intent-filter>
         </activity>
-        <activity android:name="EventsActivity"
+        <activity android:name=".EventsActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:launchMode="singleTask"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name="EventEditActivity"
+        <activity android:name=".EventEditActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name="ParticipantsActivity"
+        <activity android:name=".ParticipantsActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name="EventSurveysActivity"
+        <activity android:name=".EventSurveysActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name="SurveyEditActivity"
+        <activity android:name=".SurveyEditActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name="EventConfirmActivity"
+        <activity android:name=".EventConfirmActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name="SurveyConfirmActivity"
+        <activity android:name=".SurveyConfirmActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        <activity android:name="SettingsActivity"
+        <activity android:name=".SettingsActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>

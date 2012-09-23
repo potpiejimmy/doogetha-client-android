@@ -9,25 +9,7 @@
     <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
     <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         
-    <LinearLayout android:layout_height="wrap_content"
-    		      android:id="@+id/linearLayout1"
-    		      android:layout_width="match_parent"
-    		      android:baselineAligned="false"
-    		      android:background="#222">
-        <ImageView android:layout_height="wrap_content"
-        		   android:id="@+id/imageView1"
-        		   android:src="@drawable/icon" 
-        		   android:layout_width="wrap_content">
-        </ImageView>
-        <TextView android:id="@+id/textView1"
-                  android:textAppearance="?android:attr/textAppearanceLarge" 
-                  android:text="Doogetha" android:layout_gravity="center" 
-                  android:layout_height="wrap_content" 
-                  android:layout_weight="0.0" 
-                  android:layout_width="wrap_content" 
-                  android:layout_marginLeft="10dip"
-                  android:textColor="@color/doogetha_bg"></TextView>
-    </LinearLayout>
+    <include android:id="@+id/dg_title" layout="@layout/dg_title"/>
 
     <com.doogetha.client.util.TitleBar android:id="@+id/activitytitle"
                  android:layout_height="wrap_content"

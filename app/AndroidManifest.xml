@@ -79,7 +79,19 @@
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-        
+        <activity android:name=".WizardNewEventActivity"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity android:name=".EventEditBaseActivity"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity android:name=".EventEditDateTimeActivity"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+                
     </application>
 
 </manifest>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/doogetha_bg"
+    >
+    
+    <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
+    <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        
+    <com.doogetha.client.util.TitleBar android:id="@+id/activitytitle"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Zeitpunkt der Aktivität bearbeiten"/>
+	
+    <RelativeLayout android:layout_width="match_parent" android:id="@+id/linearLayout5" android:layout_height="wrap_content" android:layout_gravity="top" android:gravity="center_vertical">
+        <TextView android:text="Datum und Uhrzeit nicht festgelegt." 
+                  android:textAppearance="?android:attr/textAppearanceSmall" 
+                  android:id="@+id/datetimelabel" 
+				  android:textColor="#000"
+                  android:layout_gravity="center_vertical" 
+                  android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_marginLeft="3dip" android:layout_marginRight="64dip" android:layout_marginTop="3dip" android:layout_marginBottom="3dip"></TextView>
+        <ImageButton android:src="@android:drawable/ic_menu_more"
+                     android:id="@+id/editdatetime"
+                     android:text="Button" 
+                     android:layout_gravity="top" 
+                     android:layout_width="wrap_content" 
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentRight="true">
+        </ImageButton>
+    </RelativeLayout>
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    >
+		<Button android:id="@+id/editok"
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+	               android:layout_weight="0.5"
+		    android:text="@string/save"
+		    />
+		<Button android:id="@+id/editcancel"
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+	               android:layout_weight="0.5"
+		    android:text="@string/cancel"
+		    />
+	</LinearLayout>
+	
+	</LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

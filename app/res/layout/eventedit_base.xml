@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/doogetha_bg"
+    >
+    
+    <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
+    <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        
+    <com.doogetha.client.util.TitleBar android:id="@+id/activitytitle"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:text="Titel und Beschreibung bearbeiten"/>
+	
+	<TextView android:id="@+id/editlabel"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="Titel:"
+	    android:textColor="#000"
+	    />
+	<EditText android:id="@+id/activityname"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text=""
+	    >
+		<requestFocus></requestFocus>
+    </EditText>
+    
+	<TextView android:text="Beschreibung:" 
+			  android:id="@+id/textView2" 
+			  android:layout_width="wrap_content" 
+			  android:textColor="#000"
+			  android:layout_height="wrap_content">
+	</TextView>
+	<EditText android:id="@+id/activitydescription" 
+	          android:layout_width="match_parent" 
+	          android:minLines="5" 
+	          android:layout_height="wrap_content" 
+	          android:inputType="textMultiLine">
+	</EditText>
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    >
+		<Button android:id="@+id/editok"
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+	               android:layout_weight="0.5"
+		    android:text="@string/save"
+		    />
+		<Button android:id="@+id/editcancel"
+		    android:layout_width="match_parent" 
+		    android:layout_height="wrap_content" 
+	               android:layout_weight="0.5"
+		    android:text="@string/cancel"
+		    />
+	</LinearLayout>
+	
+	</LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

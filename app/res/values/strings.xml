@@ -47,6 +47,30 @@
     <string name="notify_surveyconfirm_text">{0} hat abgestimmt.</string>
     <string name="notify_surveyclosed_tickertext">Abstimmung geschlossen</string>
     <string name="notify_surveyclosed_text">Die Abstimmung wurde geschlossen.</string>
+    <string name="clear_datetime">Datum löschen</string>
+    <string name="please_enter_activity_name">Bitte gib einen Namen für die Aktivität ein.</string>
+    <string name="already_added">Bereits hinzugefügt</string>
+    <string name="address_being_verified">Adresse wird geprüft&#8230;</string>
+    <string name="email_address_invalid">Ungültige E-Mail-Adresse</string>
+    <string name="event_successfully_created">Die Aktivität wurde erfolgreich angelegt.</string>
+    <!-- New Activity Wizard -->
+    <string name="newactwiz_base_title">Neue Aktivität erstellen</string>
+    <string name="newactwiz_base_text">Doogetha wird dich nun Schritt für Schritt durch die Erstellung einer neuen Aktivität führen.\n\nFür die Aktivität kannst du zunächst einen Titel und optional eine kurze Beschreibung eingeben.</string>
+    <string name="newactwiz_datetime_title">Zeitpunkt</string>
+    <string name="newactwiz_datetime_text">Du kannst nun Datum und Uhrzeit der Aktivität festlegen.\n\nWenn der Zeitpunkt der Aktivität noch nicht feststeht, weil du diesen mit den anderen Teilnehmern abstimmen möchtest, dann lege noch kein Datum und keine Uhrzeit fest. Du kannst dann später eine Umfrage zur Terminfindung festlegen.</string>
+    <string name="newactwiz_participants_title">Teilnehmer</string>
+    <string name="newactwiz_participants_text">Als nächstes kannst du die Teilnehmer der Aktivität angeben.\n\nDu selbst bist automatisch ein Teilnehmer der Aktivität. Alle weiteren Teilnehmer müssen anhand ihrer E-Mail-Adresse hinzugefügt werden. Du kannst dazu Personen aus deinem Adressbuch auswählen oder E-Mail-Adressen manuell eingeben.</string>
+    <string name="newactwiz_surveys_title">Abstimmungen</string>
+    <string name="newactwiz_surveys_text">Zu deiner Aktivität kannst du nun eine beliebige Anzahl von Abstimmungen hinzufügen.\n\nMit Abstimmungen kannst du Termine vereinbaren oder beliebige Umfragen zu Teilaspekten deiner Aktivität durchführen.</string>
+    <string name="newactwiz_done_title">Fertig</string>
+    <string name="newactwiz_done_text">Klicke auf Speichern, um die Aktivität anzulegen und die Teilnehmer einzuladen.\n\nDie Teilnehmer werden sodann über E-Mail benachrichtigt und können die neue Aktivität in Doogetha aufrufen.</string>
+    <string name="newactwiz_button_editbase">Titel und Beschreibung eingeben&#8230;</string>
+    <string name="newactwiz_button_editdatetime">Zeitpunkt bearbeiten&#8230;</string>
+    <string name="newactwiz_button_notnowdatetime">Jetzt nicht festlegen</string>
+    <string name="newactwiz_button_editparticipants">Teilnehmer bearbeiten&#8230;</string>
+    <string name="newactwiz_button_editsurveys">Abstimmungen eingeben&#8230;</string>
+    <string name="newactwiz_button_notnowsurveys">Jetzt nicht / keine Abstimmungen</string>
+    <string name="newactwiz_button_done">Speichern</string>
     <!-- PullRefreshableListView -->
     <string name="pull_to_refresh">Zum Aktualisieren ziehen</string>
     <string name="release_to_refresh">Jetzt loslassen</string>

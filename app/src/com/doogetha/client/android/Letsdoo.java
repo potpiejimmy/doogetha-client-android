@@ -15,6 +15,9 @@ import com.doogetha.client.android.rest.UsersAccessor;
 import com.doogetha.client.android.rest.VersionAccessor;
 import com.google.android.gcm.GCMRegistrar;
 
+import de.letsdoo.server.vo.EventVo;
+import de.letsdoo.server.vo.UserVo;
+
 public class Letsdoo extends Application {
 	
 	public final static String PROTO    = "http://";
@@ -173,6 +176,17 @@ public class Letsdoo extends Application {
 		} catch (Exception ex) {
 			// failed? try again next time.
 		}
+	}
+	
+	public EventVo newEvent() {
+    	EventVo event = new EventVo();
+    	event.setName("");
+    	UserVo myself = new UserVo();
+    	myself.setEmail(getEmail());
+    	myself.setState(1); /* confirmed */
+    	event.setUsers(new UserVo[] {myself});
+    	event.setOwner(myself);
+    	return event;
 	}
 	
 	public void removeSession() {

@@ -158,7 +158,7 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
     	email = email.trim();
     	
     	if (!Utils.checkValidMailAddress(email)) {
-    		DroidLib.toast(this, "Ungültige E-Mail-Adresse: " + email);
+    		DroidLib.toast(this, getString(R.string.email_address_invalid) + ": " + email);
     		return;
     	}
     	
@@ -166,12 +166,12 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
     	for (int i=0; i<data.getCount(); i++)
     		if (data.getItem(i).getEmail().equalsIgnoreCase(email)) {found = true; break;}
     	if (found) {
-    		DroidLib.toast(this, "Bereits hinzugefügt");
+    		DroidLib.toast(this, getString(R.string.already_added));
     		return;
     	}
     		
     	// now check against server:
-    	new CheckUserTask(email).go("Adresse wird geprüft...");
+    	new CheckUserTask(email).go(getString(R.string.address_being_verified));
     }
     
     protected void addUser(String email) {

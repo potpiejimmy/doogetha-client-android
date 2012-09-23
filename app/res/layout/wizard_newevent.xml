@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/doogetha_bg2"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+	
+        <include android:id="@+id/dg_title" layout="@layout/dg_title"/>
+
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dip" >
+
+            <LinearLayout android:id="@+id/wizardPage1" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+
+                <TextView android:id="@+id/textView3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10dip" android:text="@string/newactwiz_base_title" android:textAppearance="?android:attr/textAppearanceLarge" android:textColor="@android:color/black" />
+
+                <TextView android:id="@+id/textView2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/newactwiz_base_text" android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@android:color/black" />
+
+                <LinearLayout android:id="@+id/linearLayout2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dip" android:gravity="right">
+
+                    <Button android:id="@+id/editbasebutton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/newactwiz_button_editbase" />
+                </LinearLayout>
+            </LinearLayout><LinearLayout android:id="@+id/wizardPage2" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+
+                <TextView android:id="@+id/textView4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="10dip" android:text="@string/newactwiz_datetime_title" android:textAppearance="?android:attr/textAppearanceLarge" android:textColor="@android:color/black" />
+
+                <TextView android:id="@+id/textView5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/newactwiz_datetime_text" android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@android:color/black" />
+
+                <LinearLayout android:id="@+id/linearLayout3" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dip" android:gravity="right">
+
+                    <Button android:id="@+id/editdatetimebutton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/newactwiz_button_editdatetime" />
+                </LinearLayout>
+                <LinearLayout android:id="@+id/linearLayout4" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dip" android:gravity="right">
+
+                    <Button android:id="@+id/notnowdatetimebutton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/newactwiz_button_notnowdatetime" />
+                </LinearLayout>
+            </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/wizardPage3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:text="@string/newactwiz_participants_title"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/newactwiz_participants_text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dip"
+                    android:gravity="right" >
+
+                    <Button
+                        android:id="@+id/editparticipantsbutton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/newactwiz_button_editparticipants" />
+                </LinearLayout>
+            </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/wizardPage4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:text="@string/newactwiz_surveys_title"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/newactwiz_surveys_text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dip"
+                    android:gravity="right" >
+                    <Button
+                        android:id="@+id/editsurveysbutton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/newactwiz_button_editsurveys" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linearLayout6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dip"
+                    android:gravity="right" >
+                    <Button
+                        android:id="@+id/notnowsurveysbutton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/newactwiz_button_notnowsurveys" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/wizardPage5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dip"
+                    android:text="@string/newactwiz_done_title"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/newactwiz_done_text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dip"
+                    android:gravity="right" >
+
+                    <Button
+                        android:id="@+id/donebutton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/newactwiz_button_done" />
+                </LinearLayout>
+            </LinearLayout>
+            
+        </ViewFlipper>
+
+    </LinearLayout>
+
+</ScrollView>

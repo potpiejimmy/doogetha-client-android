@@ -351,7 +351,7 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 	
     protected void addEvent()
     {
-    	Intent intent = new Intent(getApplicationContext(), EventEditActivity.class);
+    	Intent intent = new Intent(getApplicationContext(), WizardNewEventActivity.class);
     	startActivityForResult(intent, 0);
     }
     

@@ -9,31 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#222"
-            android:baselineAligned="false" >
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon" />
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dip"
-                android:layout_weight="0.0"
-                android:text="Doogetha"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/doogetha_bg" />
-        </LinearLayout>
+	
+        <include android:id="@+id/dg_title" layout="@layout/dg_title"/>
 
         <ViewFlipper
             android:id="@+id/viewFlipper"

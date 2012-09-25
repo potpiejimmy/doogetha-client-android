@@ -53,9 +53,6 @@ public class WizardNewEventActivity extends SlideActivity implements OnClickList
 		notnowsurveysbutton.setOnClickListener(this);
 		donebutton.setOnClickListener(this);
     	
-    	viewflipper.setInAnimation(getApplicationContext(), R.anim.slide_in_right);
-    	viewflipper.setOutAnimation(getApplicationContext(), R.anim.slide_still);
-    	
     	this.event = Utils.getApp(this).newEvent();
     }
     
@@ -64,7 +61,21 @@ public class WizardNewEventActivity extends SlideActivity implements OnClickList
     	if (viewflipper.getDisplayedChild() == 0)
     		finishCancel();
     	else
-    		viewflipper.showPrevious();
+    		showPreviousPage();
+    }
+    
+    protected void showPreviousPage()
+    {
+    	viewflipper.setInAnimation(getApplicationContext(), R.anim.slide_in_left);
+    	viewflipper.setOutAnimation(getApplicationContext(), R.anim.slide_out_right);
+    	viewflipper.showPrevious();
+    }
+    
+    protected void showNextPage()
+    {
+    	viewflipper.setInAnimation(getApplicationContext(), R.anim.slide_in_right);
+    	viewflipper.setOutAnimation(getApplicationContext(), R.anim.slide_out_left);
+    	viewflipper.showNext();
     }
     
     protected void finishOk()
@@ -92,7 +103,7 @@ public class WizardNewEventActivity extends SlideActivity implements OnClickList
         super.onActivityResult(reqCode, resultCode, data);
     	if (resultCode == RESULT_OK) {
     		this.event = (EventVo)data.getExtras().get("event");
-    		viewflipper.showNext();
+    		showNextPage();
     	}
     }
 
@@ -112,7 +123,7 @@ public class WizardNewEventActivity extends SlideActivity implements OnClickList
 				break;
 			case R.id.notnowdatetimebutton:
 				event.setEventtime(null);
-				viewflipper.showNext();
+				showNextPage();
 				break;
 			case R.id.editparticipantsbutton:
 				startEditActivity(ParticipantsActivity.class);
@@ -122,7 +133,7 @@ public class WizardNewEventActivity extends SlideActivity implements OnClickList
 				break;
 			case R.id.notnowsurveysbutton:
 				event.setSurveys(null);
-				viewflipper.showNext();
+				showNextPage();
 				break;
 			case R.id.donebutton:
 				saveAndExit();

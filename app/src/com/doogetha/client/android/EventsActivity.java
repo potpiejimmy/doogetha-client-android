@@ -311,8 +311,10 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 	
 	public void onNewIntent(Intent intent) {
     	checkPendingEvent(intent);
-    	showScreen(0, false); // flip to screen 0
-    	refresh(); // force reload
+    	if (pendingEventToOpen > 0) {
+    		showScreen(0, false); // flip to screen 0
+    		refresh(); // force reload
+    	}
 	}
 	
 	protected void openPendingEvent() {

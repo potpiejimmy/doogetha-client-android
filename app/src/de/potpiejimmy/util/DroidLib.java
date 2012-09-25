@@ -67,4 +67,8 @@ public class DroidLib {
 	public static void invokeBrowser(Context context, String url){
 		context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 	}
+	
+	public static void pause(int ms) {
+		try {Thread.sleep(ms);} catch (InterruptedException e) {}
+	}
 }

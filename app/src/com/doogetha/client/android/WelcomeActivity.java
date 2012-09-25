@@ -131,6 +131,7 @@ public class WelcomeActivity extends Activity implements OnClickListener {
 		password = Utils.xorHex(password, logintoken.substring(0, logintoken.indexOf(":")));
 		removeLoginToken();
     	Utils.getApp(this).register(id + ":" + password);
+    	DroidLib.pause(500); // wait a few milliseconds before trying to log on with new credentials
     	startMainView();
 	}
 	

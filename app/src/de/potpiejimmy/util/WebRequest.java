@@ -33,6 +33,8 @@ public class WebRequest implements ResponseHandler<String>
 {
 	private final static String CHAR_ENCODING = "UTF-8";
 	
+	protected final static int SOCKET_TIMEOUT_MS = 30000;
+	
     private Map<String,String> params;
     private Map<String,String> headers;
     private String contentType = null;
@@ -65,7 +67,7 @@ public class WebRequest implements ResponseHandler<String>
         headers = new HashMap<String,String>();
 
         HttpParams httpParams = new BasicHttpParams();
-    	HttpConnectionParams.setSoTimeout(httpParams, 10000);
+    	HttpConnectionParams.setSoTimeout(httpParams, SOCKET_TIMEOUT_MS);
     	
     	SchemeRegistry schemeRegistry = new SchemeRegistry ();
 

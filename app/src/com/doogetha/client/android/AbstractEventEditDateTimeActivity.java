@@ -3,9 +3,7 @@ package com.doogetha.client.android;
 import java.util.Calendar;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -16,22 +14,24 @@ import com.doogetha.client.util.SlideActivity;
 import com.doogetha.client.util.Utils;
 
 import de.letsdoo.server.vo.EventVo;
+import de.potpiejimmy.util.DatePickerDialog;
+import de.potpiejimmy.util.TimePickerDialog;
 
-public abstract class AbstractEventEditDateTimeActivity extends SlideActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public abstract class AbstractEventEditDateTimeActivity extends SlideActivity implements android.app.DatePickerDialog.OnDateSetListener,  android.app.TimePickerDialog.OnTimeSetListener {
 	
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;
-	
-	protected int currentDialogSelection = AlertDialog.BUTTON_NEUTRAL;
 	
 	protected EventVo event = null;
 
 	protected ImageButton editdatetime = null;
 	protected TextView datetimelabel = null;
 	
+	protected DatePickerDialog datePickerDialog = null;
+	protected TimePickerDialog timePickerDialog = null;
+	
     protected void editDatetime()
     {
-    	currentDialogSelection = AlertDialog.BUTTON_NEUTRAL;
     	showDialog(DATE_DIALOG_ID);
     }
     
@@ -43,31 +43,32 @@ public abstract class AbstractEventEditDateTimeActivity extends SlideActivity im
     	
         switch (id) {
         case DATE_DIALOG_ID:
-            DatePickerDialog dpd = new DatePickerDialog(this, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-            dpd.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        	datePickerDialog = DatePickerDialog.newInstance(this, cal);
+        	datePickerDialog.getDialog().setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					currentDialogSelection = AlertDialog.BUTTON_POSITIVE;
+					DatePicker dp = datePickerDialog.getDatePicker();
+					onDateSet(dp, dp.getYear(), dp.getMonth(), dp.getDayOfMonth());
 				}
             });
-            dpd.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (DialogInterface.OnClickListener)null);
-            dpd.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.clear_datetime), new DialogInterface.OnClickListener() {
+        	datePickerDialog.getDialog().setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (DialogInterface.OnClickListener)null);
+        	datePickerDialog.getDialog().setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.clear_datetime), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					currentDialogSelection = AlertDialog.BUTTON_NEGATIVE;
 					event.setEventtime(null);
 					updateUI();
 				}
             });
-            return dpd;
+            return datePickerDialog.getDialog();
             
         case TIME_DIALOG_ID:
-            TimePickerDialog tpd = new TimePickerDialog(this, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
-            tpd.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        	timePickerDialog = TimePickerDialog.newInstance(this, cal);
+        	timePickerDialog.getDialog().setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					currentDialogSelection = AlertDialog.BUTTON_POSITIVE;
+					TimePicker tp = timePickerDialog.getTimePicker();
+					onTimeSet(tp, tp.getCurrentHour(), tp.getCurrentMinute());
 				}
             });
-            tpd.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (DialogInterface.OnClickListener)null);
-            tpd.setButton(AlertDialog.BUTTON_NEGATIVE, "Keine Uhrzeit", new DialogInterface.OnClickListener() {
+        	timePickerDialog.getDialog().setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (DialogInterface.OnClickListener)null);
+        	timePickerDialog.getDialog().setButton(AlertDialog.BUTTON_NEGATIVE, "Keine Uhrzeit", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					Calendar cal = Calendar.getInstance();
 					cal.setTimeInMillis(event.getEventtime());
@@ -77,7 +78,7 @@ public abstract class AbstractEventEditDateTimeActivity extends SlideActivity im
 					updateUI();
 				}
             });
-            return tpd;
+            return timePickerDialog.getDialog();
         }
         return null;
     }
@@ -87,7 +88,6 @@ public abstract class AbstractEventEditDateTimeActivity extends SlideActivity im
     }
     
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		if (currentDialogSelection != AlertDialog.BUTTON_POSITIVE) return;
 		Calendar cal = Calendar.getInstance();
     	if (event.getEventtime() != null) {
     		// keep time setting if we already have one
@@ -102,12 +102,10 @@ public abstract class AbstractEventEditDateTimeActivity extends SlideActivity im
 		cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 		this.event.setEventtime(cal.getTimeInMillis());
 		updateUI();
-    	currentDialogSelection = AlertDialog.BUTTON_NEUTRAL;
 		showDialog(TIME_DIALOG_ID);
 	}
 
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-		if (currentDialogSelection != AlertDialog.BUTTON_POSITIVE) return;
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(event.getEventtime());
 		cal.set(Calendar.HOUR_OF_DAY, hourOfDay);

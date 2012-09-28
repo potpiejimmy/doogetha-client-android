@@ -137,6 +137,7 @@ public class Letsdoo extends Application {
 	public void unregister() {
 		removeAuthtoken();
 		removeSession();
+		unregisterGcm();
 	}
 	
 	public String getEmail() {
@@ -158,6 +159,11 @@ public class Letsdoo extends Application {
 		}
 	}
 
+	protected void unregisterGcm() {
+		// do not really unregister, just set server sync false:
+		GCMRegistrar.setRegisteredOnServer(this, false);
+	}
+	
 	public boolean isGcmServerSynced() {
 		return GCMRegistrar.isRegisteredOnServer(getApplicationContext());
 	}

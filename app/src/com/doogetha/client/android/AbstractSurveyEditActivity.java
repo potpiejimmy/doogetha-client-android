@@ -4,19 +4,23 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.DialogInterface;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
 import com.doogetha.client.util.SlideActivity;
+
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
+import de.potpiejimmy.util.DatePickerDialog;
 import de.potpiejimmy.util.DroidLib;
+import de.potpiejimmy.util.TimePickerDialog;
 
-public abstract class AbstractSurveyEditActivity extends SlideActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public abstract class AbstractSurveyEditActivity extends SlideActivity implements OnDateSetListener, OnTimeSetListener {
 	protected static final int DATE_DIALOG_ID = 0;
 	protected static final int TIME_DIALOG_ID = 1;
 	
@@ -28,10 +32,10 @@ public abstract class AbstractSurveyEditActivity extends SlideActivity implement
     	
         switch (id) {
         case DATE_DIALOG_ID:
-        	return new DatePickerDialog(this, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        	return new DatePickerDialog(this, this, cal).getDialog();
             
         case TIME_DIALOG_ID:
-        	return new TimePickerDialog(this, this, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+        	return new TimePickerDialog(this, this, cal, true).getDialog();
         }
         return null;
     }
@@ -48,13 +52,13 @@ public abstract class AbstractSurveyEditActivity extends SlideActivity implement
 		final EditText input = new EditText(this);
 		input.setText(text);
 		new AlertDialog.Builder(this)
-	    .setMessage("Auswahlmšglichkeit eingeben:")
+	    .setMessage(R.string.enter_survey_item)
 	    .setView(input)
-	    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+	    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int whichButton) {
 	        	finishEditSurveyItem(input.getText().toString().trim());
 	        }
-	    }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+	    }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int whichButton) {
 	        }
 	    }).show();

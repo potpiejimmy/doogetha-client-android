@@ -43,31 +43,18 @@ public abstract class AbstractEventEditDateTimeActivity extends SlideActivity im
     	
         switch (id) {
         case DATE_DIALOG_ID:
-        	datePickerDialog = DatePickerDialog.newInstance(this, cal);
-        	datePickerDialog.getDialog().setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					DatePicker dp = datePickerDialog.getDatePicker();
-					onDateSet(dp, dp.getYear(), dp.getMonth(), dp.getDayOfMonth());
-				}
-            });
-        	datePickerDialog.getDialog().setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (DialogInterface.OnClickListener)null);
+        	datePickerDialog = new DatePickerDialog(this, this, cal);
         	datePickerDialog.getDialog().setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.clear_datetime), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					event.setEventtime(null);
 					updateUI();
 				}
             });
+        	datePickerDialog.getDialog().setTitle("Datum");
             return datePickerDialog.getDialog();
             
         case TIME_DIALOG_ID:
-        	timePickerDialog = TimePickerDialog.newInstance(this, cal);
-        	timePickerDialog.getDialog().setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					TimePicker tp = timePickerDialog.getTimePicker();
-					onTimeSet(tp, tp.getCurrentHour(), tp.getCurrentMinute());
-				}
-            });
-        	timePickerDialog.getDialog().setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.cancel), (DialogInterface.OnClickListener)null);
+        	timePickerDialog = new TimePickerDialog(this, this, cal, true);
         	timePickerDialog.getDialog().setButton(AlertDialog.BUTTON_NEGATIVE, "Keine Uhrzeit", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					Calendar cal = Calendar.getInstance();
@@ -78,6 +65,7 @@ public abstract class AbstractEventEditDateTimeActivity extends SlideActivity im
 					updateUI();
 				}
             });
+        	timePickerDialog.getDialog().setTitle("Uhrzeit");
             return timePickerDialog.getDialog();
         }
         return null;

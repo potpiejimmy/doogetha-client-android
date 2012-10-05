@@ -23,6 +23,8 @@ import de.potpiejimmy.util.AsyncUITask;
 public class EventConfirmActivity extends SlideActivity implements OnClickListener {
 
 	private EventVo event = null;
+	
+	protected View commentsPreviewer = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,11 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 		} else {
 			findViewById(R.id.eventconfirmsurveyresults).setVisibility(View.GONE);
 		}
+		
+		// comments previewer:
+		commentsPreviewer = findViewById(R.id.comments_previewer);
+		commentsPreviewer.setClickable(true);
+		commentsPreviewer.setOnClickListener(this);
 
 		View confirmbuttonpanel = findViewById(R.id.confirmbuttonpanel);
 		Button confirmbutton1 = (Button) findViewById(R.id.eventconfirmbutton1);
@@ -119,6 +126,10 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			case R.id.eventconfirmbutton2:
 				confirm(2);
 				break;
+			case R.id.comments_previewer:
+				v.setBackgroundResource(android.R.drawable.list_selector_background);
+				showComments();
+				break;
 			default:
 				// otherwise, a survey item was clicked:
 				if (v.getTag() instanceof SurveyVo) {
@@ -128,10 +139,18 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 		}
 	}
 	
+	protected void showComments() {
+		Intent i = new Intent(getApplicationContext(), CommentsActivity.class);
+		i.putExtra("event", event);
+    	this.setSlideInAnim(R.anim.slide_in_bottom);
+		startActivityForResult(i, 0);
+	}
+	
 	protected void showSurveyResults(SurveyVo survey) {
 		Intent i = new Intent(getApplicationContext(), SurveyConfirmActivity.class);
 		i.putExtra("event", event);
 		i.putExtra("survey", survey);
+    	this.setSlideInAnim(R.anim.slide_in_right);
 		startActivityForResult(i, 0);
 	}
 	

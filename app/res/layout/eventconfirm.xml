@@ -7,7 +7,7 @@
   android:background="@color/doogetha_bg"
   >
     
-    <ScrollView android:layout_width="match_parent" android:layout_height="fill_parent" android:id="@+id/scrollView1">
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/scrollView1">
     <LinearLayout android:id="@+id/linearLayout6" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
         
     <com.doogetha.client.util.TitleBar android:id="@+id/activityconfirmtitle"
@@ -73,5 +73,14 @@
 
 	</LinearLayout>
     </ScrollView>
+
+    <LinearLayout android:id="@+id/linearLayout3" 
+                  android:layout_width="match_parent"
+                  android:layout_height="3dip"
+                  android:background="@color/doogetha_titlebar">
+    </LinearLayout>
+
+    <include android:id="@+id/comments_previewer"
+             layout="@layout/comments_previewer"/>
 
 </LinearLayout>

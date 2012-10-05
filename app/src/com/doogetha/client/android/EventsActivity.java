@@ -394,12 +394,12 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     		openPendingEvent();
     	} else {
 	    	checkGcmRegistration();
-			
-			if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
-				this.currentEventsList.onRefreshComplete();
-			else if (currentScreen == SCREEN_MY_ACTIVITIES)
-				this.myEventsList.onRefreshComplete();
     	}
+
+    	if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
+			this.currentEventsList.onRefreshComplete();
+		else if (currentScreen == SCREEN_MY_ACTIVITIES)
+			this.myEventsList.onRefreshComplete();
     }
     
     protected void checkGcmRegistration()

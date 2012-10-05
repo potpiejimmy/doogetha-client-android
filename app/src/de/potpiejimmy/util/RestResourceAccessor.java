@@ -39,8 +39,8 @@ public class RestResourceAccessor<CT, ET>
 	public RestResourceAccessor(String baseUrl, Class<CT> collectionType, Class<ET> entityType)
 	{
 		if (baseUrl == null) throw new IllegalArgumentException("baseUrl is null");
-		
-		this.baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+
+		this.setBaseUrl(baseUrl);
 		this.requester = new JsonWebRequest();
 		
 		this.collectionType = collectionType;
@@ -58,6 +58,16 @@ public class RestResourceAccessor<CT, ET>
 		return this.requester;
 	}
 	
+	public void setBaseUrl(String baseUrl)
+	{
+		this.baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+	}
+
+	public String getBaseUrl()
+	{
+		return baseUrl;
+	}
+
 	public CT getItems() throws Exception
 	{
 		return requester.getObject(baseUrl, collectionType);

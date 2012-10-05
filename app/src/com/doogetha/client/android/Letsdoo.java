@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
+import com.doogetha.client.android.rest.CommentsAccessor;
 import com.doogetha.client.android.rest.DevicesAccessor;
 import com.doogetha.client.android.rest.EventsAccessor;
 import com.doogetha.client.android.rest.LoginAccessor;
@@ -21,10 +22,10 @@ import de.letsdoo.server.vo.UserVo;
 public class Letsdoo extends Application {
 	
 	public final static String PROTO    = "http://";
-	public final static String PROTOSEC = "https://";
+	public final static String PROTOSEC = "http://";
 	
-	public final static String URI = "www.doogetha.com/beta/res/";
-	//public final static String URI = "192.168.178.21:8080/beta/res/";
+	//public final static String URI = "www.doogetha.com/beta/res/";
+	public final static String URI = "192.168.178.21:8080/beta/res/";
 	//public final static String URI = "192.168.100.22:8089/beta/res/";
 	//public final static String URI = "172.18.119.203:8089/beta/res/";
 	
@@ -36,6 +37,7 @@ public class Letsdoo extends Application {
 	private SurveysAccessor surveysAccessor = null;
 	private UsersAccessor usersAccessor = null;
 	private DevicesAccessor devicesAccessor = null;
+	private CommentsAccessor commentsAccessor = null;
 	private RegisterAccessor registerAccessor = null;
 	private LoginAccessor loginAccessor = null;
 	private VersionAccessor versionAccessor = null;
@@ -53,6 +55,7 @@ public class Letsdoo extends Application {
 		surveysAccessor = new SurveysAccessor(PROTOSEC + URI + "surveys");
 		usersAccessor = new UsersAccessor(PROTOSEC + URI + "users");
 		devicesAccessor = new DevicesAccessor(PROTOSEC + URI + "devices/1"); // 1 = Google Device
+		commentsAccessor = new CommentsAccessor(PROTOSEC + URI + "comments");
 		registerAccessor = new RegisterAccessor(PROTOSEC + URI + "register");
 		loginAccessor = new LoginAccessor(PROTOSEC + URI + "login");
 		versionAccessor = new VersionAccessor(PROTO + URI + "version");
@@ -85,6 +88,10 @@ public class Letsdoo extends Application {
 	
 	public DevicesAccessor getDevicesAccessor() {
 		return devicesAccessor;
+	}
+	
+	public CommentsAccessor getCommentsAccessor() {
+		return commentsAccessor;
 	}
 	
 	public LoginAccessor getLoginAccessor() {
@@ -200,6 +207,7 @@ public class Letsdoo extends Application {
     	surveysAccessor.getWebRequest().removeHeader("Authorization");
     	usersAccessor.getWebRequest().removeHeader("Authorization");
     	devicesAccessor.getWebRequest().removeHeader("Authorization");
+    	commentsAccessor.getWebRequest().removeHeader("Authorization");
 	}
 	
 	public void newSession(String sessionkey) {
@@ -207,6 +215,7 @@ public class Letsdoo extends Application {
     	surveysAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
     	usersAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
     	devicesAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
+    	commentsAccessor.getWebRequest().setHeader("Authorization", "Basic "+sessionkey);
 	}
 	
 	public boolean hasSession() {

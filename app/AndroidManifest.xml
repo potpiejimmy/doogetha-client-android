@@ -91,7 +91,11 @@
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
-                
+        <activity android:name=".CommentsActivity"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        
     </application>
 
 </manifest>

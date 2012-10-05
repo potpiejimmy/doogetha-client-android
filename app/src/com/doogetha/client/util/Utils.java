@@ -7,8 +7,11 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.widget.ImageView;
+
 import com.doogetha.client.android.Letsdoo;
 import com.doogetha.client.android.R;
+
+import de.letsdoo.server.vo.EventCommentVo;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
@@ -69,6 +72,12 @@ public class Utils {
     		stb.append(TIME_FORMAT.format(cal.getTime()));
     	}
     	return stb.toString();
+    }
+    
+    public static String formatCommentSubline(Letsdoo app, EventCommentVo comment) {
+		String userName = ContactsUtils.userDisplayName(app, comment.getUser());
+		String timeLabel = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(comment.getCreated());
+		return userName + " (" + timeLabel + ")";
     }
     
     public static String formatSurveyItem(SurveyVo survey, SurveyItemVo item) {

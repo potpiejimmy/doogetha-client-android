@@ -22,10 +22,10 @@ import de.letsdoo.server.vo.UserVo;
 public class Letsdoo extends Application {
 	
 	public final static String PROTO    = "http://";
-	public final static String PROTOSEC = "http://";
+	public final static String PROTOSEC = "https://";
 	
-	//public final static String URI = "www.doogetha.com/beta/res/";
-	public final static String URI = "192.168.178.21:8080/beta/res/";
+	public final static String URI = "www.doogetha.com/beta/res/";
+	//public final static String URI = "192.168.178.21:8080/beta/res/";
 	//public final static String URI = "192.168.100.22:8089/beta/res/";
 	//public final static String URI = "172.18.119.203:8089/beta/res/";
 	

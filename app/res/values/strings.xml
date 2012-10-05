@@ -54,6 +54,8 @@
     <string name="email_address_invalid">Ungültige E-Mail-Adresse</string>
     <string name="event_successfully_created">Die Aktivität wurde erfolgreich angelegt.</string>
     <string name="enter_survey_item">Auswahlmöglichkeit eingeben:</string>
+    <string name="comment_one">\u2191 1 Kommentar \u2191</string>
+    <string name="comments_n">\u2191 {0} Kommentare \u2191</string>
     <!-- New Activity Wizard -->
     <string name="newactwiz_base_title">Neue Aktivität erstellen</string>
     <string name="newactwiz_base_text">Doogetha wird dich nun Schritt für Schritt durch die Erstellung einer neuen Aktivität führen.\n\nFür die Aktivität kannst du zunächst einen Titel und optional eine kurze Beschreibung eingeben.</string>

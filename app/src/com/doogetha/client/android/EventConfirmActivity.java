@@ -1,5 +1,8 @@
 package com.doogetha.client.android;
 
+import java.text.MessageFormat;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,10 +13,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.doogetha.client.android.rest.EventsAccessor;
 import com.doogetha.client.util.ContactsUtils;
 import com.doogetha.client.util.SlideActivity;
 import com.doogetha.client.util.Utils;
+
+import de.letsdoo.server.vo.EventCommentVo;
+import de.letsdoo.server.vo.EventCommentsVo;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemVo;
 import de.letsdoo.server.vo.SurveyVo;
@@ -25,6 +32,8 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 	private EventVo event = null;
 	
 	protected View commentsPreviewer = null;
+	
+	private boolean dirty = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +91,7 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 		commentsPreviewer = findViewById(R.id.comments_previewer);
 		commentsPreviewer.setClickable(true);
 		commentsPreviewer.setOnClickListener(this);
+		updateCommentsPreviewer();
 
 		View confirmbuttonpanel = findViewById(R.id.confirmbuttonpanel);
 		Button confirmbutton1 = (Button) findViewById(R.id.eventconfirmbutton1);
@@ -108,7 +118,37 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			Utils.setIconForConfirmState(icon, user);
 			list.addView(vi);
 		}
-
+    }
+    
+    public void onBackPressed()
+    {
+    	// do we need to update the main view (because of updated comments?)
+    	if (dirty)
+    		finishOk();
+    	else
+    		super.onBackPressed();
+    }
+    
+    protected void updateCommentsPreviewer() {
+		TextView headLine = (TextView) findViewById(R.id.comments_previewer_headline);
+		TextView label = (TextView) findViewById(R.id.comments_previewer_label);
+		TextView sublabel = (TextView) findViewById(R.id.comments_previewer_sublabel);
+		
+		EventCommentsVo vo = event.getComments();
+		if (vo.getCount() == 1)
+			headLine.setText(R.string.comment_one);
+		else
+			headLine.setText(MessageFormat.format(getString(R.string.comments_n), vo.getCount()));
+		
+		List<EventCommentVo> comments = vo.getEventComments();
+		EventCommentVo displayComment = (comments == null || comments.size() == 0) ? null : comments.get(0); /* display the newest comment */
+		if (displayComment == null) {
+			label.setVisibility(View.GONE);
+			sublabel.setText("Kommentieren...");
+		} else {
+			label.setText(displayComment.getComment());
+			sublabel.setText(Utils.formatCommentSubline(Utils.getApp(this), displayComment));
+		}
     }
 
     protected void addHorizontalSeparator(ViewGroup view) {
@@ -160,6 +200,16 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
     		// when returning with RESULT_OK from SurveyConfirmView,
     		// leave this view so everything is refreshed:
     		finishOk();
+    	}
+    	else if (resultCode == RESULT_FIRST_USER)
+    	{
+    		// set in CommentsActivity to return the current commments:
+    		EventCommentsVo comments = (EventCommentsVo)data.getExtras().get("comments");
+    		if (comments != null) {
+    			dirty = true;
+    			event.setComments(comments);
+    			updateCommentsPreviewer();
+    		}
     	}
     }
     

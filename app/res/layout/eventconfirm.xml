@@ -74,7 +74,7 @@
 	</LinearLayout>
     </ScrollView>
 
-    <LinearLayout android:id="@+id/linearLayout3" 
+    <LinearLayout android:id="@+id/horizontal_line_comments" 
                   android:layout_width="match_parent"
                   android:layout_height="3dip"
                   android:background="@color/doogetha_titlebar">

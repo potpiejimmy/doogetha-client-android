@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -23,9 +24,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.doogetha.client.android.rest.SurveysAccessor;
+import com.doogetha.client.util.CommentsPreviewer;
 import com.doogetha.client.util.ContactsUtils;
 import com.doogetha.client.util.Utils;
 import com.doogetha.client.util.VerticalLabelView;
+
+import de.letsdoo.server.vo.EventCommentsVo;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemUserVo;
 import de.letsdoo.server.vo.SurveyItemVo;
@@ -45,6 +49,9 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	private UserVo myself = null;
 	
 	private boolean myOwn = false;
+	private boolean dirty = false;
+	
+	protected CommentsPreviewer commentsPreviewer = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,8 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
         
         this.myOwn = event.getOwner().getId().equals(myself.getId());
         
+		this.commentsPreviewer = new CommentsPreviewer(this, event);
+
 		((TextView)findViewById(R.id.surveyname)).setText(survey.getName());
         recreateSurveyView();
         
@@ -276,6 +285,28 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	surveyclosedlabel.setVisibility(View.VISIBLE);
     }
     
+    public void onBackPressed()
+    {
+    	// do we need to update the main view (because of updated comments?)
+    	if (dirty)
+    		finishDirty();
+    	else
+    		super.onBackPressed();
+    }
+    
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (resultCode == RESULT_FIRST_USER)
+    	{
+    		// set in CommentsActivity to return the current commments:
+    		EventCommentsVo comments = (EventCommentsVo)data.getExtras().get("comments");
+    		if (comments != null) {
+    			dirty = true;
+    			event.setComments(comments);
+    			commentsPreviewer.update();
+    		}
+    	}
+    }
+    
 	public void onClick(View v) {
 		if (v.getId() < 0) {
 			for (int i=0; i<confirmViews.size(); i++) {
@@ -319,7 +350,19 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     
     protected void finishCancel()
     {
-    	setResult(RESULT_CANCELED);
+    	if (dirty)
+    		finishDirty();
+    	else {
+    		setResult(RESULT_CANCELED);
+    		finish();
+    	}
+    }
+
+    protected void finishDirty()
+    {
+    	Intent returnValue = new Intent();
+    	returnValue.putExtra("comments", event.getComments());
+    	setResult(RESULT_FIRST_USER, returnValue);
     	finish();
     }
     

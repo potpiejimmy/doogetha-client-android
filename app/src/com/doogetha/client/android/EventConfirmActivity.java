@@ -1,8 +1,5 @@
 package com.doogetha.client.android;
 
-import java.text.MessageFormat;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,11 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doogetha.client.android.rest.EventsAccessor;
+import com.doogetha.client.util.CommentsPreviewer;
 import com.doogetha.client.util.ContactsUtils;
 import com.doogetha.client.util.SlideActivity;
 import com.doogetha.client.util.Utils;
 
-import de.letsdoo.server.vo.EventCommentVo;
 import de.letsdoo.server.vo.EventCommentsVo;
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.SurveyItemVo;
@@ -31,7 +28,7 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 
 	private EventVo event = null;
 	
-	protected View commentsPreviewer = null;
+	protected CommentsPreviewer commentsPreviewer = null;
 	
 	private boolean dirty = false;
 
@@ -87,11 +84,7 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			findViewById(R.id.eventconfirmsurveyresults).setVisibility(View.GONE);
 		}
 		
-		// comments previewer:
-		commentsPreviewer = findViewById(R.id.comments_previewer);
-		commentsPreviewer.setClickable(true);
-		commentsPreviewer.setOnClickListener(this);
-		updateCommentsPreviewer();
+		this.commentsPreviewer = new CommentsPreviewer(this, event);
 
 		View confirmbuttonpanel = findViewById(R.id.confirmbuttonpanel);
 		Button confirmbutton1 = (Button) findViewById(R.id.eventconfirmbutton1);
@@ -129,28 +122,6 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
     		super.onBackPressed();
     }
     
-    protected void updateCommentsPreviewer() {
-		TextView headLine = (TextView) findViewById(R.id.comments_previewer_headline);
-		TextView label = (TextView) findViewById(R.id.comments_previewer_label);
-		TextView sublabel = (TextView) findViewById(R.id.comments_previewer_sublabel);
-		
-		EventCommentsVo vo = event.getComments();
-		if (vo.getCount() == 1)
-			headLine.setText(R.string.comment_one);
-		else
-			headLine.setText(MessageFormat.format(getString(R.string.comments_n), vo.getCount()));
-		
-		List<EventCommentVo> comments = vo.getEventComments();
-		EventCommentVo displayComment = (comments == null || comments.size() == 0) ? null : comments.get(0); /* display the newest comment */
-		if (displayComment == null) {
-			label.setVisibility(View.GONE);
-			sublabel.setText("Kommentieren...");
-		} else {
-			label.setText(displayComment.getComment());
-			sublabel.setText(Utils.formatCommentSubline(Utils.getApp(this), displayComment));
-		}
-    }
-
     protected void addHorizontalSeparator(ViewGroup view) {
 		View ruler = new View(getApplicationContext());
 		ruler.setBackgroundColor(0xFF000000);
@@ -166,10 +137,6 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			case R.id.eventconfirmbutton2:
 				confirm(2);
 				break;
-			case R.id.comments_previewer:
-				v.setBackgroundResource(android.R.drawable.list_selector_background);
-				showComments();
-				break;
 			default:
 				// otherwise, a survey item was clicked:
 				if (v.getTag() instanceof SurveyVo) {
@@ -177,13 +144,6 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 					showSurveyResults((SurveyVo)v.getTag());
 				}
 		}
-	}
-	
-	protected void showComments() {
-		Intent i = new Intent(getApplicationContext(), CommentsActivity.class);
-		i.putExtra("event", event);
-    	this.setSlideInAnim(R.anim.slide_in_bottom);
-		startActivityForResult(i, 0);
 	}
 	
 	protected void showSurveyResults(SurveyVo survey) {
@@ -208,7 +168,7 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
     		if (comments != null) {
     			dirty = true;
     			event.setComments(comments);
-    			updateCommentsPreviewer();
+    			commentsPreviewer.update();
     		}
     	}
     }

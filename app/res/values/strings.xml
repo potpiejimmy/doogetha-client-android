@@ -47,6 +47,8 @@
     <string name="notify_surveyconfirm_text">{0} hat abgestimmt.</string>
     <string name="notify_surveyclosed_tickertext">Abstimmung geschlossen</string>
     <string name="notify_surveyclosed_text">Die Abstimmung wurde geschlossen.</string>
+    <string name="notify_eventcommented_tickertext">{0} hat kommentiert</string>
+    <string name="notify_eventcommented_text">{0}: {1}</string>
     <string name="clear_datetime">Datum löschen</string>
     <string name="please_enter_activity_name">Bitte gib einen Namen für die Aktivität ein.</string>
     <string name="already_added">Bereits hinzugefügt</string>

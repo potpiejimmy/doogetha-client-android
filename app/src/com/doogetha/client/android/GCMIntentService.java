@@ -121,8 +121,12 @@ public class GCMIntentService extends GCMBaseIntentService {
 	}
 
 	protected void onMessageEventCommented(Intent intent, String userName, String eventName, int eventId, String comment) {
-		// XXX TODO:
-		sendNotification(eventId, userName, userName, comment);
+		String ticker = getString(R.string.notify_eventcommented_tickertext);
+		String title = eventName;
+		String text = getString(R.string.notify_eventcommented_text);
+		ticker = MessageFormat.format(ticker, userName);
+		text = MessageFormat.format(text, userName, comment);
+		sendNotification(eventId, ticker, title, text);
 	}
 	
 	protected void sendNotification(int eventId, String ticker, String title, String text) {

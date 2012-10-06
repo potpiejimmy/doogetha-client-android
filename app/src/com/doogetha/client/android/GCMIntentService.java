@@ -64,6 +64,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 			onMessageSurveyConfirmed(intent, userName, eventName, eventId, surveyName);
 		else if ("surveyclosed".equals(type))
 			onMessageSurveyClosed(intent, userName, eventName, eventId, surveyName);
+		else if ("eventcommented".equals(type))
+			onMessageEventCommented(intent, userName, eventName, eventId, intent.getExtras().getString("comment"));
 	}		
 	
 	@Override
@@ -118,6 +120,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 		sendNotification(eventId, ticker, title, text);
 	}
 
+	protected void onMessageEventCommented(Intent intent, String userName, String eventName, int eventId, String comment) {
+		// XXX TODO:
+		sendNotification(eventId, userName, userName, comment);
+	}
+	
 	protected void sendNotification(int eventId, String ticker, String title, String text) {
 		NotificationManager notificationManager =
 			    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

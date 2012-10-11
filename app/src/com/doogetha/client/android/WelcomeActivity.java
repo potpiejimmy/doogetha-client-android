@@ -59,7 +59,9 @@ public class WelcomeActivity extends Activity implements OnClickListener {
     }
     
     protected void startMainView() {
-    	startActivity(new Intent(getApplicationContext(), EventsActivity.class));
+    	Intent i = new Intent(getApplicationContext(), StartupActivity.class);
+    	i.putExtras(getIntent());
+    	startActivity(i);
     }
     
 	public void onClick(View view) {

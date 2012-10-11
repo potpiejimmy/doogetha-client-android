@@ -138,7 +138,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		//notification.defaults |= Notification.DEFAULT_VIBRATE;  // requires VIBRATE permission
 		notification.defaults |= Notification.DEFAULT_LIGHTS;
 		notification.flags    |= Notification.FLAG_AUTO_CANCEL;
-		Intent notificationIntent =  new Intent(this, EventsActivity.class);
+		Intent notificationIntent =  new Intent(this, WelcomeActivity.class);
 		notificationIntent.putExtra("eventId", eventId);
 		int notificationId = (int)System.currentTimeMillis();
 		PendingIntent contentIntent = PendingIntent.getActivity(this, notificationId, notificationIntent, 0);

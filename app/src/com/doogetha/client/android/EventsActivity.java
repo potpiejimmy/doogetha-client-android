@@ -1,17 +1,13 @@
 package com.doogetha.client.android;
 
-import java.net.ConnectException;
-import java.net.SocketException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -38,7 +34,6 @@ import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.EventsVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
-import de.potpiejimmy.util.DroidLib;
 import de.potpiejimmy.util.PullRefreshableListView;
 import de.potpiejimmy.util.PullRefreshableListView.OnRefreshListener;
 
@@ -56,8 +51,6 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 	private Button[] screenButtons = new Button[NUMBER_OF_SCREENS];
 	
 	private DataLoader dataLoader = null;
-	
-	private boolean versionChecked = false;
 	
 	private PullRefreshableListView currentEventsList = null;
 	private PullRefreshableListView myEventsList = null;
@@ -128,7 +121,7 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     	showScreen(0, false);
     	updateUI();
     	
-		startSession();
+		refresh();
    }
     
     protected void showScreen(int index, boolean refresh) {
@@ -263,22 +256,11 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     	startActivityForResult(intent, 0);
     }
     
-    protected void startSession()
-    {
-    	new SessionLoginTask(Utils.getApp(this).getAuthtoken()).go("Sitzung wird gestartet...");
-    }
-    
-    protected void sessionCreateSuccess(String sessionkey)
-    {
-    	Utils.getApp(this).newSession(sessionkey);
-    	refresh();
-    }
-    
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (resultCode == RESULT_OK)
     	{
-    		if (!Utils.getApp(this).hasSession()) startSession();
-    		else refresh();
+    		//if (!Utils.getApp(this).hasSession()) startSession();
+    		/*else*/ refresh();
     	} else if (resultCode == RESULT_FIRST_USER) {
     		// set when unregistered in settings view - quit:
     		finish();
@@ -357,21 +339,6 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     	startActivityForResult(intent, 0);
     }
     
-    protected void checkVersion()
-    {
-    	versionChecked = true;
-    	new VersionCheckTask().go(getString(R.string.process_checkversion));
-    }
-    
-    protected void newerVersionExists()
-    {
-    	DroidLib.alert(this, getString(R.string.newversionavailable), "Jetzt herunterladen", new android.content.DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int i) {
-				DroidLib.invokeBrowser(EventsActivity.this, Letsdoo.DOWNLOADURL);
-			}
-    	});
-    }
-    
     protected EventVo meFirst(EventVo e) {
     	int found = -1;
     	UserVo[] users = e.getUsers();
@@ -392,29 +359,14 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     	if (this.pendingEventToOpen > 0) {
     		// is there a pending event that should be opened?
     		openPendingEvent();
-    	} else {
-	    	checkGcmRegistration();
     	}
-
+    	
     	if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
 			this.currentEventsList.onRefreshComplete();
 		else if (currentScreen == SCREEN_MY_ACTIVITIES)
 			this.myEventsList.onRefreshComplete();
     }
     
-    protected void checkGcmRegistration()
-    {
-    	if (!Utils.getApp(this).isGcmServerSynced())
-    		new DeviceRegisterTask().go("Registriere Messaging...");
-    	else
-    		doneGcmCheck();
-    }
-    
-    protected void doneGcmCheck()
-    {
-		if (!versionChecked) checkVersion();
-    }
-	
 	protected class DataLoader extends AsyncUITask<EventsVo>
 	{
 		public DataLoader() { super(EventsActivity.this); }
@@ -454,41 +406,6 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		}
 	}
 	
-	protected class SessionLoginTask extends AsyncUITask<String>
-	{
-		private String authkey = null;
-		
-		public SessionLoginTask(String authkey) 
-		{
-			super(EventsActivity.this);
-			this.authkey = authkey;
-		}
-		
-		public String doTask() throws Throwable
-		{
-			return Utils.getApp(EventsActivity.this).getLoginAccessor().insertItemWithResult(authkey);
-		}
-		
-		public void doneOk(String sessioncredentials)
-		{
-	    	String userid = sessioncredentials.substring(0, sessioncredentials.indexOf(":"));
-	    	String password = sessioncredentials.substring(sessioncredentials.indexOf(":")+1);
-	    	String sessionkey = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
-	    	sessionCreateSuccess(sessionkey);
-		}
-		
-		public void doneFail(Throwable throwable) 
-		{
-			if (throwable instanceof ConnectException ||
-				throwable instanceof SocketException) {
-				DroidLib.alert(EventsActivity.this, getString(R.string.servernotavailable));
-			} else {
-				DroidLib.alert(EventsActivity.this, "Die Anmeldung ist fehlgeschlagen: "+throwable);
-				if (!versionChecked) checkVersion();
-			}
-		}
-	}
-	
 	protected class Deleter extends AsyncUITask<String>
 	{
 		private EventVo event = null;
@@ -514,61 +431,6 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		public void doneFail(Throwable throwable) 
 		{
     		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	protected class VersionCheckTask extends AsyncUITask<String>
-	{
-		public VersionCheckTask() 
-		{
-			super(EventsActivity.this);
-		}
-		
-		public String doTask() throws Throwable
-		{
-			return Utils.getApp(EventsActivity.this).getVersionAccessor().getItems();
-		}
-		
-		public void doneOk(String result)
-		{
-			if (result == null) return; // could not fetch current version, ignore
-			try {
-				int currentVersion = Integer.parseInt(result);
-				if (currentVersion > Utils.getApp(EventsActivity.this).getVersionCode())
-					newerVersionExists();
-			} catch (NumberFormatException nfe) {
-				// no valid version value received, just ignore and do nothing
-			}
-		}
-		
-		public void doneFail(Throwable throwable) 
-		{
-    		// just ignore
-		}
-	}
-	
-	protected class DeviceRegisterTask extends AsyncUITask<String>
-	{
-		public DeviceRegisterTask() 
-		{
-			super(EventsActivity.this);
-		}
-		
-		public String doTask() throws Throwable
-		{
-			Utils.getApp(EventsActivity.this).gcmServerSync();
-			return null;
-		}
-		
-		public void doneOk(String result)
-		{
-			doneGcmCheck();
-		}
-		
-		public void doneFail(Throwable throwable) 
-		{
-    		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
-			doneGcmCheck();
 		}
 	}
 }

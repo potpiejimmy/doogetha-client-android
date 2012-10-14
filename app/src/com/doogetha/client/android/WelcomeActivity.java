@@ -28,13 +28,14 @@ public class WelcomeActivity extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.welcome);
         
         if (Utils.getApp(this).isRegistered()) {
         	// already registered? proceed to main view
         	startMainView();
         	return;
         }
+
+        this.setContentView(R.layout.welcome);
         
     	registerbutton = (Button) findViewById(R.id.registerbutton);
     	continuebutton = (Button) findViewById(R.id.continuebutton);

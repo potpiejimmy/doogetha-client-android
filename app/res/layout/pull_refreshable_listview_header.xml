@@ -3,7 +3,7 @@
     	              android:layout_width="match_parent"
     	              android:layout_height="0px"
 	                  android:gravity="bottom"
-	                  android:background="#222">
+	                  android:background="@color/doogetha_bg">
 
     <RelativeLayout android:id="@+id/header"
     	              android:layout_width="match_parent"
@@ -34,7 +34,7 @@
 	                 android:layout_centerVertical="true"
     	             android:textAppearance="?android:attr/textAppearanceMedium"
     	             android:textStyle="normal"
-    	             android:textColor="@android:color/white"/>
+    	             android:textColor="@android:color/black"/>
         
         </RelativeLayout>
 

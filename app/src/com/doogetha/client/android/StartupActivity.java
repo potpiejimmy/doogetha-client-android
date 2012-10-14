@@ -25,14 +25,17 @@ public class StartupActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Utils.getApp(this).hasSession()) {
+        	startMainView();
+        	return;
+        }
+        
         this.setContentView(R.layout.startup);
         
         this.label = (TextView)findViewById(R.id.startupLabel);
         
-        if (Utils.getApp(this).hasSession())
-        	startMainView();
-        else 
-        	startSession();
+        startSession();
     }
 
     protected void startSession()
@@ -66,12 +69,12 @@ public class StartupActivity extends Activity
     
     protected void doneCheckVersion()
     {
+    	label.setText("Starte Doogetha...");
     	startMainView();
     }
     
     protected void startMainView()
     {
-    	label.setText("Starte Doogetha...");
     	Intent i = new Intent(getApplicationContext(), EventsActivity.class);
     	i.putExtras(getIntent());
     	startActivity(i);

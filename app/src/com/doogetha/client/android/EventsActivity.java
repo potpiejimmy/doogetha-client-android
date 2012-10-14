@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,6 +55,8 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 	
 	private PullRefreshableListView currentEventsList = null;
 	private PullRefreshableListView myEventsList = null;
+	
+	private Dialog screenLock = null;
 	
 	private int currentScreen = 0;
 	
@@ -113,6 +116,8 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 			}
     	};
     	
+    	this.screenLock = new Dialog(this, android.R.style.Theme_Panel);
+
     	setupListView(currentEventsList);
     	setupListView(myEventsList);
     	
@@ -234,11 +239,15 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 	
     protected void refresh()
     {
-    	refresh(true);
+    	refresh(false);
     }
     
     protected void refresh(boolean showDialog)
     {
+    	if (!showDialog) {
+    		if (!getCurrentListView().isRefreshing()) getCurrentListView().setRefreshing();
+    		screenLock.show();
+    	}
     	dataLoader.go(getString(R.string.loading), showDialog);
     	updateUI();
     }
@@ -280,7 +289,7 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
      * Called by PullRefreshableListView if pulled
      */
 	public void onRefresh() {
-		refresh(true);
+		refresh(false);
 	}
 	
 	protected void checkPendingEvent(Intent intent) {
@@ -354,17 +363,23 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     	return e;
     }
     
+    protected PullRefreshableListView getCurrentListView()
+    {
+    	if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
+			return this.currentEventsList;
+		else if (currentScreen == SCREEN_MY_ACTIVITIES)
+			return this.myEventsList;
+    	return null;
+    }
+    
     protected void loadingDone()
     {
+    	screenLock.dismiss();
     	if (this.pendingEventToOpen > 0) {
     		// is there a pending event that should be opened?
     		openPendingEvent();
     	}
-    	
-    	if (currentScreen == SCREEN_CURRENT_ACTIVITIES)
-			this.currentEventsList.onRefreshComplete();
-		else if (currentScreen == SCREEN_MY_ACTIVITIES)
-			this.myEventsList.onRefreshComplete();
+    	getCurrentListView().onRefreshComplete();
     }
     
 	protected class DataLoader extends AsyncUITask<EventsVo>

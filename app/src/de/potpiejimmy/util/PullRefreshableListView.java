@@ -304,6 +304,11 @@ public class PullRefreshableListView extends ListView {
 
 		case REFRESHING:
 			setUiRefreshing();
+			if (onRefreshListener == null) {
+				setState(RefreshState.PULL_TO_REFRESH);
+			} else {
+				onRefreshListener.onRefresh();
+			}
 			break;
 		}
 	}
@@ -355,12 +360,6 @@ public class PullRefreshableListView extends ListView {
 
 			if (stateAtAnimationStart != RefreshState.REFRESHING) {
 				setState(RefreshState.PULL_TO_REFRESH);
-			} else {
-				if (onRefreshListener == null) {
-					setState(RefreshState.PULL_TO_REFRESH);
-				} else {
-					onRefreshListener.onRefresh();
-				}
 			}
 		}
 

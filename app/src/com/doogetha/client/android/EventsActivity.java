@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -55,8 +54,6 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 	
 	private PullRefreshableListView currentEventsList = null;
 	private PullRefreshableListView myEventsList = null;
-	
-	private Dialog screenLock = null;
 	
 	private int currentScreen = 0;
 	
@@ -116,8 +113,6 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 			}
     	};
     	
-    	this.screenLock = new Dialog(this, android.R.style.Theme_Panel);
-
     	setupListView(currentEventsList);
     	setupListView(myEventsList);
     	
@@ -162,6 +157,7 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     	listView.setTextFilterEnabled(true);
     	listView.setOnItemClickListener(this);
     	listView.setOnRefreshListener(this);
+    	listView.setUseScreenLockWhileRefreshing(true);
     	registerForContextMenu(listView);
     }
     
@@ -246,7 +242,6 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     {
     	if (!showDialog) {
     		if (!getCurrentListView().isRefreshing()) getCurrentListView().setRefreshing();
-    		screenLock.show();
     	}
     	dataLoader.go(getString(R.string.loading), showDialog);
     	updateUI();
@@ -374,7 +369,6 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     
     protected void loadingDone()
     {
-    	screenLock.dismiss();
     	if (this.pendingEventToOpen > 0) {
     		// is there a pending event that should be opened?
     		openPendingEvent();

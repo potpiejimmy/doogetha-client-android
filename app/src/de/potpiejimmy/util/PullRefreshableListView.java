@@ -1,5 +1,6 @@
 package de.potpiejimmy.util;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -53,8 +54,10 @@ public class PullRefreshableListView extends ListView {
 	private int headerPadding;
 	private boolean scrollbarEnabled;
 	private boolean lockScrollWhileRefreshing = true;
+	private boolean useScreenLockWhileRefreshing = false;
 	private boolean hasResetHeader;
 	private boolean animating = false;
+	private boolean scrollingHeader = false;
 
 	private RefreshState state;
 	private LinearLayout headerContainer;
@@ -68,6 +71,8 @@ public class PullRefreshableListView extends ListView {
 	private OnItemClickListener onItemClickListener;
 	private OnRefreshListener onRefreshListener;
 
+	private Dialog screenLock = null;
+	
 	public PullRefreshableListView(Context context) {
 		super(context);
 		init();
@@ -118,6 +123,14 @@ public class PullRefreshableListView extends ListView {
 	}
 
 	/**
+	 * Lock the whole screen while refreshing?
+	 * @param useScreenLockWhileRefreshing
+	 */
+	public void setUseScreenLockWhileRefreshing(boolean useScreenLockWhileRefreshing) {
+		this.useScreenLockWhileRefreshing = useScreenLockWhileRefreshing;
+	}
+
+	/**
 	 * Explicitly set the state to refreshing. This is useful when you want to
 	 * show the spinner and 'Refreshing' text when the refresh was not triggered
 	 * by 'pull to refresh', for example on start.
@@ -135,6 +148,7 @@ public class PullRefreshableListView extends ListView {
 	 */
 	public void onRefreshComplete() {
 		state = RefreshState.PULL_TO_REFRESH;
+    	if (useScreenLockWhileRefreshing) screenLock.dismiss();
 		resetHeader();
 	}
 
@@ -169,6 +183,8 @@ public class PullRefreshableListView extends ListView {
 		ViewTreeObserver vto = header.getViewTreeObserver();
 		vto.addOnGlobalLayoutListener(new PullRefreshableOnGlobalLayoutListener());
 
+    	this.screenLock = new Dialog(getContext(), android.R.style.Theme_Panel);
+
 		super.setOnItemClickListener(new PullRefreshableOnItemClickListener());
 	}
 
@@ -188,6 +204,8 @@ public class PullRefreshableListView extends ListView {
 		if (lockScrollWhileRefreshing && state == RefreshState.REFRESHING) {
 			return true;
 		}
+		
+		boolean movingUp = false;
 
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -198,6 +216,7 @@ public class PullRefreshableListView extends ListView {
 			break;
 
 		case MotionEvent.ACTION_UP:
+			scrollingHeader = false;
 			if (previousY != -1
 					&& (state == RefreshState.RELEASE_TO_REFRESH || getFirstVisiblePosition() == 0)) {
 				switch (state) {
@@ -218,8 +237,11 @@ public class PullRefreshableListView extends ListView {
 			if (previousY != -1) {
 				float y = event.getY();
 				float diff = y - previousY;
-				if (diff > 0)
-					diff /= PULL_WEIGHT;
+
+				if (diff > 0 && headerPadding > -header.getHeight() + 1) scrollingHeader = true;
+				if (diff < 0) movingUp = true;
+				
+				if (diff > 0) diff /= PULL_WEIGHT;
 				previousY = y;
 
 				int newHeaderPadding = Math.max(
@@ -248,7 +270,10 @@ public class PullRefreshableListView extends ListView {
 			break;
 		}
 
-		return super.onTouchEvent(event);
+		if (scrollingHeader && movingUp)
+			return true; // do not handle moving up while scrolling header until released
+		else
+			return super.onTouchEvent(event);
 	}
 
 	private void bounceBackHeader() {
@@ -285,6 +310,7 @@ public class PullRefreshableListView extends ListView {
 		image.clearAnimation();
 		image.setVisibility(View.INVISIBLE);
 		text.setText(R.string.refreshing);
+		if (useScreenLockWhileRefreshing) screenLock.show();
 	}
 
 	private void setState(RefreshState state) {
@@ -304,11 +330,6 @@ public class PullRefreshableListView extends ListView {
 
 		case REFRESHING:
 			setUiRefreshing();
-			if (onRefreshListener == null) {
-				setState(RefreshState.PULL_TO_REFRESH);
-			} else {
-				onRefreshListener.onRefresh();
-			}
 			break;
 		}
 	}
@@ -360,6 +381,12 @@ public class PullRefreshableListView extends ListView {
 
 			if (stateAtAnimationStart != RefreshState.REFRESHING) {
 				setState(RefreshState.PULL_TO_REFRESH);
+			} else {
+				if (onRefreshListener == null) {
+					setState(RefreshState.PULL_TO_REFRESH);
+				} else {
+					onRefreshListener.onRefresh();
+				}
 			}
 		}
 

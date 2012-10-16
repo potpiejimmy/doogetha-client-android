@@ -71,6 +71,7 @@ public class CommentsActivity extends SlideActivity implements OnItemClickListen
     	
     	this.commentsList.setAdapter(this.data);
     	this.commentsList.setOnRefreshListener(this);
+    	this.commentsList.setUseScreenLockWhileRefreshing(true);
 
     	this.submitButton.setOnClickListener(this);
     	
@@ -131,7 +132,8 @@ public class CommentsActivity extends SlideActivity implements OnItemClickListen
 	
 	protected void reload()
 	{
-		new DataLoader().go(getString(R.string.loading));
+		if (!commentsList.isRefreshing()) commentsList.setRefreshing();
+		new DataLoader().go(getString(R.string.loading), false);
 	}
 
 	protected void adaptComments(EventCommentsVo comments)

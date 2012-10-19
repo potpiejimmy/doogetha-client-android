@@ -35,6 +35,7 @@
     <string name="newversionavailable">Eine neue Version von Doogetha steht zur Verfügung!</string>
     <string name="servernotavailable">Server nicht erreichbar. Bitte prüfe deine Internetverbindung.</string>
     <string name="deleted">Gelöscht</string>
+    <string name="surveyresetdone">Die Abstimmung wurde zurückgesetzt</string>
     <string name="notify_eventinvitation_tickertext">Neue Einladung erhalten</string>
     <string name="notify_eventinvitation_text">{0} hat dich eingeladen.</string>
     <string name="notify_eventupdate_tickertext">Aktivität wurde geändert</string>
@@ -59,6 +60,7 @@
     <string name="enter_survey_item">Auswahlmöglichkeit eingeben:</string>
     <string name="comment_one">\u2191 1 Kommentar \u2191</string>
     <string name="comments_n">\u2191 {0} Kommentare \u2191</string>
+    <string name="reset_survey_confirm">Alle Abstimmergebnisse der Teilnehmer werden zurückgesetzt und die Abstimmung wieder geöffnet.</string>
     <!-- New Activity Wizard -->
     <string name="newactwiz_base_title">Neue Aktivität erstellen</string>
     <string name="newactwiz_base_text">Doogetha wird dich nun Schritt für Schritt durch die Erstellung einer neuen Aktivität führen.\n\nFür die Aktivität kannst du zunächst einen Titel und optional eine kurze Beschreibung eingeben.</string>

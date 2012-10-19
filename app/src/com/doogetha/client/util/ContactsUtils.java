@@ -42,8 +42,11 @@ public class ContactsUtils {
 	 */
 	public static void fillUserInfo(ContentResolver contentResolver, UserVo user) {
     	Cursor c = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.DATA + "=?", new String[] {user.getEmail()}, null);
-    	if (c.moveToFirst()) {
-    		user.setLastname(c.getString(c.getColumnIndex(ContactsContract.Data.DISPLAY_NAME)));
+    	while (c.moveToNext()) {
+    		String displayName = c.getString(c.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+    		user.setLastname(displayName);
+    		// found something that is not the mail address itself - break. otherwise continue:
+    		if (!user.getEmail().equals(displayName)) break; 
     	}
     	c.close();
     }

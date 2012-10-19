@@ -51,6 +51,8 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	private boolean myOwn = false;
 	private boolean dirty = false;
 	
+	protected ImageButton addItemButton = null;
+	
 	protected CommentsPreviewer commentsPreviewer = null;
 	
     @Override
@@ -168,13 +170,13 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 			survey.getState() == 0 /* open */) {
 			row = new TableRow(this);
         	//row.addView(verticalSeparator(), tableParams);
-			ImageButton addbutton = new ImageButton(this);
-			addbutton.setBackgroundDrawable(null);
-			addbutton.setId(1);
-			addbutton.setTag("add");
-			addbutton.setImageResource(android.R.drawable.ic_input_add);
-			addbutton.setOnClickListener(this);
-			row.addView(addbutton, tableParams);
+			addItemButton = new ImageButton(this);
+			addItemButton.setBackgroundDrawable(null);
+			addItemButton.setId(1);
+			addItemButton.setTag("add");
+			addItemButton.setImageResource(android.R.drawable.ic_input_add);
+			addItemButton.setOnClickListener(this);
+			row.addView(addItemButton, tableParams);
 			table.addView(row, tableParams);
 		}
     	
@@ -291,6 +293,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	TextView surveyclosedlabel = (TextView)findViewById(R.id.surveyclosedlabel);
     	surveyclosedlabel.setText("Diese Abstimmung wird geschlossen mit dem Ergebnis: " + Utils.formatSurveyItem(survey, closeItem));
     	surveyclosedlabel.setVisibility(View.VISIBLE);
+    	if (addItemButton != null) addItemButton.setVisibility(View.GONE);
     }
     
     public void onBackPressed()
@@ -354,6 +357,14 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	}
 	
 	protected void reset() {
+		DroidLib.alert(this, getString(R.string.reset_survey_confirm), getString(R.string.ok), getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				resetImpl();
+			}
+		});
+	}
+	
+	protected void resetImpl() {
 		new Resetter().go(getString(R.string.reset));
 	}
 	
@@ -424,6 +435,7 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 							if (item.getState() == 1) { /* survey result */
 								sa.getWebRequest().setParam("close", ""+item.getId());
 								sa.getItem(survey.getId());
+								sa.getWebRequest().removeParam("close");
 							}
 						}
 					}
@@ -454,7 +466,8 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 			SurveysAccessor sa = Utils.getApp(SurveyConfirmActivity.this).getSurveysAccessor();
 			sa.getWebRequest().setParam("reset", "true");
 			sa.getItem(survey.getId());
-    		return "OK";
+			sa.getWebRequest().removeParam("reset");
+    		return getString(R.string.surveyresetdone);
 		}
 		
 		public void doneOk(String result)

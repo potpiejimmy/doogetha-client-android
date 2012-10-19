@@ -63,8 +63,10 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	
 		Button buttonok = (Button) findViewById(R.id.editok);
     	Button buttoncancel = (Button) findViewById(R.id.editcancel);
+    	Button buttonreset = (Button) findViewById(R.id.resetbutton);
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
+    	buttonreset.setOnClickListener(this);
 
         for (UserVo user : event.getUsers())
         	if (Utils.getApp(this).getEmail().equalsIgnoreCase(user.getEmail()))
@@ -77,8 +79,14 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		((TextView)findViewById(R.id.surveyname)).setText(survey.getName());
         recreateSurveyView();
         
-        if (survey.getState() == 1) /* closed */
+        if (survey.getState() == 1) {
+        	/* closed */
         	findViewById(R.id.surveyconfirmbuttonpanel).setVisibility(View.GONE);
+        	if (!myOwn) findViewById(R.id.surveyclosedbuttonpanel).setVisibility(View.GONE);
+        } else {
+        	/* open */
+        	findViewById(R.id.surveyclosedbuttonpanel).setVisibility(View.GONE);
+        }
     }
     
     protected void recreateSurveyView() {
@@ -331,6 +339,9 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 			case R.id.editcancel:
 				finishCancel();
 				break;
+			case R.id.resetbutton:
+				reset();
+				break;
 		}
 		if ("add".equals(v.getTag())) {
 			// add button was clicked:
@@ -340,6 +351,10 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 	
 	protected void confirm() {
 		new Confirmer().go("Speichern...");
+	}
+	
+	protected void reset() {
+		new Resetter().go(getString(R.string.reset));
 	}
 	
     protected void finishOk()
@@ -366,6 +381,31 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
     	finish();
     }
     
+	@Override
+	protected SurveyVo getSurvey() {
+		return survey;
+	}
+
+	@Override
+	protected void finishEditSurveyItem(String item) {
+		List<SurveyItemVo> itemList = new ArrayList<SurveyItemVo>(Arrays.asList(survey.getSurveyItems()));
+    	if (!checkUnique(itemList, item, -1)) return;
+		
+		SurveyItemVo newItem = createNewSurveyItem(item);
+		for (int i=0; i<itemList.size(); i++)
+			if (itemList.get(i).getName().compareTo(newItem.getName()) > 0) {
+				itemList.add(i, newItem);
+				break;
+			} else if (i == itemList.size()-1) {
+				itemList.add(newItem);
+				break;
+			}
+		
+		survey.setSurveyItems(itemList.toArray(new SurveyItemVo[itemList.size()]));
+		
+		recreateSurveyView();
+	}
+	
 	protected class Confirmer extends AsyncUITask<String>
 	{
 		public Confirmer() {
@@ -403,28 +443,29 @@ public class SurveyConfirmActivity extends AbstractSurveyEditActivity implements
 		}
 	}
 
-	@Override
-	protected SurveyVo getSurvey() {
-		return survey;
-	}
+	protected class Resetter extends AsyncUITask<String>
+	{
+		public Resetter() {
+			super(SurveyConfirmActivity.this);
+		}
+		
+		public String doTask() throws Throwable
+		{
+			SurveysAccessor sa = Utils.getApp(SurveyConfirmActivity.this).getSurveysAccessor();
+			sa.getWebRequest().setParam("reset", "true");
+			sa.getItem(survey.getId());
+    		return "OK";
+		}
+		
+		public void doneOk(String result)
+		{
+    		Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+    		finishOk();
+		}
 
-	@Override
-	protected void finishEditSurveyItem(String item) {
-		List<SurveyItemVo> itemList = new ArrayList<SurveyItemVo>(Arrays.asList(survey.getSurveyItems()));
-    	if (!checkUnique(itemList, item, -1)) return;
-		
-		SurveyItemVo newItem = createNewSurveyItem(item);
-		for (int i=0; i<itemList.size(); i++)
-			if (itemList.get(i).getName().compareTo(newItem.getName()) > 0) {
-				itemList.add(i, newItem);
-				break;
-			} else if (i == itemList.size()-1) {
-				itemList.add(newItem);
-				break;
-			}
-		
-		survey.setSurveyItems(itemList.toArray(new SurveyItemVo[itemList.size()]));
-		
-		recreateSurveyView();
+		public void doneFail(Throwable throwable)
+		{
+    		Toast.makeText(getApplicationContext(), throwable.toString(), Toast.LENGTH_SHORT).show();
+		}
 	}
 }

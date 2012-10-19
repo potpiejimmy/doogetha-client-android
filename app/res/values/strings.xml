@@ -20,6 +20,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
+    <string name="reset">Zurücksetzen</string>
     <string name="deleteitem">Eintrag löschen</string>
     <string name="edititem">Eintrag bearbeiten</string>
     <string name="showitem">Eintrag anzeigen</string>

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -34,6 +35,7 @@ import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.EventsVo;
 import de.letsdoo.server.vo.UserVo;
 import de.potpiejimmy.util.AsyncUITask;
+import de.potpiejimmy.util.DroidLib;
 import de.potpiejimmy.util.PullRefreshableListView;
 import de.potpiejimmy.util.PullRefreshableListView.OnRefreshListener;
 
@@ -189,8 +191,19 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
       super.onCreateContextMenu(menu, v, menuInfo);
+      
+      boolean myEvent = false;
+      if (v == myEventsList) {
+    	  // events in "my events list" are all mine:
+    	  myEvent = true;
+      } else {
+    	  // check whether the selected event in "current events list" is my own:
+    	  EventVo selectedEvent = data.getItem(((AdapterContextMenuInfo)menuInfo).position-1);
+    	  myEvent = selectedEvent != null && selectedEvent.getOwner().getEmail().equalsIgnoreCase(Utils.getApp(this).getEmail());
+      }
+      
       MenuInflater inflater = getMenuInflater();
-      inflater.inflate(v == currentEventsList ? R.menu.context_currentactivities : R.menu.context_myactivities, menu);
+      inflater.inflate(!myEvent ? R.menu.context_currentactivities : R.menu.context_myactivities, menu);
     }
     
     @Override
@@ -204,11 +217,20 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		  		editEvent(data.getItem(info.position-1));
 		        return true;
 	      case R.id.deleteitem:
-		  		new Deleter(data.getItem(info.position-1)).go(getString(R.string.process_delete));
+		  		deleteEvent(data.getItem(info.position-1));
 		        return true;
 	      default:
 	    	    return super.onContextItemSelected(item);
       }
+    }
+    
+    protected void deleteEvent(final EventVo event)
+    {
+		DroidLib.alert(this, getString(R.string.delete_event_confirm), getString(R.string.ok), getString(R.string.cancel), new android.content.DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+		  		new Deleter(event).go(getString(R.string.process_delete));
+			}
+		});
     }
     
 	public void onClick(View view) {

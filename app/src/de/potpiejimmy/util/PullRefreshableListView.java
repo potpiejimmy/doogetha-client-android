@@ -58,6 +58,7 @@ public class PullRefreshableListView extends ListView {
 	private boolean hasResetHeader;
 	private boolean animating = false;
 	private boolean scrollingHeader = false;
+	private boolean scrollingHeaderMovedUp = false;
 
 	private RefreshState state;
 	private LinearLayout headerContainer;
@@ -205,8 +206,6 @@ public class PullRefreshableListView extends ListView {
 			return true;
 		}
 		
-		boolean movingUp = false;
-
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			if (getFirstVisiblePosition() == 0)
@@ -217,6 +216,7 @@ public class PullRefreshableListView extends ListView {
 
 		case MotionEvent.ACTION_UP:
 			scrollingHeader = false;
+			scrollingHeaderMovedUp = false;
 			if (previousY != -1
 					&& (state == RefreshState.RELEASE_TO_REFRESH || getFirstVisiblePosition() == 0)) {
 				switch (state) {
@@ -239,7 +239,7 @@ public class PullRefreshableListView extends ListView {
 				float diff = y - previousY;
 
 				if (diff > 0 && headerPadding > -header.getHeight() + 1) scrollingHeader = true;
-				if (diff < 0) movingUp = true;
+				if (diff < 0 && scrollingHeader) scrollingHeaderMovedUp = true;
 				
 				if (diff > 0) diff /= PULL_WEIGHT;
 				previousY = y;
@@ -270,8 +270,8 @@ public class PullRefreshableListView extends ListView {
 			break;
 		}
 
-		if (scrollingHeader && movingUp)
-			return true; // do not handle moving up while scrolling header until released
+		if (scrollingHeader && scrollingHeaderMovedUp)
+			return true; // do not handle moving in superclass if header was scrolled up until released
 		else
 			return super.onTouchEvent(event);
 	}

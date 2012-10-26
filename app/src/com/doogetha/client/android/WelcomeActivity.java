@@ -51,7 +51,7 @@ public class WelcomeActivity extends Activity implements OnClickListener {
     	cancelbutton.setOnClickListener(this);
     	
     	viewflipper.setInAnimation(getApplicationContext(), R.anim.slide_in_right);
-    	viewflipper.setOutAnimation(getApplicationContext(), R.anim.slide_still);
+    	viewflipper.setOutAnimation(getApplicationContext(), R.anim.slide_out_left);
     	
     	if (getLoginToken() != null) {
     		viewflipper.showNext();

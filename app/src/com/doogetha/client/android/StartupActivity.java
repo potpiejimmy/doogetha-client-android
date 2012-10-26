@@ -5,6 +5,7 @@ import java.net.SocketException;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
@@ -128,8 +129,11 @@ public class StartupActivity extends Activity
 				throwable instanceof SocketException) {
 				DroidLib.alert(StartupActivity.this, getString(R.string.servernotavailable));
 			} else {
-				DroidLib.alert(StartupActivity.this, "Die Anmeldung ist fehlgeschlagen: "+throwable);
-				checkVersion();
+				DroidLib.alert(StartupActivity.this, null, "Die Anmeldung ist fehlgeschlagen: "+throwable, null, null, null, new OnDismissListener() {
+					public void onDismiss(DialogInterface dialog) {
+						checkVersion();
+					}
+				});
 			}
 		}
 	}

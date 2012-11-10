@@ -4,7 +4,7 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/doogetha_bg2"
+  android:background="@color/doogetha_bg"
   >
     
     <ScrollView android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1" android:id="@+id/scrollView1">

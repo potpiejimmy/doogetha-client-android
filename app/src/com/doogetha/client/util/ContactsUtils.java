@@ -10,6 +10,7 @@ import android.provider.ContactsContract;
 
 import com.doogetha.client.android.Letsdoo;
 
+import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
 
 public class ContactsUtils {
@@ -66,5 +67,20 @@ public class ContactsUtils {
     	if (stb.length() == 0)
     		stb.append(user.getEmail());
     	return stb.toString();
+	}
+	
+	/**
+	 * Returns a comma-separated list of participant names for the given event
+	 */
+	public static String participantNames(Letsdoo app, EventVo event) {
+		StringBuilder stb = new StringBuilder();
+		for (UserVo user : event.getUsers()) {
+			if (user.getEmail().equalsIgnoreCase(app.getEmail())) continue; // skip myself
+			fillUserInfo(app.getContentResolver(), user); // resolve name from address book
+			if (stb.length() > 0) stb.append(", ");
+			stb.append(userDisplayName(app, user));
+		}
+		if (stb.length()>0) return stb.toString();
+		else return null; // no participants except myself - return null
 	}
 }

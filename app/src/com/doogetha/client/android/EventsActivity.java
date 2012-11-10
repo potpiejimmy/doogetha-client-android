@@ -28,6 +28,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.doogetha.client.android.rest.EventsAccessor;
+import com.doogetha.client.util.ContactsUtils;
 import com.doogetha.client.util.SlideActivity;
 import com.doogetha.client.util.Utils;
 
@@ -99,6 +100,13 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 					datetime.setText(Utils.formatDateTime(event.getEventtime()));
 				} else {
 					datetime.setVisibility(View.GONE);
+				}
+				TextView subInfo = (TextView) convertView.findViewById(R.id.eventsubinfo);
+				String participants = ContactsUtils.participantNames(Utils.getApp(EventsActivity.this), event);
+				if (participants != null) {
+					subInfo.setText("mit " + participants);
+				} else {
+					subInfo.setText("keine Teilnehmer");
 				}
 				ImageView icon = (ImageView) convertView.findViewById(R.id.eventstateiconview);
 				if (Utils.hasOpenSurveys(event)) {

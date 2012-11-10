@@ -110,6 +110,8 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			ImageView icon = (ImageView) vi.findViewById(R.id.participantconfirmiconview);
 			Utils.setIconForConfirmState(icon, user);
 			list.addView(vi);
+			// add horizontal ruler:
+			addHorizontalSeparator(list);
 		}
     }
     

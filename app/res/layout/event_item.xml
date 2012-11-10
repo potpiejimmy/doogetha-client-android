@@ -32,10 +32,20 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
 		    android:paddingLeft="6dip"
-		    android:paddingBottom="10dip"
+		    android:paddingBottom="5dip"
 		    android:textSize="18sp"
 		    android:textColor="#000"
 		    android:text="Ein tolles Event">
 		</TextView>
-	</LinearLayout>
+		<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:id="@+id/eventsubinfo"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:paddingLeft="6dip"
+		    android:paddingBottom="10dip"
+		    android:textSize="10sp"
+		    android:textColor="#000"
+		    android:text="mit Slim, Gringo und Karl-Heinz">
+	    </TextView>
+			</LinearLayout>
 </LinearLayout>

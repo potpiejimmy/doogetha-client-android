@@ -1,9 +1,7 @@
 package com.doogetha.client.android;
 
-import java.io.ByteArrayInputStream;
 import java.net.ConnectException;
 import java.net.SocketException;
-import java.util.Properties;
 
 import android.app.Activity;
 import android.content.DialogInterface;

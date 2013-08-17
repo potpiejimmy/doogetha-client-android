@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.widget.ImageView;
@@ -22,8 +23,8 @@ import de.letsdoo.server.vo.UserVo;
  */
 public class Utils {
 	
-	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEEEEE,\ndd MMM yyyy");
-	public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
+	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("EEEEEE,\ndd MMM yyyy", Locale.getDefault());
+	public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
 	public static Letsdoo getApp(Activity activity) {
 		return (Letsdoo)activity.getApplication();
@@ -52,12 +53,12 @@ public class Utils {
     }
     
     public static String bytesToHex(byte[] digest) {
-        String digits = "0123456789abcdef";
+        char[] digits = "0123456789abcdef".toCharArray();
         StringBuilder sb = new StringBuilder(digest.length * 2);
         for (byte b : digest) {
             int bi = b & 0xff;
-            sb.append(digits.charAt(bi >> 4));
-            sb.append(digits.charAt(bi & 0xf));
+            sb.append(digits[bi >> 4]);
+            sb.append(digits[bi & 0xf]);
         }
         return sb.toString();
     }

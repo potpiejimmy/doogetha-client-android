@@ -1,7 +1,9 @@
 package com.doogetha.client.android;
 
+import java.io.ByteArrayInputStream;
 import java.net.ConnectException;
 import java.net.SocketException;
+import java.util.Properties;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.doogetha.client.util.Utils;
 
+import de.letsdoo.server.vo.VersionVo;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
@@ -138,28 +141,28 @@ public class StartupActivity extends Activity
 		}
 	}
 	
-	protected class VersionCheckTask extends AsyncUITask<String>
+	protected class VersionCheckTask extends AsyncUITask<VersionVo>
 	{
 		public VersionCheckTask() 
 		{
 			super(StartupActivity.this);
 		}
 		
-		public String doTask() throws Throwable
+		public VersionVo doTask() throws Throwable
 		{
 			return Utils.getApp(StartupActivity.this).getVersionAccessor().getItems();
 		}
 		
-		public void doneOk(String result)
+		public void doneOk(VersionVo result)
 		{
 			if (result == null) return; // could not fetch current version, ignore
 			try {
-				int currentVersion = Integer.parseInt(result);
+				int currentVersion = result.getClientVersionCode();
 				if (currentVersion > Utils.getApp(StartupActivity.this).getVersionCode())
 					newerVersionExists();
 				else
 					doneCheckVersion();
-			} catch (NumberFormatException nfe) {
+			} catch (Exception nfe) {
 				// no valid version value received, just ignore and do nothing
 				doneCheckVersion();
 			}

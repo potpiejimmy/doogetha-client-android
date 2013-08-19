@@ -21,7 +21,7 @@ public class KeyUtil {
 	public static KeyPair generateKeyPair() {
 		try {
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-			keyGen.initialize(1024);
+			keyGen.initialize(2048);
 			KeyPair generatedKeyPair = keyGen.genKeyPair();
 			 
 			System.out.println("Generated Key Pair");

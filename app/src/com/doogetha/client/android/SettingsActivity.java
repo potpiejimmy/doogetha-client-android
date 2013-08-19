@@ -1,5 +1,6 @@
 package com.doogetha.client.android;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +12,15 @@ import android.preference.PreferenceScreen;
 import com.doogetha.client.util.SlidePreferenceActivity;
 import com.doogetha.client.util.Utils;
 
+import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
+import de.potpiejimmy.util.KeyUtil;
 
 public class SettingsActivity extends SlidePreferenceActivity implements OnPreferenceClickListener, DialogInterface.OnClickListener {
 
+	protected Preference unregisterPref = null;
+	protected Preference keyGenPref = null;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,14 +44,31 @@ public class SettingsActivity extends SlidePreferenceActivity implements OnPrefe
         intentPref.setTitle("Abmelden");
         intentPref.setSummary(Utils.getApp(this).getEmail());
         intentPref.setOnPreferenceClickListener(this);
-        
+        this.unregisterPref = intentPref;
         inlinePrefCat.addPreference(intentPref);
+
+        intentPref = getPreferenceManager().createPreferenceScreen(this);
+		intentPref.setTitle("Server");
+		intentPref.setSummary(Letsdoo.URI + "\n(Version <unversioned>)"); // XXX
+		intentPref.setEnabled(false);
+		inlinePrefCat.addPreference(intentPref);
+
+        intentPref = getPreferenceManager().createPreferenceScreen(this);
+		intentPref.setTitle("Create key pair");
+		intentPref.setSummary("Test creation of 2048 bit RSA key pair"); // XXX
+        intentPref.setOnPreferenceClickListener(this);
+		this.keyGenPref = intentPref;
+		inlinePrefCat.addPreference(intentPref);
 
         return root;
     }
 
 	public boolean onPreferenceClick(Preference preference) {
-		DroidLib.alert(this, "Wirklich abmelden und Registrierung erneut durchführen?", "Ja", "Nein", this);
+		if (preference == unregisterPref) {
+			DroidLib.alert(this, "Wirklich abmelden und Registrierung erneut durchführen?", "Ja", "Nein", this);
+		} else if (preference == keyGenPref) {
+			new KeyGenTask(this).go("Creating key pair...");
+		}
 		return true;
 	}
 
@@ -54,5 +77,33 @@ public class SettingsActivity extends SlidePreferenceActivity implements OnPrefe
 		startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
 		setResult(RESULT_FIRST_USER); /* signal unregistration */
 		finish();
+	}
+	
+	public static class KeyGenTask extends AsyncUITask<String> {
+
+		private long genTime = 0;
+		
+		public KeyGenTask(Context context) {
+			super(context);
+		}
+
+		@Override
+		public String doTask() throws Throwable {
+			genTime = System.currentTimeMillis();
+			KeyUtil.generateKeyPair();
+			genTime = System.currentTimeMillis() - genTime;
+			return null;
+		}
+
+		@Override
+		public void doneOk(String result) {
+			DroidLib.alert(getContext(), "Key pair generated in " + genTime + " ms");
+		}
+
+		@Override
+		public void doneFail(Throwable throwable) {
+			DroidLib.alert(getContext(), "Key pair generation failed: " + throwable);
+		}
+		
 	}
 }

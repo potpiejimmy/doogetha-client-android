@@ -21,6 +21,8 @@ import de.letsdoo.server.vo.UserVo;
 
 public class Letsdoo extends Application {
 	
+	public final static int PROTOCOL_VERSION = 1;
+	
 	public final static String PROTO    = "http://";
 	public final static String PROTOSEC = "https://";
 	

@@ -17,6 +17,11 @@ public abstract class AsyncUITask<T> implements Runnable,OnCancelListener
 		this.context = context;
 	}
 	
+	public Context getContext()
+	{
+		return context;
+	}
+	
 	public void go(String msg)
 	{
 		go(msg, true);

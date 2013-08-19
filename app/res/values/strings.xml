@@ -32,7 +32,9 @@
     <string name="publicactivities">Community</string>
     <string name="process_delete">Löschen&#8230;</string>
     <string name="process_checkversion">Prüfe Version&#8230;</string>
-    <string name="newversionavailable">Eine neue Version von Doogetha steht zur Verfügung!</string>
+    <string name="newversionavailable">Eine neue Version von Doogetha steht zur Verfügung.</string>
+    <string name="newversionavailablemustupdate">Bitte installiere diese, um fortzufahren.</string>
+    <string name="protocolversionincompatible">Diese Version von Doogetha ist veraltet und nicht mehr mit dem Doogetha-Server kompatibel. Bitte aktualisiere deine Doogetha-Installation.</string>
     <string name="servernotavailable">Server nicht erreichbar. Bitte prüfe deine Internetverbindung.</string>
     <string name="deleted">Gelöscht</string>
     <string name="surveyresetdone">Die Abstimmung wurde zurückgesetzt</string>

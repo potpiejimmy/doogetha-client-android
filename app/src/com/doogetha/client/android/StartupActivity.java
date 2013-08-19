@@ -37,7 +37,7 @@ public class StartupActivity extends Activity
         
         this.label = (TextView)findViewById(R.id.startupLabel);
         
-        startSession();
+        checkVersion();
     }
 
     protected void startSession()
@@ -61,7 +61,8 @@ public class StartupActivity extends Activity
     
     protected void doneGcmCheck()
     {
-		checkVersion();
+    	label.setText("Starte Doogetha...");
+    	startMainView();
     }
 	
     protected void checkVersion()
@@ -71,8 +72,7 @@ public class StartupActivity extends Activity
     
     protected void doneCheckVersion()
     {
-    	label.setText("Starte Doogetha...");
-    	startMainView();
+    	startSession();
     }
     
     protected void startMainView()
@@ -82,23 +82,49 @@ public class StartupActivity extends Activity
     	startActivity(i);
     }
     
-    protected void newerVersionExists()
+    protected void newerVersionExists(boolean protocolVersionIncompatible)
     {
-    	DroidLib.alert(this, null, getString(R.string.newversionavailable), "Jetzt herunterladen", null, new android.content.DialogInterface.OnClickListener() {
+    	DroidLib.alert(this, null, 
+    			protocolVersionIncompatible ?
+    					getString(R.string.newversionavailable) + " " + getString(R.string.newversionavailablemustupdate) :
+    					getString(R.string.newversionavailable),
+    			"Jetzt herunterladen", null, new android.content.DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int i) {
 				DroidLib.invokeBrowser(StartupActivity.this, Letsdoo.DOWNLOADURL);
 			}
-    	}, new android.content.DialogInterface.OnDismissListener() {
-			public void onDismiss(DialogInterface dialog) {
-				doneCheckVersion();
-			}
-		});
+    	}, protocolVersionIncompatible ?
+    		new android.content.DialogInterface.OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					finishCancel();
+				}
+    		} :
+    		new android.content.DialogInterface.OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					doneCheckVersion();
+				}
+    		});
+    }
+    
+    protected void incompatibleProtocolVersion()
+    {
+    	DroidLib.alert(this, null, getString(R.string.protocolversionincompatible), null, null, null,
+    		new android.content.DialogInterface.OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					finishCancel();
+				}
+    		});
     }
     
     protected void performTask(AsyncUITask<?> task, String msg)
     {
     	label.setText(msg);
     	task.go(msg, false);
+    }
+    
+    protected void finishCancel()
+    {
+    	setResult(RESULT_CANCELED);
+    	finish();
     }
     
     protected class SessionLoginTask extends AsyncUITask<String>
@@ -126,16 +152,15 @@ public class StartupActivity extends Activity
 		
 		public void doneFail(Throwable throwable) 
 		{
-			if (throwable instanceof ConnectException ||
-				throwable instanceof SocketException) {
-				DroidLib.alert(StartupActivity.this, getString(R.string.servernotavailable));
-			} else {
-				DroidLib.alert(StartupActivity.this, null, "Die Anmeldung ist fehlgeschlagen: "+throwable, null, null, null, new OnDismissListener() {
-					public void onDismiss(DialogInterface dialog) {
-						checkVersion();
-					}
-				});
-			}
+			DroidLib.alert(StartupActivity.this, null, 
+					(throwable instanceof ConnectException || throwable instanceof SocketException) ?
+					getString(R.string.servernotavailable) :
+					"Die Anmeldung ist fehlgeschlagen: "+throwable,
+					null, null, null, new OnDismissListener() {
+				public void onDismiss(DialogInterface dialog) {
+					finishCancel();
+				}
+			});
 		}
 	}
 	
@@ -155,9 +180,16 @@ public class StartupActivity extends Activity
 		{
 			if (result == null) return; // could not fetch current version, ignore
 			try {
+				// protocol version handling:
+				int protocolVersion = result.getProtocolVersion();
+				boolean protocolVersionIncompatible = (protocolVersion != Letsdoo.PROTOCOL_VERSION);
+				
+				// client version handling:
 				int currentVersion = result.getClientVersionCode();
 				if (currentVersion > Utils.getApp(StartupActivity.this).getVersionCode())
-					newerVersionExists();
+					newerVersionExists(protocolVersionIncompatible);
+				else if (protocolVersionIncompatible)
+					incompatibleProtocolVersion();
 				else
 					doneCheckVersion();
 			} catch (Exception nfe) {

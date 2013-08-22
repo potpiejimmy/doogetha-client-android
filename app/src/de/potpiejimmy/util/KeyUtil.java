@@ -1,9 +1,5 @@
 package de.potpiejimmy.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -18,13 +14,13 @@ import com.doogetha.client.util.Utils;
 
 public class KeyUtil {
 	
+	protected final static String ALGORITHM = "RSA";
+	
 	public static KeyPair generateKeyPair() {
 		try {
-			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+			KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
 			keyGen.initialize(2048);
 			KeyPair generatedKeyPair = keyGen.genKeyPair();
-			 
-			System.out.println("Generated Key Pair");
 			dumpKeyPair(generatedKeyPair);
 			return generatedKeyPair;
 		} catch (Exception e) {
@@ -34,59 +30,42 @@ public class KeyUtil {
 	}
  
 	private static void dumpKeyPair(KeyPair keyPair) {
+		System.out.println("Generated Key Pair");
+		
 		PublicKey pub = keyPair.getPublic();
 		System.out.println("Public Key: " + Utils.bytesToHex(pub.getEncoded()));
 		 
 		PrivateKey priv = keyPair.getPrivate();
 		System.out.println("Private Key: " + Utils.bytesToHex(priv.getEncoded()));
+		
+		System.out.println("Encoded public  key (X509)  length: " + encodeKey(pub).length());
+		System.out.println("Encoded private key (PKCS8) length: " + encodeKey(priv).length());
 	}
  
-public void SaveKeyPair(String path, KeyPair keyPair) throws IOException {
-PrivateKey privateKey = keyPair.getPrivate();
-PublicKey publicKey = keyPair.getPublic();
+	public static String encodeKey(PrivateKey privateKey) {
+		// Encode Private Key.
+		PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(privateKey.getEncoded());
+		return Utils.bytesToHex(pkcs8EncodedKeySpec.getEncoded());
+	}
  
-// Store Public Key.
-X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
-publicKey.getEncoded());
-FileOutputStream fos = new FileOutputStream(path + "/public.key");
-fos.write(x509EncodedKeySpec.getEncoded());
-fos.close();
- 
-// Store Private Key.
-PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
-privateKey.getEncoded());
-fos = new FileOutputStream(path + "/private.key");
-fos.write(pkcs8EncodedKeySpec.getEncoded());
-fos.close();
-}
- 
-public KeyPair LoadKeyPair(String path, String algorithm)
-throws IOException, NoSuchAlgorithmException,
-InvalidKeySpecException {
-// Read Public Key.
-File filePublicKey = new File(path + "/public.key");
-FileInputStream fis = new FileInputStream(path + "/public.key");
-byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
-fis.read(encodedPublicKey);
-fis.close();
- 
-// Read Private Key.
-File filePrivateKey = new File(path + "/private.key");
-fis = new FileInputStream(path + "/private.key");
-byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
-fis.read(encodedPrivateKey);
-fis.close();
- 
-// Generate KeyPair.
-KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-encodedPublicKey);
-PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
- 
-PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
-encodedPrivateKey);
-PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
- 
-return new KeyPair(publicKey, privateKey);
-}	
+	public static String encodeKey(PublicKey publicKey) {
+		// Encode Public Key.
+		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(publicKey.getEncoded());
+		return Utils.bytesToHex(x509EncodedKeySpec.getEncoded());
+	}
+	
+	public KeyPair decodeKeyPair(String privateKeyHex, String publicKeyHex) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		byte[] encodedPrivateKey = Utils.hexToBytes(privateKeyHex);
+		byte[] encodedPublicKey = Utils.hexToBytes(publicKeyHex);
+		 
+		// Generate KeyPair.
+		KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
+		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+		 
+		PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
+		PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+		 
+		return new KeyPair(publicKey, privateKey);
+	}	
 }

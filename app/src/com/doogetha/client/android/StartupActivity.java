@@ -51,6 +51,16 @@ public class StartupActivity extends Activity
     	checkGcmRegistration();
     }
     
+    protected void sessionCreateFail()
+    {
+    	DroidLib.alert(this, null, getString(R.string.sessioncreatefailed), null, null, null,
+        		new android.content.DialogInterface.OnDismissListener() {
+    				public void onDismiss(DialogInterface dialog) {
+    					doneStartup(); // start up anyway to get to settings if needed
+    				}
+        		});
+    }
+    
     protected void checkGcmRegistration()
     {
     	if (!Utils.getApp(this).isGcmServerSynced())
@@ -60,6 +70,11 @@ public class StartupActivity extends Activity
     }
     
     protected void doneGcmCheck()
+    {
+    	doneStartup();
+    }
+    
+    protected void doneStartup()
     {
     	label.setText("Starte Doogetha...");
     	startMainView();
@@ -146,6 +161,11 @@ public class StartupActivity extends Activity
 		{
 	    	String userid = sessioncredentials.substring(0, sessioncredentials.indexOf(":"));
 	    	String password = sessioncredentials.substring(sessioncredentials.indexOf(":")+1);
+	    	if (userid.length() == 0 || password.length() == 0) {
+	    		// no session credentials received:
+	    		sessionCreateFail();
+	    		return;
+	    	}
 	    	String sessionkey = Base64.encodeToString((userid + ":" + password).getBytes(), Base64.NO_WRAP);
 	    	sessionCreateSuccess(sessionkey);
 		}

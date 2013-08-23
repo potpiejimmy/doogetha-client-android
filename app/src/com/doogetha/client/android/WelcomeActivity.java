@@ -10,11 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+
+import com.doogetha.client.android.uitasks.SessionLoginTask;
+import com.doogetha.client.android.uitasks.SessionLoginTaskCallback;
+import com.doogetha.client.android.uitasks.VersionCheckTask;
+import com.doogetha.client.android.uitasks.VersionCheckTaskCallback;
 import com.doogetha.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
-public class WelcomeActivity extends Activity implements OnClickListener {
+public class WelcomeActivity extends Activity implements OnClickListener,VersionCheckTaskCallback,SessionLoginTaskCallback {
 
 	private Button loginbutton = null;
 	private Button registerbutton = null;
@@ -53,9 +58,9 @@ public class WelcomeActivity extends Activity implements OnClickListener {
     	viewflipper.setInAnimation(getApplicationContext(), R.anim.slide_in_right);
     	viewflipper.setOutAnimation(getApplicationContext(), R.anim.slide_out_left);
     	
-    	if (getLoginToken() != null) {
+    	if (Utils.getApp(this).getLoginToken() != null) {
     		viewflipper.showNext();
-    		registerSuccess(getLoginToken());  // display login token and PIN again when reopening
+    		registerSuccess(Utils.getApp(this).getLoginToken());  // display login token and PIN again when reopening
     	}
     }
     
@@ -88,56 +93,71 @@ public class WelcomeActivity extends Activity implements OnClickListener {
 
 	protected void register()
 	{
+		// prior to registering, do a version check:
+		new VersionCheckTask(this, this).go(getString(R.string.process_checkversion));
+	}
+	
+	public void doneCheckVersionOk()
+	{
+		// version ok, do register:
+		doRegister();
+	}
+	
+	public void doneCheckVersionFail()
+	{
+		finishCancel();
+	}
+	
+	protected void doRegister()
+	{
 		String mailstring = email.getText().toString();
 		Utils.getApp(this).setEmail(mailstring);
-		new RegisterTask(mailstring).go("Registrierungsanfrage wird gesendet...");
+		new RegisterTask(mailstring).go(getString(R.string.doregisterwait));
 	}
 	
 	protected void login()
 	{
-		new FetchCredentialsTask(getLoginToken()).go("Anmelden...");
+		// perform a test login to see whether registration was successful.
+		// (note: real session login is done in StartupActivity).
+		new SessionLoginTask(this, this, Utils.getApp(this).getLoginToken()).go("Anmelden...");
 	}
 	
 	protected void cancelRegistration()
 	{
-		removeLoginToken();
+		Utils.getApp(this).removeLoginToken();
 		viewflipper.showPrevious();
 		viewflipper.showPrevious();
-	}
-	
-	protected String getLoginToken() {
-		return Utils.getApp(this).getPreferences().getString("logintoken", null);
-	}
-	
-	protected void setLoginToken(String logintoken) {
-    	Utils.getApp(this).getPreferences().edit().putString("logintoken", logintoken).commit();
-	}
-	
-	protected void removeLoginToken() {
-    	Utils.getApp(this).getPreferences().edit().remove("logintoken").commit();
 	}
 	
 	protected void registerSuccess(String logintoken)
 	{
 		String pin = logintoken.substring(logintoken.indexOf(":")+1);
-    	//String authtoken = Base64.encodeToString("thorsten@potpiejimmy.de:asdfasdf".getBytes(), Base64.NO_WRAP);
     	registerresulttext.setText("PIN: " + pin);
-    	setLoginToken(logintoken);
+    	Utils.getApp(this).setLoginToken(logintoken);
     	viewflipper.showNext();
 	}
 	
-	protected void fetchCredentialsSuccess(String authkey)
-	{
-		String id = authkey.substring(0, authkey.indexOf(":"));
-		String password = authkey.substring(authkey.indexOf(":")+1);
-		String logintoken = getLoginToken();
-		password = Utils.xorHex(password, logintoken.substring(0, logintoken.indexOf(":")));
-		removeLoginToken();
-    	Utils.getApp(this).register(id + ":" + password);
+
+	public void doneLoginOk(String sessionkey) {
+		Utils.getApp(this).setRegistered(true);
     	DroidLib.pause(500); // wait a few milliseconds before trying to log on with new credentials
     	startMainView();
 	}
+
+	public void doneLoginFail() {
+		DroidLib.alert(this, "Die Registrierung war nicht erfolgreich. Bitte prüfe, ob du die E-Mail-Bestätigung korrekt durchgeführt hast.");
+	}
+
+	public void doneLoginError() {
+		doneLoginFail();
+	}
 	
+    protected void finishCancel()
+    {
+    	setResult(RESULT_CANCELED);
+    	finish();
+    }
+    
 	protected class RegisterTask extends AsyncUITask<String>
 	{
 		private String email = null;
@@ -149,7 +169,9 @@ public class WelcomeActivity extends Activity implements OnClickListener {
 
 		@Override
 		public String doTask() throws Throwable {
-			return Utils.getApp(WelcomeActivity.this).getRegisterAccessor().insertItemWithResult(email);
+			Utils.getApp(WelcomeActivity.this).createNewKeyPair();
+			String registerData = email + ":" + Utils.getApp(WelcomeActivity.this).getPublicKey();
+			return Utils.getApp(WelcomeActivity.this).getRegisterAccessor().insertItemWithResult(registerData);
 		}
 
 		@Override
@@ -160,32 +182,6 @@ public class WelcomeActivity extends Activity implements OnClickListener {
 		@Override
 		public void doneFail(Throwable throwable) {
 			DroidLib.alert(WelcomeActivity.this, "Die Registrierungsanfrage konnte nicht gesendet werden.");
-		}
-	}
-	
-	protected class FetchCredentialsTask extends AsyncUITask<String>
-	{
-		private String logintoken = null;
-		
-		public FetchCredentialsTask(String logintoken) {
-			super(WelcomeActivity.this);
-			this.logintoken = logintoken;
-		}
-
-		@Override
-		public String doTask() throws Throwable {
-			return Utils.getApp(WelcomeActivity.this).getRegisterAccessor().getItem(logintoken.substring(0, logintoken.indexOf(":")));
-		}
-
-		@Override
-		public void doneOk(String credentials) {
-
-			fetchCredentialsSuccess(credentials);
-		}
-
-		@Override
-		public void doneFail(Throwable throwable) {
-			DroidLib.alert(WelcomeActivity.this, "Die Registrierung war nicht erfolgreich. Bitte prüfe, ob du die E-Mail-Bestätigung korrekt durchgeführt hast.");
 		}
 	}
 }

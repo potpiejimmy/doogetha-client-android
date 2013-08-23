@@ -1,5 +1,7 @@
 package com.doogetha.client.android;
 
+import java.security.KeyPair;
+
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -18,16 +20,17 @@ import com.google.android.gcm.GCMRegistrar;
 
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
+import de.potpiejimmy.util.KeyUtil;
 
 public class Letsdoo extends Application {
 	
-	public final static int PROTOCOL_VERSION = 1;
+	public final static int PROTOCOL_VERSION = 2;
 	
 	public final static String PROTO    = "http://";
-	public final static String PROTOSEC = "https://";
+	public final static String PROTOSEC = "http://";
 	
-	public final static String URI = "www.doogetha.com/beta/res/";
-	//public final static String URI = "192.168.178.21:8080/beta/res/";
+	//public final static String URI = "www.doogetha.com/beta/res/";
+	public final static String URI = "192.168.178.21:8080/beta/res/";
 	//public final static String URI = "192.168.100.22:8089/beta/res/";
 	//public final static String URI = "172.18.119.203:8089/beta/res/";
 	
@@ -123,30 +126,44 @@ public class Letsdoo extends Application {
 		this.knownAddresses = knownAddresses;
 	}
 
-	public String getAuthtoken() {
-		return getPreferences().getString("authtoken", null);
+	public String getLoginToken() {
+		return getPreferences().getString("logintoken", null);
 	}
 	
-	public void setAuthtoken(String authtoken) {
-		getPreferences().edit().putString("authtoken", authtoken).commit();
+	public void setLoginToken(String logintoken) {
+		getPreferences().edit().putString("logintoken", logintoken).commit();
 	}
 	
-	public void removeAuthtoken() {
-		getPreferences().edit().remove("authtoken").commit();
+	public void removeLoginToken() {
+		getPreferences().edit().remove("logintoken").commit();
 	}
 	
 	public boolean isRegistered() {
-		return getAuthtoken() != null;
+		return Boolean.parseBoolean(getPreferences().getString("registered", "false"));
 	}
 	
-	public void register(String authtoken) {
-		setAuthtoken(authtoken);
+	public void setRegistered(boolean registered) {
+		getPreferences().edit().putString("registered", Boolean.valueOf(registered).toString()).commit();
 	}
 	
 	public void unregister() {
-		removeAuthtoken();
+		setRegistered(false);
+		removeLoginToken();
 		removeSession();
 		unregisterGcm();
+	}
+	
+	public void createNewKeyPair() {
+		KeyPair kp = KeyUtil.generateKeyPair();
+		getPreferences().
+			edit().
+			putString("pubkey",  KeyUtil.encodeKey(kp.getPublic())).
+			putString("privkey", KeyUtil.encodeKey(kp.getPrivate())).
+			commit();
+	}
+	
+	public String getPublicKey() {
+		return getPreferences().getString("pubkey", null);
 	}
 	
 	public String getEmail() {

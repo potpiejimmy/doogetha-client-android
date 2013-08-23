@@ -1,5 +1,6 @@
 package de.potpiejimmy.util;
 
+
 /**
  * Utility class to access resources of a RESTful web service.
  * <p/>
@@ -91,6 +92,11 @@ public class RestResourceAccessor<CT, ET>
 	public void updateItem(String id, ET item) throws Exception
 	{
 		requester.putObject(baseUrl + id, item);
+	}
+	
+	public ET updateItemWithResult(String id, ET item) throws Exception
+	{
+		return requester.putObjectWithResult(baseUrl + id, item, entityType);
 	}
 	
 	public void deleteItem(String id) throws Exception

@@ -21,7 +21,7 @@ public class KeyUtil {
 			KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
 			keyGen.initialize(2048);
 			KeyPair generatedKeyPair = keyGen.genKeyPair();
-			dumpKeyPair(generatedKeyPair);
+//			dumpKeyPair(generatedKeyPair);
 			return generatedKeyPair;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -29,18 +29,18 @@ public class KeyUtil {
 		return null;
 	}
  
-	private static void dumpKeyPair(KeyPair keyPair) {
-		System.out.println("Generated Key Pair");
-		
-		PublicKey pub = keyPair.getPublic();
-		System.out.println("Public Key: " + Utils.bytesToHex(pub.getEncoded()));
-		 
-		PrivateKey priv = keyPair.getPrivate();
-		System.out.println("Private Key: " + Utils.bytesToHex(priv.getEncoded()));
-		
-		System.out.println("Encoded public  key (X509)  length: " + encodeKey(pub).length());
-		System.out.println("Encoded private key (PKCS8) length: " + encodeKey(priv).length());
-	}
+//	private static void dumpKeyPair(KeyPair keyPair) {
+//		System.out.println("Generated Key Pair");
+//		
+//		PublicKey pub = keyPair.getPublic();
+//		System.out.println("Public Key: " + Utils.bytesToHex(pub.getEncoded()));
+//		 
+//		PrivateKey priv = keyPair.getPrivate();
+//		System.out.println("Private Key: " + Utils.bytesToHex(priv.getEncoded()));
+//		
+//		System.out.println("Encoded public  key (X509)  length: " + encodeKey(pub).length());
+//		System.out.println("Encoded private key (PKCS8) length: " + encodeKey(priv).length());
+//	}
  
 	public static String encodeKey(PrivateKey privateKey) {
 		// Encode Private Key.

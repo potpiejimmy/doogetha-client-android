@@ -35,6 +35,11 @@ public class JsonWebRequest extends WebRequest
 		super.put(url, gson.toJson(object));
 	}
 
+	public <T> T putObjectWithResult(String url, Object object, Class<T> resultType) throws Exception
+	{
+		return convertResult(super.put(url, gson.toJson(object)), resultType);
+	}
+
 	public void deleteObject(String url) throws Exception
 	{
 		super.delete(url);

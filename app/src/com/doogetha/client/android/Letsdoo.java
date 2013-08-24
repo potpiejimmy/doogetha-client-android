@@ -1,6 +1,7 @@
 package com.doogetha.client.android;
 
 import java.security.KeyPair;
+import java.security.PrivateKey;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -27,10 +28,10 @@ public class Letsdoo extends Application {
 	public final static int PROTOCOL_VERSION = 2;
 	
 	public final static String PROTO    = "http://";
-	public final static String PROTOSEC = "http://";
+	public final static String PROTOSEC = "https://";
 	
-	//public final static String URI = "www.doogetha.com/beta/res/";
-	public final static String URI = "192.168.178.21:8080/beta/res/";
+	public final static String URI = "www.doogetha.com/beta/res/";
+	//public final static String URI = "192.168.178.21:8080/beta/res/";
 	//public final static String URI = "192.168.100.22:8089/beta/res/";
 	//public final static String URI = "172.18.119.203:8089/beta/res/";
 	
@@ -153,7 +154,7 @@ public class Letsdoo extends Application {
 		unregisterGcm();
 	}
 	
-	public void createNewKeyPair() {
+	public void generateNewKeyPair() throws Exception {
 		KeyPair kp = KeyUtil.generateKeyPair();
 		getPreferences().
 			edit().
@@ -162,8 +163,13 @@ public class Letsdoo extends Application {
 			commit();
 	}
 	
-	public String getPublicKey() {
+	public String getEncodedPublicKey() {
 		return getPreferences().getString("pubkey", null);
+	}
+	
+	public PrivateKey getPrivateKey() throws Exception {
+		String privkey = getPreferences().getString("privkey", null);
+		return KeyUtil.decodePrivateKey(privkey);
 	}
 	
 	public String getEmail() {

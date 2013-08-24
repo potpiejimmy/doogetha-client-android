@@ -58,6 +58,7 @@ public class StartupActivity extends Activity implements VersionCheckTaskCallbac
     protected void sessionCreateSuccess(String sessionkey)
     {
     	Utils.getApp(this).newSession(sessionkey);
+    	DroidLib.pause(500); // wait a few milliseconds before trying to log on with new session key credentials
     	checkGcmRegistration();
     }
     

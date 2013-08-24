@@ -13,6 +13,7 @@ import com.doogetha.client.util.Utils;
 
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
+import de.potpiejimmy.util.KeyUtil;
 
 public class SessionLoginTask extends AsyncUITask<String>
 {
@@ -42,8 +43,8 @@ public class SessionLoginTask extends AsyncUITask<String>
 		}
 		String userid = challenge.substring(0, challenge.indexOf(":"));
 		byte[] challengeData = Utils.hexToBytes(challenge.substring(challenge.indexOf(":")+1));
-		// encrypt challenge:
-		// XXX TODO encrypt
+		// sign challenge data:
+		challengeData = KeyUtil.sign(challengeData, Utils.getApp(activity).getPrivateKey());
 		return Utils.getApp(activity).getLoginAccessor().updateItemWithResult(userid, Utils.bytesToHex(challengeData));
 	}
 	

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.doogetha.client.android"
-      android:versionCode="74"
-      android:versionName="0.9.6.4">
+      android:versionCode="75"
+      android:versionName="0.9.7.0">
     
     <uses-sdk android:minSdkVersion="8" 
     		  android:targetSdkVersion="17"/>

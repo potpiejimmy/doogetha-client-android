@@ -140,7 +140,6 @@ public class WelcomeActivity extends Activity implements OnClickListener,Version
 
 	public void doneLoginOk(String sessionkey) {
 		Utils.getApp(this).setRegistered(true);
-    	DroidLib.pause(500); // wait a few milliseconds before trying to log on with new credentials
     	startMainView();
 	}
 
@@ -169,8 +168,8 @@ public class WelcomeActivity extends Activity implements OnClickListener,Version
 
 		@Override
 		public String doTask() throws Throwable {
-			Utils.getApp(WelcomeActivity.this).createNewKeyPair();
-			String registerData = email + ":" + Utils.getApp(WelcomeActivity.this).getPublicKey();
+			Utils.getApp(WelcomeActivity.this).generateNewKeyPair();
+			String registerData = email + ":" + Utils.getApp(WelcomeActivity.this).getEncodedPublicKey();
 			return Utils.getApp(WelcomeActivity.this).getRegisterAccessor().insertItemWithResult(registerData);
 		}
 

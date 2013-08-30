@@ -21,6 +21,7 @@ import com.google.android.gcm.GCMRegistrar;
 
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
+import de.letsdoo.server.vo.VersionVo;
 import de.potpiejimmy.util.KeyUtil;
 
 public class Letsdoo extends Application {
@@ -52,6 +53,8 @@ public class Letsdoo extends Application {
 	
 	private int versionCode = 0;
 	private String versionName = null;
+	
+	private VersionVo serverVersionVo = null;
 	
 	private String[] knownAddresses = null;
 	
@@ -253,5 +256,13 @@ public class Letsdoo extends Application {
 	
 	public String getVersionName() {
 		return versionName;
+	}
+
+	public VersionVo getServerVersionVo() {
+		return serverVersionVo;
+	}
+
+	public void setServerVersionVo(VersionVo serverVersionVo) {
+		this.serverVersionVo = serverVersionVo;
 	}
 }

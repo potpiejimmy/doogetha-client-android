@@ -36,6 +36,8 @@ public class VersionCheckTask extends AsyncUITask<VersionVo>
 			return;
 		}
 		try {
+			Utils.getApp(activity).setServerVersionVo(result);
+			
 			// protocol version handling:
 			int protocolVersion = result.getProtocolVersion();
 			boolean protocolVersionIncompatible = (protocolVersion != Letsdoo.PROTOCOL_VERSION);

@@ -1,5 +1,7 @@
 package com.doogetha.client.util;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -7,6 +9,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.util.Base64;
 import android.widget.ImageView;
 
 import com.doogetha.client.android.Letsdoo;
@@ -135,5 +138,14 @@ public class Utils {
     	return (parts.length==2 &&
     			parts[0].trim().length()>0 &&
     			parts[1].trim().length()>0);
+    }
+    
+    public static String md5Base64(String input) {
+    	try {
+    		MessageDigest digest = MessageDigest.getInstance("MD5");
+    		return Base64.encodeToString(digest.digest(input.getBytes()), Base64.NO_WRAP);
+    	} catch (NoSuchAlgorithmException nsae) {
+    		throw new RuntimeException(nsae);
+    	}
     }
 }

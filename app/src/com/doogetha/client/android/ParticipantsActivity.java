@@ -262,7 +262,7 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
 
 		@Override
 		public UserVo doTask() throws Throwable {
-			return Utils.getApp(ParticipantsActivity.this).getUsersAccessor().getItem(email);
+			return Utils.getApp(ParticipantsActivity.this).getUsersAccessor().getItem(Utils.md5Base64(email));
 		}
 
 		@Override

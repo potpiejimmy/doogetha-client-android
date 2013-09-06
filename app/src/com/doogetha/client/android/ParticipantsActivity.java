@@ -191,11 +191,13 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
 			    	  startActivityForResult(intentContact, PICK_CONTACT);
 			    	  break;
 					case 1:
-					  DroidLib.alert(ParticipantsActivity.this, "E-Mail-Adresse wählen", Utils.getApp(ParticipantsActivity.this).getKnownAddresses(),  new android.content.DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int which) {
-							checkAddUser(Utils.getApp(ParticipantsActivity.this).getKnownAddresses()[which]);
-						}
-					  });
+//					  DroidLib.alert(ParticipantsActivity.this, "E-Mail-Adresse wählen", Utils.getApp(ParticipantsActivity.this).getKnownAddresses(),  new android.content.DialogInterface.OnClickListener() {
+//						public void onClick(DialogInterface dialog, int which) {
+//							checkAddUser(Utils.getApp(ParticipantsActivity.this).getKnownAddresses()[which]);
+//						}
+//					  });
+					  Intent intentDoogethaList = new Intent(getApplicationContext(), DoogethaFriendsActivity.class);
+					  startActivityForResult(intentDoogethaList, 0);
 					  break;
 					case 2:
 						final EditText input = new EditText(ParticipantsActivity.this);

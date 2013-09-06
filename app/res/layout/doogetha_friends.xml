@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/doogetha_bg"
-    >
+    android:background="@color/doogetha_bg" >
+    
+    <include android:id="@+id/dg_title" layout="@layout/dg_title"/>
 
     <com.doogetha.client.util.TitleBar android:layout_height="wrap_content"
                  android:layout_width="match_parent"
-                 android:text="@string/editparticipants_title"/>
+                 android:text="@string/doogethafriends_title"/>
 	
 	<LinearLayout android:orientation="horizontal"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    >
 		<ImageButton android:id="@+id/addbutton"
-		    android:contentDescription="@string/editparticipants_addbuttonimagebutton"
+		    android:contentDescription="@string/doogethafriends_addbuttonimagebutton"
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content" 
 		    android:src="@android:drawable/ic_input_add"
 		    />
-		<!-- TextView android:id="@+id/mainlabel"
-		    android:layout_width="fill_parent" 
-		    android:layout_height="wrap_content" 
-		    android:text="@string/hello"
-		    android:padding="10dp"
-		    android:textSize="12sp"
-		    android:textColor="#F00"
-		    /-->
 	</LinearLayout>
+    
 	<ListView android:id="@id/android:list"
 	               android:layout_width="match_parent"
 	               android:layout_height="0dip"
@@ -43,13 +37,13 @@
 	    >
 		<Button android:id="@+id/editok"
 		    android:layout_width="match_parent" 
-		    android:layout_height="wrap_content" 
+		    android:layout_height="match_parent" 
 	               android:layout_weight="0.5"
-		    android:text="@string/ok"
+		    android:text="@string/submit_selection"
 		    />
 		<Button android:id="@+id/editcancel"
 		    android:layout_width="match_parent" 
-		    android:layout_height="wrap_content" 
+		    android:layout_height="match_parent" 
 	               android:layout_weight="0.5"
 		    android:text="@string/cancel"
 		    />

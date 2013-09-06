@@ -4,8 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     >
-	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/participantname"
+	<TextView android:id="@+id/participantname"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:paddingLeft="10dp"
@@ -14,8 +13,7 @@
 	    android:textColor="#000"
 	    android:text="Max Mustermann">
     </TextView>
-	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/participantemail"
+	<TextView android:id="@+id/participantemail"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:paddingLeft="10dp"

@@ -65,6 +65,10 @@
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
+        <activity android:name=".DoogethaFriendsActivity"
+                  android:theme="@android:style/Theme.NoTitleBar"
+                  android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
         <activity android:name=".EventSurveysActivity"
                   android:theme="@android:style/Theme.NoTitleBar"
                   android:configChanges="keyboardHidden|orientation|screenSize">

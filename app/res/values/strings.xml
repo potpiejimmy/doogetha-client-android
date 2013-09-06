@@ -2,6 +2,7 @@
 <resources>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="doogetha">Doogetha</string>
     <string name="welcome_title">Willkommen bei Doogetha</string>
     <string name="welcome_intro">Doogetha erlaubt es dir, beliebige Aktivitäten mit Freunden, Bekannten und unbekannten Personen zu planen.\n\nBitte drücke auf Fortfahren, um Doogetha auf diesem Gerät einzurichten.</string>
     <string name="welcome_continue">Fortfahren</string>
@@ -67,6 +68,7 @@
     <string name="comments_n">\u2191 {0} Kommentare \u2191</string>
     <string name="reset_survey_confirm">Alle Abstimmergebnisse der Teilnehmer werden zurückgesetzt und die Abstimmung wieder geöffnet.</string>
     <string name="delete_event_confirm">Möchtest du die Aktivität wirklich löschen?</string>
+    <string name="submit_selection">Auswahl übernehmen</string>
     <!-- New Activity Wizard -->
     <string name="newactwiz_base_title">Neue Aktivität erstellen</string>
     <string name="newactwiz_base_text">Doogetha wird dich nun Schritt für Schritt durch die Erstellung einer neuen Aktivität führen.\n\nFür die Aktivität kannst du zunächst einen Titel und optional eine kurze Beschreibung eingeben.</string>
@@ -89,5 +91,10 @@
     <string name="pull_to_refresh">Zum Aktualisieren ziehen</string>
     <string name="release_to_refresh">Jetzt loslassen</string>
     <string name="refreshing">Bitte warten&#8230;</string>
-    <!--  -->
+    <!-- Participants Activity -->
+    <string name="editparticipants_title">Teilnehmer bearbeiten</string>
+    <string name="editparticipants_addbuttonimagebutton">Teilnehmer hinzufügen</string>
+    <!-- Doogetha Friends Activity -->
+    <string name="doogethafriends_title">Deine Freunde bei Doogetha</string>
+    <string name="doogethafriends_addbuttonimagebutton">Manuell hinzufügen</string>
 </resources>

@@ -46,7 +46,9 @@ public class DoogethaFriendsSyncTask  extends AsyncUITask<UsersVo> {
 		// also put all mail addresses from the address book in the map:
 		try {
 			List<String> addressBookMails = ContactsUtils.fetchEmails(activity, null);
-			for (String mail : addressBookMails) userMap.put(Utils.md5Base64(mail), mail);
+			for (String mail : addressBookMails) 
+				if (!mail.equalsIgnoreCase(app.getEmail()))
+					userMap.put(Utils.md5Base64(mail), mail);
 		} catch (Exception ex) {
 			// for now, just ignore
 		}
@@ -65,8 +67,8 @@ public class DoogethaFriendsSyncTask  extends AsyncUITask<UsersVo> {
 		UserVo[] sortedFriends = syncedUsers.toArray(new UserVo[syncedUsers.size()]);
 		Arrays.sort(sortedFriends, new Comparator<UserVo>() {
 			public int compare(UserVo lhs, UserVo rhs) {
-				String n1 = ContactsUtils.userDisplayName(Utils.getApp(activity), lhs); 
-				String n2 = ContactsUtils.userDisplayName(Utils.getApp(activity), rhs); 
+				String n1 = ContactsUtils.userDisplayName(Utils.getApp(activity), lhs).toLowerCase(); 
+				String n2 = ContactsUtils.userDisplayName(Utils.getApp(activity), rhs).toLowerCase(); 
 				return n1.compareToIgnoreCase(n2);
 			}
 		});

@@ -96,6 +96,8 @@
     <string name="editparticipants_addbuttonimagebutton">Teilnehmer hinzufügen</string>
     <!-- Doogetha Friends Activity -->
     <string name="doogethafriends_title">Deine Freunde bei Doogetha</string>
+    <string name="doogethafriends_addbuttonimagebutton">Mail-Adresse manuell hinzufügen</string>
     <string name="doogethafriends_syncbuttonimagebutton">Freundeliste synchronisieren</string>
     <string name="doogethafriends_synchronizing">Deine Freundeliste wird aktualisiert</string>
+    <string name="friends">Freunde</string>
 </resources>

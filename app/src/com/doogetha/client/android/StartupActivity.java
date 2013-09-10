@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.doogetha.client.android.uitasks.DoogethaFriendsSyncTask;
+import com.doogetha.client.android.uitasks.DoogethaFriendsSyncTaskCallback;
 import com.doogetha.client.android.uitasks.SessionLoginTask;
 import com.doogetha.client.android.uitasks.SessionLoginTaskCallback;
 import com.doogetha.client.android.uitasks.VersionCheckTask;
@@ -16,7 +18,7 @@ import com.doogetha.client.util.Utils;
 import de.potpiejimmy.util.AsyncUITask;
 import de.potpiejimmy.util.DroidLib;
 
-public class StartupActivity extends Activity implements VersionCheckTaskCallback, SessionLoginTaskCallback
+public class StartupActivity extends Activity implements VersionCheckTaskCallback, SessionLoginTaskCallback, DoogethaFriendsSyncTaskCallback
 {
 	
 	protected TextView label = null;
@@ -82,9 +84,19 @@ public class StartupActivity extends Activity implements VersionCheckTaskCallbac
     
     protected void doneGcmCheck()
     {
-    	doneStartup();
+    	synchronizeFriends();
     }
     
+    protected void synchronizeFriends()
+    {
+    	performTask(new DoogethaFriendsSyncTask(this, this), "Freundeliste wird aktualisiert...");
+    }
+    
+	public void friendListSynced()
+	{
+		doneStartup();
+	}
+	
     protected void doneStartup()
     {
     	label.setText("Starte Doogetha...");

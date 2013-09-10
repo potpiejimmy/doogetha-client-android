@@ -16,7 +16,25 @@
 	    android:layout_height="wrap_content"
 	    android:gravity="right"
 	    >
-		<ImageButton android:id="@+id/syncbutton"
+
+		<TextView
+		    android:id="@+id/numFriendsLabel"
+		    android:layout_weight="1"
+		    android:layout_width="0dip"
+		    android:layout_height="match_parent"
+		    android:padding="5dip"
+		    android:gravity="center_vertical"
+		    android:text="@string/friends"
+		    android:textColor="@android:color/black"
+		    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+		<ImageButton android:id="@+id/addbutton"
+		    android:contentDescription="@string/doogethafriends_addbuttonimagebutton"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content" 
+		    android:src="@android:drawable/ic_input_add"
+		    />
+	    <ImageButton android:id="@+id/syncbutton"
 		    android:contentDescription="@string/doogethafriends_syncbuttonimagebutton"
 		    android:layout_width="wrap_content" 
 		    android:layout_height="wrap_content" 

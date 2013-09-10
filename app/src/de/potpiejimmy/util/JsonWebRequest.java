@@ -45,7 +45,7 @@ public class JsonWebRequest extends WebRequest
 		super.delete(url);
 	}
 	
-	protected <T> T convertResult(String result, Class<T> type) {
+	public <T> T convertResult(String result, Class<T> type) {
 		try {
 			return gson.fromJson(result, type);
 		} catch (Exception ex) {

@@ -1,7 +1,10 @@
 package com.doogetha.client.android;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,29 +20,21 @@ import android.widget.CheckedTextView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.doogetha.client.android.uitasks.DoogethaFriendsSyncTask;
+import com.doogetha.client.android.uitasks.DoogethaFriendsSyncTaskCallback;
 import com.doogetha.client.util.ContactsUtils;
 import com.doogetha.client.util.SlideListActivity;
 import com.doogetha.client.util.Utils;
 
 import de.letsdoo.server.vo.UserVo;
 
-public class DoogethaFriendsActivity extends SlideListActivity implements OnItemClickListener, OnClickListener {
+public class DoogethaFriendsActivity extends SlideListActivity implements OnItemClickListener, OnClickListener, DoogethaFriendsSyncTaskCallback {
 
-    private ArrayAdapter<SelectableUser> data = null;
+    private ArrayAdapter<UserVo> data = null;
 	
-	private ImageButton addButton = null;
-	
-	protected static class SelectableUser
-	{
-		public UserVo user = null;
-		public boolean selected = false;
-		
-		public SelectableUser(UserVo user, boolean selected)
-		{
-			this.user = user;
-			this.selected = selected;
-		}
-	}
+	private ImageButton syncButton = null;
+
+	private Map<String,Boolean> currentSelection = new HashMap<String,Boolean>();
 	
     /** Called when the activity is first created. */
     @Override
@@ -49,23 +44,15 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
         
     	Button buttonok = (Button) findViewById(R.id.editok);
     	Button buttoncancel = (Button) findViewById(R.id.editcancel);
-        this.addButton = (ImageButton)findViewById(R.id.addbutton);
+        this.syncButton = (ImageButton)findViewById(R.id.syncbutton);
         
-        addButton.setOnClickListener(this);
+        syncButton.setOnClickListener(this);
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
     	
-    	List<SelectableUser> users = new ArrayList<SelectableUser>();
-    	UserVo user = new UserVo();
-    	user.setEmail("thorsten@potpiejimmy.de");
-    	user.setFirstname("Thorsten");
-    	users.add(new SelectableUser(user, false));
-    	user = new UserVo();
-    	user.setEmail("kerstin_nicklaus@web.de");
-    	user.setFirstname("Kerstin");
-    	users.add(new SelectableUser(user, false));
+    	List<UserVo> users = this.getCurrentFriendsList();
     	
-    	this.data = new ArrayAdapter<SelectableUser>(this, R.layout.doogetha_friend_item, users) {
+    	this.data = new ArrayAdapter<UserVo>(this, R.layout.doogetha_friend_item, users) {
     		@Override
     		public View getView(int position, View convertView, ViewGroup viewGroup) {
     			if (convertView == null) {
@@ -73,13 +60,13 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
     	                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	            convertView = inflater.inflate(R.layout.doogetha_friend_item, null);
     	        }
-    			SelectableUser user = getItem(position);
+    			UserVo user = getItem(position);
     			TextView displayName = (TextView) convertView.findViewById(R.id.participantname);
-    			displayName.setText(ContactsUtils.userDisplayName(Utils.getApp(DoogethaFriendsActivity.this), user.user));
+    			displayName.setText(ContactsUtils.userDisplayName(Utils.getApp(DoogethaFriendsActivity.this), user));
     			TextView email = (TextView) convertView.findViewById(R.id.participantemail);
-    			email.setText(user.user.getEmail());
+    			email.setText(user.getEmail());
     			CheckedTextView checkBox = (CheckedTextView)convertView.findViewById(R.id.item_checkbox);
-    			checkBox.setChecked(user.selected);
+    			checkBox.setChecked(currentSelection.get(user.getEmail()) != null);
     	        return convertView;
     		}
     	};
@@ -90,9 +77,21 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
     	//registerForContextMenu(getListView());
     }
     
+    protected List<UserVo> getCurrentFriendsList() {
+    	Collection<UserVo> friends = Utils.getApp(this).getDoogethaFriends().getUsers();
+    	List<UserVo> users = new ArrayList<UserVo>();
+    	if (friends != null) {
+    		for (UserVo user : friends) users.add(user);
+    	}
+    	return users;
+    }
+    
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		SelectableUser user = data.getItem(position);
-		user.selected = user.selected ^ true;
+		UserVo user = data.getItem(position);
+		if (currentSelection.get(user.getEmail()) != null)
+			currentSelection.remove(user.getEmail());
+		else
+			currentSelection.put(user.getEmail(), true);
 		data.notifyDataSetChanged();
 	}
 
@@ -111,8 +110,8 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
 	public void onClick(View view) {
 		switch (view.getId())
 		{
-		case R.id.addbutton:
-			
+		case R.id.syncbutton:
+			new DoogethaFriendsSyncTask(this, this).go(getString(R.string.doogethafriends_synchronizing));
 			break;
 		case R.id.editok:
 			finishOk();
@@ -121,5 +120,12 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
 			finishCancel();
 			break;
 		}
+	}
+
+	public void friendListSynced() {
+		data.clear();
+		for (UserVo user : getCurrentFriendsList())
+			data.add(user);
+		data.notifyDataSetChanged();
 	}
 }

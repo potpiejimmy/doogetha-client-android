@@ -17,13 +17,15 @@ public class ContactsUtils {
 	
 	/**
 	 * Fetches all email addresses from the address book for the given contact id
+	 * @param activity activity
+	 * @param contactId a contact id, null fetches all mails
 	 */
 	public static List<String> fetchEmails(Activity activity, String contactId) {
-    	Cursor emailCur = activity.getContentResolver().query( 
+    	Cursor emailCur = activity.getContentResolver().query(
     			ContactsContract.CommonDataKinds.Email.CONTENT_URI, 
     			null,
-    			ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", 
-    			new String[]{contactId}, null); 
+    			contactId != null ? ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?" : null, 
+    			contactId != null ? new String[]{contactId} : new String[] {}, null); 
     	List<String> result = new ArrayList<String>();
 		while (emailCur.moveToNext()) { 
 		    String email = emailCur.getString(

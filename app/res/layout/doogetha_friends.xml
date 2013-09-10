@@ -12,14 +12,15 @@
                  android:text="@string/doogethafriends_title"/>
 	
 	<LinearLayout android:orientation="horizontal"
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:gravity="right"
 	    >
-		<ImageButton android:id="@+id/addbutton"
-		    android:contentDescription="@string/doogethafriends_addbuttonimagebutton"
-		    android:layout_width="fill_parent" 
+		<ImageButton android:id="@+id/syncbutton"
+		    android:contentDescription="@string/doogethafriends_syncbuttonimagebutton"
+		    android:layout_width="wrap_content" 
 		    android:layout_height="wrap_content" 
-		    android:src="@android:drawable/ic_input_add"
+		    android:src="@android:drawable/ic_popup_sync"
 		    />
 	</LinearLayout>
     

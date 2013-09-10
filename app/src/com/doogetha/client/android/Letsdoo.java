@@ -18,9 +18,12 @@ import com.doogetha.client.android.rest.SurveysAccessor;
 import com.doogetha.client.android.rest.UsersAccessor;
 import com.doogetha.client.android.rest.VersionAccessor;
 import com.google.android.gcm.GCMRegistrar;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
+import de.letsdoo.server.vo.UsersVo;
 import de.letsdoo.server.vo.VersionVo;
 import de.potpiejimmy.util.KeyUtil;
 
@@ -58,6 +61,8 @@ public class Letsdoo extends Application {
 	
 	private String[] knownAddresses = null;
 	
+	private Gson gson = null;
+
 	@Override
 	public void onCreate() {
 		eventsAccessor = new EventsAccessor(PROTOSEC + URI + "events");
@@ -79,6 +84,8 @@ public class Letsdoo extends Application {
 		{
 		    Log.v("Letsdoo", e.getMessage());
 		}
+		
+		this.gson = new GsonBuilder().create();
 		
 		registerGcm();
 	}
@@ -148,6 +155,15 @@ public class Letsdoo extends Application {
 	
 	public void setRegistered(boolean registered) {
 		getPreferences().edit().putString("registered", Boolean.valueOf(registered).toString()).commit();
+	}
+	
+	public synchronized UsersVo getDoogethaFriends() {
+		String friends = getPreferences().getString("doogethaFriends", null);
+		return friends != null ? gson.fromJson(friends, UsersVo.class) : new UsersVo();
+	}
+	
+	public synchronized void setDoogethaFriends(UsersVo friends) {
+		getPreferences().edit().putString("doogethaFriends", gson.toJson(friends)).commit();
 	}
 	
 	public void unregister() {

@@ -1,10 +1,8 @@
 package com.doogetha.client.android;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import android.app.AlertDialog;
@@ -98,12 +96,7 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
     }
     
     protected List<UserVo> getCurrentFriendsList() {
-    	Collection<UserVo> friends = Utils.getApp(this).getDoogethaFriends().getUsers();
-    	List<UserVo> users = new ArrayList<UserVo>();
-    	if (friends != null) {
-    		for (UserVo user : friends) users.add(user);
-    	}
-    	return users;
+    	return Utils.getApp(this).getDoogethaFriends().getFriends();
     }
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -158,24 +151,9 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
         newUser.setState(0); /* unconfirmed/new */
         ContactsUtils.fillUserInfo(this.getContentResolver(), newUser);
         currentSelection.put(email, true);
-        
-        // manually add a new entry to doogetha friends list (in alphabetical order):
-        UsersVo doogethaFriends = app.getDoogethaFriends();
-        Collection<UserVo> users = doogethaFriends.getUsers();
-        List<UserVo> newUsers = users != null ? new ArrayList<UserVo>(users) : new ArrayList<UserVo>();
-        boolean added = false;
-        for (int i=0; i<newUsers.size(); i++) {
-        	String n1 = ContactsUtils.userDisplayName(app, newUsers.get(i)).toLowerCase(Locale.getDefault());
-        	String n2 = ContactsUtils.userDisplayName(app, newUser).toLowerCase(Locale.getDefault());
-        	if (n1.compareTo(n2) > 0) {
-        		newUsers.add(i, newUser);
-        		added = true;
-        		break;
-        	}
-        }
-        if (!added) newUsers.add(newUser);
-        doogethaFriends.setUsers(newUsers);
-        app.setDoogethaFriends(doogethaFriends);
+
+        app.getDoogethaFriends().addFriend(newUser);
+        app.getDoogethaFriends().save();
 
         updateFriendsList();
     }

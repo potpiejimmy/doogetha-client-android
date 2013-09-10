@@ -1,11 +1,10 @@
 package com.doogetha.client.android.uitasks;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import android.app.Activity;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 
 import com.doogetha.client.android.Letsdoo;
 import com.doogetha.client.util.ContactsUtils;
+import com.doogetha.client.util.DoogethaFriends;
 import com.doogetha.client.util.Utils;
 
 import de.letsdoo.server.vo.UserVo;
@@ -23,7 +23,6 @@ import de.potpiejimmy.util.JsonWebRequest;
 public class DoogethaFriendsSyncTask  extends AsyncUITask<UsersVo> {
 	private Activity activity = null;
 	private DoogethaFriendsSyncTaskCallback callback = null;
-	private Map<String,String> userMap = null;
 	
 	public DoogethaFriendsSyncTask(Activity activity, DoogethaFriendsSyncTaskCallback callback) 
 	{
@@ -31,15 +30,16 @@ public class DoogethaFriendsSyncTask  extends AsyncUITask<UsersVo> {
 		this.activity = activity;
 		this.callback = callback;
 	}
+	
 	public UsersVo doTask() throws Throwable
 	{
 		Letsdoo app = Utils.getApp(activity);
 		
 		// maps email hash strings to email addresses:
-		userMap = new HashMap<String,String>();
+		Map<String,String> userMap = new HashMap<String,String>();
 
 		// get the current list:
-		Collection<UserVo> currentUsers = app.getDoogethaFriends().getUsers();
+		List<UserVo> currentUsers = app.getDoogethaFriends().getFriends();
 		// put all current users in the hash list:
 		if (currentUsers != null)
 			for (UserVo user : currentUsers) userMap.put(Utils.md5Base64(user.getEmail()), user.getEmail());
@@ -65,29 +65,27 @@ public class DoogethaFriendsSyncTask  extends AsyncUITask<UsersVo> {
 		
 		Collection<UserVo> syncedUsers = req.convertResult(req.post(app.getUsersAccessor().getBaseUrl(), hashes.toString()), UsersVo.class).getUsers();
 		
-		UserVo[] sortedFriends = syncedUsers.toArray(new UserVo[syncedUsers.size()]);
-		Arrays.sort(sortedFriends, new Comparator<UserVo>() {
-			public int compare(UserVo lhs, UserVo rhs) {
-				String n1 = ContactsUtils.userDisplayName(Utils.getApp(activity), lhs).toLowerCase(Locale.getDefault()); 
-				String n2 = ContactsUtils.userDisplayName(Utils.getApp(activity), rhs).toLowerCase(Locale.getDefault()); 
-				return n1.compareToIgnoreCase(n2);
-			}
-		});
-		
 		// fetch display names from address book:
-		for (UserVo friend : sortedFriends)
+		for (UserVo friend : syncedUsers)
 			ContactsUtils.fillUserInfo(activity.getContentResolver(), friend);
 		
-		UsersVo newUsers = new UsersVo();
-		newUsers.setUsers(Arrays.asList(sortedFriends));
+		UserVo[] sortedFriends = syncedUsers.toArray(new UserVo[syncedUsers.size()]);
+		Arrays.sort(sortedFriends, new DoogethaFriends.FriendsListComparator(app));
 		
-		// store back:
-		app.setDoogethaFriends(newUsers);
+		currentUsers = new ArrayList<UserVo>(Arrays.asList(sortedFriends)); // must be modifiable
+		UsersVo newUsers = new UsersVo();
+		newUsers.setUsers(currentUsers);
+		
 		return newUsers;
 	}
 	
 	public void doneOk(UsersVo users)
 	{
+		// store back:
+		DoogethaFriends friends = Utils.getApp(activity).getDoogethaFriends(); 
+		friends.setFriends((List<UserVo>)users.getUsers());
+		friends.save();
+		
 		callback.friendListSynced();
 	}
 	

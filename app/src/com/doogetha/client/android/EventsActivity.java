@@ -1,9 +1,5 @@
 package com.doogetha.client.android;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -422,18 +418,16 @@ public class EventsActivity extends SlideActivity implements OnItemClickListener
 		
 		public void doneOk(EventsVo result)
 		{
+			Letsdoo app = Utils.getApp(EventsActivity.this);
 			data.clear();
-			Map<String,String> allMails = new HashMap<String,String>();
 			if (result != null && result.getEvents() != null)
 				for (EventVo e : result.getEvents()) {
 					data.add(meFirst(e));
 					for (UserVo user : e.getUsers())
-						allMails.put(user.getEmail(), user.getEmail());
+						app.getDoogethaFriends().addFriend(user);
 				}
-			String[] knownAddresses = allMails.keySet().toArray(new String[allMails.size()]);
-			Arrays.sort(knownAddresses);
-			Utils.getApp(EventsActivity.this).setKnownAddresses(knownAddresses);
 			
+			app.getDoogethaFriends().save();
 			loadingDone();
 		}
 

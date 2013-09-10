@@ -17,13 +17,11 @@ import com.doogetha.client.android.rest.RegisterAccessor;
 import com.doogetha.client.android.rest.SurveysAccessor;
 import com.doogetha.client.android.rest.UsersAccessor;
 import com.doogetha.client.android.rest.VersionAccessor;
+import com.doogetha.client.util.DoogethaFriends;
 import com.google.android.gcm.GCMRegistrar;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
-import de.letsdoo.server.vo.UsersVo;
 import de.letsdoo.server.vo.VersionVo;
 import de.potpiejimmy.util.KeyUtil;
 
@@ -59,9 +57,7 @@ public class Letsdoo extends Application {
 	
 	private VersionVo serverVersionVo = null;
 	
-	private String[] knownAddresses = null;
-	
-	private Gson gson = null;
+	private DoogethaFriends friends = null;
 
 	@Override
 	public void onCreate() {
@@ -84,8 +80,6 @@ public class Letsdoo extends Application {
 		{
 		    Log.v("Letsdoo", e.getMessage());
 		}
-		
-		this.gson = new GsonBuilder().create();
 		
 		registerGcm();
 	}
@@ -129,14 +123,6 @@ public class Letsdoo extends Application {
 		return preferences;
 	}
 	
-	public String[] getKnownAddresses() {
-		return knownAddresses;
-	}
-
-	public void setKnownAddresses(String[] knownAddresses) {
-		this.knownAddresses = knownAddresses;
-	}
-
 	public String getLoginToken() {
 		return getPreferences().getString("logintoken", null);
 	}
@@ -157,13 +143,9 @@ public class Letsdoo extends Application {
 		getPreferences().edit().putString("registered", Boolean.valueOf(registered).toString()).commit();
 	}
 	
-	public synchronized UsersVo getDoogethaFriends() {
-		String friends = getPreferences().getString("doogethaFriends", null);
-		return friends != null ? gson.fromJson(friends, UsersVo.class) : new UsersVo();
-	}
-	
-	public synchronized void setDoogethaFriends(UsersVo friends) {
-		getPreferences().edit().putString("doogethaFriends", gson.toJson(friends)).commit();
+	public synchronized DoogethaFriends getDoogethaFriends() {
+		if (friends == null) friends = new DoogethaFriends(this);
+		return friends;
 	}
 	
 	public void unregister() {

@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -163,8 +165,8 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
         List<UserVo> newUsers = users != null ? new ArrayList<UserVo>(users) : new ArrayList<UserVo>();
         boolean added = false;
         for (int i=0; i<newUsers.size(); i++) {
-        	String n1 = ContactsUtils.userDisplayName(app, newUsers.get(i)).toLowerCase();
-        	String n2 = ContactsUtils.userDisplayName(app, newUser).toLowerCase();
+        	String n1 = ContactsUtils.userDisplayName(app, newUsers.get(i)).toLowerCase(Locale.getDefault());
+        	String n2 = ContactsUtils.userDisplayName(app, newUser).toLowerCase(Locale.getDefault());
         	if (n1.compareTo(n2) > 0) {
         		newUsers.add(i, newUser);
         		added = true;
@@ -180,7 +182,18 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
     
     protected void finishOk()
     {
-    	setResult(RESULT_OK);
+    	Intent returnValue = new Intent();
+    	UsersVo selectedUsers = new UsersVo();
+    	List<UserVo> users = new ArrayList<UserVo>();
+    	for (String email : currentSelection.keySet()) {
+    		for (int i=0; i<data.getCount(); i++) {
+    			if (data.getItem(i).getEmail().equals(email))
+    				users.add(data.getItem(i));
+    		}
+    	}
+    	selectedUsers.setUsers(users);
+    	returnValue.putExtra("selectedUsers", selectedUsers);
+    	setResult(RESULT_OK, returnValue);
     	finish();
     }
     
@@ -231,7 +244,7 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
 
 		@Override
 		public UserVo doTask() throws Throwable {
-			return Utils.getApp(DoogethaFriendsActivity.this).getUsersAccessor().getItem(Utils.md5Base64(email));
+			return Utils.getApp(DoogethaFriendsActivity.this).getUsersAccessor().getItem(Utils.md5Hex(email));
 		}
 
 		@Override

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import android.app.Activity;
@@ -67,8 +68,8 @@ public class DoogethaFriendsSyncTask  extends AsyncUITask<UsersVo> {
 		UserVo[] sortedFriends = syncedUsers.toArray(new UserVo[syncedUsers.size()]);
 		Arrays.sort(sortedFriends, new Comparator<UserVo>() {
 			public int compare(UserVo lhs, UserVo rhs) {
-				String n1 = ContactsUtils.userDisplayName(Utils.getApp(activity), lhs).toLowerCase(); 
-				String n2 = ContactsUtils.userDisplayName(Utils.getApp(activity), rhs).toLowerCase(); 
+				String n1 = ContactsUtils.userDisplayName(Utils.getApp(activity), lhs).toLowerCase(Locale.getDefault()); 
+				String n2 = ContactsUtils.userDisplayName(Utils.getApp(activity), rhs).toLowerCase(Locale.getDefault()); 
 				return n1.compareToIgnoreCase(n2);
 			}
 		});

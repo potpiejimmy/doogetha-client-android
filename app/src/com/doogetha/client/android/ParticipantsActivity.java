@@ -30,6 +30,7 @@ import com.doogetha.client.util.Utils;
 
 import de.letsdoo.server.vo.EventVo;
 import de.letsdoo.server.vo.UserVo;
+import de.letsdoo.server.vo.UsersVo;
 
 public class ParticipantsActivity extends SlideListActivity implements OnItemClickListener, OnClickListener {
 
@@ -112,8 +113,8 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
 	}
 
     @Override
-    public void onActivityResult(int reqCode, int resultCode, Intent data) {
-            super.onActivityResult(reqCode, resultCode, data);
+    public void onActivityResult(int reqCode, int resultCode, Intent resultData) {
+            super.onActivityResult(reqCode, resultCode, resultData);
 
 //            switch (reqCode) {
 //                    case (PICK_CONTACT):
@@ -144,6 +145,25 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
 //                            }
 //                            break;
 //            }
+            
+        // returned from DoogethaFriendsActivity:
+        if (resultData != null && resultData.getExtras() != null) {
+	        UsersVo selectedUsers = (UsersVo)resultData.getExtras().get("selectedUsers");
+	        if (selectedUsers != null &&
+	            selectedUsers.getUsers() != null) {
+	        	for (UserVo user : selectedUsers.getUsers()) {
+	        		boolean found = false;
+	        		for (int i=0; i<data.getCount(); i++) {
+	        			if (data.getItem(i).getEmail().equalsIgnoreCase(user.getEmail())) {
+	        				found = true;
+	        				break;
+	        			}
+	        		}
+	        		if (!found) data.add(user);
+	        	}
+	        	data.notifyDataSetChanged();
+	        }
+        }
     }
     
     protected void add() {

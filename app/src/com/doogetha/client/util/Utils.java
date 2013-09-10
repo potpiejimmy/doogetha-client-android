@@ -139,13 +139,21 @@ public class Utils {
     			parts[0].trim().length()>0 &&
     			parts[1].trim().length()>0);
     }
-    
-    public static String md5Base64(String input) {
+
+    public static byte[] md5(String input) {
     	try {
     		MessageDigest digest = MessageDigest.getInstance("MD5");
-    		return Base64.encodeToString(digest.digest(input.getBytes()), Base64.NO_WRAP);
+    		return digest.digest(input.getBytes());
     	} catch (NoSuchAlgorithmException nsae) {
     		throw new RuntimeException(nsae);
     	}
+    }
+    
+    public static String md5Base64(String input) {
+		return Base64.encodeToString(md5(input), Base64.NO_WRAP);
+    }
+
+    public static String md5Hex(String input) {
+		return Utils.bytesToHex(md5(input));
     }
 }

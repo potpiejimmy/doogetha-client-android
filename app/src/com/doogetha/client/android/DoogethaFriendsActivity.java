@@ -10,11 +10,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -61,7 +66,7 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
     	buttonok.setOnClickListener(this);
     	buttoncancel.setOnClickListener(this);
     	
-    	List<UserVo> users = this.getCurrentFriendsList();
+    	List<UserVo> users = new ArrayList<UserVo>(Utils.getApp(this).getDoogethaFriends().getFriends());
     	
     	this.data = new ArrayAdapter<UserVo>(this, R.layout.doogetha_friend_item, users) {
     		@Override
@@ -83,20 +88,38 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
     	};
     	this.setListAdapter(data);
     	
-    	getListView().setTextFilterEnabled(true);
+    	//getListView().setTextFilterEnabled(true);
     	getListView().setOnItemClickListener(this);
-    	//registerForContextMenu(getListView());
+    	registerForContextMenu(getListView());
     	
     	updateUI();
     }
     
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+      super.onCreateContextMenu(menu, v, menuInfo);
+      MenuInflater inflater = getMenuInflater();
+      inflater.inflate(R.menu.doogethafriends_edit_context, menu);
+    }
+    
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+      AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+      switch (item.getItemId()) {
+	      case R.id.deleteitem:
+	    	UserVo user = data.getItem(info.position);
+	    	Utils.getApp(this).getDoogethaFriends().removeFriend(user);
+	    	Utils.getApp(this).getDoogethaFriends().save();
+	    	updateFriendsList();
+	        return true;
+	      default:
+	        return super.onContextItemSelected(item);
+      }
+    }
+
     protected void updateUI()
     {
     	numFriendsLabel.setText(data.getCount() + " " + getString(R.string.friends));
-    }
-    
-    protected List<UserVo> getCurrentFriendsList() {
-    	return Utils.getApp(this).getDoogethaFriends().getFriends();
     }
     
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -205,7 +228,7 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
 	
 	protected void updateFriendsList() {
 		data.clear();
-		for (UserVo user : getCurrentFriendsList())
+		for (UserVo user : Utils.getApp(this).getDoogethaFriends().getFriends())
 			data.add(user);
 		data.notifyDataSetChanged();
 		updateUI();

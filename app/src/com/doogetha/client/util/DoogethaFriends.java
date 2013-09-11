@@ -70,6 +70,8 @@ public class DoogethaFriends
 	
 	public void addFriend(UserVo friend)
 	{
+		if (friend.getEmail().equalsIgnoreCase(app.getEmail())) return; // don't add myself
+		
 		for (UserVo f : friends)
 			if (f.getEmail().equalsIgnoreCase(friend.getEmail())) return; // don't add duplicates
 		
@@ -84,5 +86,15 @@ public class DoogethaFriends
         	}
         }
         if (!added) friends.add(friend);
+	}
+	
+	public void removeFriend(UserVo friend)
+	{
+		for (UserVo f : friends) {
+			if (f.getEmail().equalsIgnoreCase(friend.getEmail())) {
+				friends.remove(f);
+				break;
+			}
+		}
 	}
 }

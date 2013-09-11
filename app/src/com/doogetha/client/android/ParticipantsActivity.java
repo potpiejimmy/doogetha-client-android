@@ -81,7 +81,7 @@ public class ParticipantsActivity extends SlideListActivity implements OnItemCli
     	};
     	this.setListAdapter(data);
     	
-    	getListView().setTextFilterEnabled(true);
+    	//getListView().setTextFilterEnabled(true);
     	getListView().setOnItemClickListener(this);
     	registerForContextMenu(getListView());
     }

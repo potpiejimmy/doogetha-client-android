@@ -3,8 +3,10 @@ package com.doogetha.client.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import com.doogetha.client.android.Letsdoo;
 import com.google.gson.Gson;
@@ -16,7 +18,10 @@ import de.letsdoo.server.vo.UsersVo;
 public class DoogethaFriends
 {
 	private Letsdoo app = null;
+	
 	private List<UserVo> friends = null;
+	private Map<String,UserVo> lookupMap = null;
+	
 	private Gson gson = null;
 	
 	public static class FriendsListComparator implements Comparator<UserVo>
@@ -45,9 +50,14 @@ public class DoogethaFriends
 		String res = app.getPreferences().getString("doogethaFriends", null);
 		UsersVo usersVo = res != null ? gson.fromJson(res, UsersVo.class) : new UsersVo();
     	Collection<UserVo> flist = usersVo.getUsers();
-    	friends = new ArrayList<UserVo>();
+    	int capacity = (flist != null) ? flist.size() : 10;
+    	friends = new ArrayList<UserVo>(capacity);
+    	lookupMap = new HashMap<String,UserVo>(capacity);
     	if (flist != null) {
-    		for (UserVo user : flist) friends.add(user);
+    		for (UserVo user : flist) {
+    			friends.add(user);
+    			lookupMap.put(user.getEmail(), user);
+    		}
     	}
 	}
 	
@@ -66,14 +76,20 @@ public class DoogethaFriends
 	public void setFriends(List<UserVo> friends)
 	{
 		this.friends = friends;
+		
+		lookupMap.clear();
+		for (UserVo friend : friends)
+			lookupMap.put(friend.getEmail(), friend);
 	}
 	
 	public void addFriend(UserVo friend)
 	{
 		if (friend.getEmail().equalsIgnoreCase(app.getEmail())) return; // don't add myself
 		
-		for (UserVo f : friends)
-			if (f.getEmail().equalsIgnoreCase(friend.getEmail())) return; // don't add duplicates
+		if (lookupMap.containsKey(friend.getEmail())) return; // don't add duplicates
+		
+		// new friend: fetch display name from address book
+		ContactsUtils.fillUserInfo(app.getContentResolver(), friend);
 		
         // manually add a new entry to doogetha friends list (in alphabetical order):
         boolean added = false;
@@ -86,15 +102,23 @@ public class DoogethaFriends
         	}
         }
         if (!added) friends.add(friend);
+        lookupMap.put(friend.getEmail(), friend);
 	}
 	
 	public void removeFriend(UserVo friend)
 	{
 		for (UserVo f : friends) {
-			if (f.getEmail().equalsIgnoreCase(friend.getEmail())) {
+			if (f.getEmail().equals(friend.getEmail())) {
 				friends.remove(f);
+				lookupMap.remove(f.getEmail());
 				break;
 			}
 		}
+	}
+	
+	public UserVo resolveUserInfo(UserVo user)
+	{
+		UserVo resolved = lookupMap.get(user.getEmail());
+		return resolved != null ? resolved : user;
 	}
 }

@@ -100,7 +100,7 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
     	
     	LinearLayout list = (LinearLayout)findViewById(R.id.participantsconfirmlist);
     	for (UserVo user : event.getUsers()) {
-			ContactsUtils.fillUserInfo(this.getContentResolver(), user);
+			user = Utils.getApp(this).getDoogethaFriends().resolveUserInfo(user);
 				
 			View vi = getLayoutInflater().inflate(R.layout.participant_confirm_item, null);
 			TextView name = (TextView) vi.findViewById(R.id.participantname);

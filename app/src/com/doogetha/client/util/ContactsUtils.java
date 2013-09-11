@@ -78,7 +78,7 @@ public class ContactsUtils {
 		StringBuilder stb = new StringBuilder();
 		for (UserVo user : event.getUsers()) {
 			if (user.getEmail().equalsIgnoreCase(app.getEmail())) continue; // skip myself
-			fillUserInfo(app.getContentResolver(), user); // resolve name from address book
+			user = app.getDoogethaFriends().resolveUserInfo(user); // resolve names from friends list
 			if (stb.length() > 0) stb.append(", ");
 			stb.append(userDisplayName(app, user));
 		}

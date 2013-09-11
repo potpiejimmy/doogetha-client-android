@@ -172,7 +172,6 @@ public class DoogethaFriendsActivity extends SlideListActivity implements OnItem
         UserVo newUser = new UserVo();
         newUser.setEmail(email);
         newUser.setState(0); /* unconfirmed/new */
-        ContactsUtils.fillUserInfo(this.getContentResolver(), newUser);
         currentSelection.put(email, true);
 
         app.getDoogethaFriends().addFriend(newUser);

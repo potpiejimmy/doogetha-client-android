@@ -4,7 +4,7 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/doogetha_bg"
+  android:background="@color/doogetha_bg2"
   >
     
     <ScrollView android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/scrollView1">
@@ -75,12 +75,17 @@
     </ScrollView>
 
     <LinearLayout android:id="@+id/horizontal_line_comments" 
-                  android:layout_width="match_parent"
-                  android:layout_height="3dip"
-                  android:background="@color/doogetha_titlebar">
+		android:layout_width="match_parent"
+		android:layout_height="3dip"
+		android:background="@color/doogetha_titlebar">
     </LinearLayout>
 
-    <include android:id="@+id/comments_previewer"
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="#fff">
+    	<include android:id="@+id/comments_previewer"
              layout="@layout/comments_previewer"/>
+	</LinearLayout>
 
 </LinearLayout>

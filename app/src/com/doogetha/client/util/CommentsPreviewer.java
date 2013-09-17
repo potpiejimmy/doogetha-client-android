@@ -26,13 +26,13 @@ public class CommentsPreviewer implements OnClickListener {
 		this.event = event;
 		// comments previewer:
 		commentsPreviewer = activity.findViewById(R.id.comments_previewer);
+		commentsPreviewer.setBackgroundResource(android.R.drawable.list_selector_background);
 		commentsPreviewer.setClickable(true);
 		commentsPreviewer.setOnClickListener(this);
 		update();
 	}
 
 	public void onClick(View v) {
-		v.setBackgroundResource(android.R.drawable.list_selector_background);
 		showComments();
 	}
 

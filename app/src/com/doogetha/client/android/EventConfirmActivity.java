@@ -77,6 +77,7 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 						((ImageView)surveyView.findViewById(R.id.surveyimg)).setImageResource(R.drawable.showdetails);
 					}
 					surveysList.addView(surveyView);
+					surveyView.setBackgroundResource(android.R.drawable.list_selector_background);
 					surveyView.setClickable(true);
 					surveyView.setOnClickListener(this);
 			}
@@ -111,7 +112,7 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			Utils.setIconForConfirmState(icon, user);
 			list.addView(vi);
 			// add horizontal ruler:
-			addHorizontalSeparator(list);
+			//addHorizontalSeparator(list);
 		}
     }
     
@@ -142,7 +143,6 @@ public class EventConfirmActivity extends SlideActivity implements OnClickListen
 			default:
 				// otherwise, a survey item was clicked:
 				if (v.getTag() instanceof SurveyVo) {
-					v.setBackgroundResource(android.R.drawable.list_selector_background);
 					showSurveyResults((SurveyVo)v.getTag());
 				}
 		}

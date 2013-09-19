@@ -76,11 +76,12 @@ public class ContactsUtils {
 	 */
 	public static String participantNames(Letsdoo app, EventVo event) {
 		StringBuilder stb = new StringBuilder();
+		int delimiters = event.getUsers().length - 2;
 		for (UserVo user : event.getUsers()) {
 			if (user.getEmail().equalsIgnoreCase(app.getEmail())) continue; // skip myself
 			user = app.getDoogethaFriends().resolveUserInfo(user); // resolve names from friends list
-			if (stb.length() > 0) stb.append(", ");
-			stb.append(userDisplayName(app, user));
+			if (stb.length() > 0) stb.append(--delimiters>0 ? ", " : " und "); // XXX
+			stb.append(userDisplayName(app, user).split(" ")[0]);
 		}
 		if (stb.length()>0) return stb.toString();
 		else return null; // no participants except myself - return null

@@ -119,6 +119,11 @@ public class DoogethaFriends
 	public UserVo resolveUserInfo(UserVo user)
 	{
 		UserVo resolved = lookupMap.get(user.getEmail());
-		return resolved != null ? resolved : user;
+		if (resolved != null) {
+			// adapt the user name from friend list:
+			user.setFirstname(resolved.getFirstname());
+			user.setLastname(resolved.getLastname());
+		}
+		return user;
 	}
 }

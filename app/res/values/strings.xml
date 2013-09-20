@@ -8,7 +8,7 @@
     <string name="welcome_continue">Fortfahren</string>
     <string name="register_intro">Damit du Doogetha verwenden kannst, musst du dich einmalig am Doogetha-Server registrieren. Dazu benötigst du nur eine E-Mail-Adresse - mehr nicht.\n\nBitte beachte, dass die E-Mail-Adresse gleichzeitig auch deine Nutzerkennung sein wird und stelle sicher, dass niemand außer du selbst Zugriff auf dieses Mailkonto hat.</string>
     <string name="emailaddress">E-Mail-Adresse</string>
-    <string name="doregisterwait">Doogetha erstellt nun für dieses Gerät ein neues Schlüsselpaar zur Authentifizierung und sendet den öffentlichen Schlüssel zusammen mit deiner E-Mail-Adresse zum Server. Dies kann einen Moment dauern&#8230;</string>
+    <string name="doregisterwait">Neues Schlüsselpaar wird generiert. Dies kann einen Moment dauern&#8230;</string>
     <string name="register_confirm1">Vielen Dank. Der Doogetha-Server hat soeben eine E-Mail an deine Adresse versendet.\n\nUm deine Identität zu bestätigen, klicke bitte auf den Bestätigungslink in der E-Mail und gib auf der Bestätigungsseite den folgenden dreistelligen PIN ein:</string>
     <string name="register_confirm2">Drücke danach den Anmelden-Button, um dich einzuloggen.</string>
     <string name="pin123">PIN: 123</string>

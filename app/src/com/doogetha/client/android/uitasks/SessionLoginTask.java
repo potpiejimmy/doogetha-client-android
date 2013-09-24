@@ -35,6 +35,10 @@ public class SessionLoginTask extends AsyncUITask<String>
 		String challenge = Utils.getApp(activity).getLoginAccessor().insertItemWithResult(logintoken.substring(0, logintoken.indexOf(":")));
 		String userid = challenge.substring(0, challenge.indexOf(":"));
 		byte[] challengeData = Utils.hexToBytes(challenge.substring(challenge.indexOf(":")+1));
+    	if (userid.length() == 0 || challengeData.length == 0) {
+    		// no challenge data received:
+    		return ":";
+    	}
 		// sign challenge data:
 		challengeData = KeyUtil.sign(challengeData, Utils.getApp(activity).getPrivateKey());
 		return Utils.getApp(activity).getLoginAccessor().updateItemWithResult(userid, Utils.bytesToHex(challengeData));

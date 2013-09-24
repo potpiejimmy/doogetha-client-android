@@ -2,6 +2,7 @@ package com.doogetha.client.android.uitasks;
 
 import java.net.ConnectException;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -31,16 +32,7 @@ public class SessionLoginTask extends AsyncUITask<String>
 	
 	public String doTask() throws Throwable
 	{
-		String challenge = null;
-		try {
-			challenge = Utils.getApp(activity).getLoginAccessor().insertItemWithResult(logintoken.substring(0, logintoken.indexOf(":")));
-		} catch (Exception ex) {
-			challenge = null;
-		}
-		if (challenge == null || challenge.length() == 0) {
-			// no challenge received
-			return ":"; // no credentials received
-		}
+		String challenge = Utils.getApp(activity).getLoginAccessor().insertItemWithResult(logintoken.substring(0, logintoken.indexOf(":")));
 		String userid = challenge.substring(0, challenge.indexOf(":"));
 		byte[] challengeData = Utils.hexToBytes(challenge.substring(challenge.indexOf(":")+1));
 		// sign challenge data:
@@ -64,7 +56,9 @@ public class SessionLoginTask extends AsyncUITask<String>
 	public void doneFail(Throwable throwable) 
 	{
 		DroidLib.alert(activity, null, 
-				(throwable instanceof ConnectException || throwable instanceof SocketException) ?
+				(throwable instanceof ConnectException ||
+				 throwable instanceof SocketException ||
+				 throwable instanceof UnknownHostException) ?
 				activity.getString(R.string.servernotavailable) :
 				"Die Anmeldung ist fehlgeschlagen: "+throwable,
 				null, null, null, new OnDismissListener() {
